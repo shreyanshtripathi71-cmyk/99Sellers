@@ -1,9 +1,3 @@
 {
-  "/listing_05/page": "app/listing_05/page.js",
-  "/listing_07/page": "app/listing_07/page.js",
-  "/listing_details_06/page": "app/listing_details_06/page.js",
-  "/listing_09/page": "app/listing_09/page.js",
-  "/dashboard/membership/page": "app/dashboard/membership/page.js",
-  "/page": "app/page.js",
-  "/[...not-found]/page": "app/[...not-found]/page.js"
+  "/page": "app/page.js"
 }

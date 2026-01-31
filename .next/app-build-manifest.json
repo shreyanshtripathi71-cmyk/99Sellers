@@ -11,37 +11,6 @@
       "static/chunks/main-app.js",
       "static/css/app/layout.css",
       "static/chunks/app/layout.js"
-    ],
-    "/dashboard/membership/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/dashboard/membership/page.js"
-    ],
-    "/[...not-found]/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/[...not-found]/page.js"
-    ],
-    "/listing_05/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/listing_05/page.js"
-    ],
-    "/listing_07/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/listing_07/page.js"
-    ],
-    "/listing_details_06/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/listing_details_06/page.css",
-      "static/chunks/app/listing_details_06/page.js"
-    ],
-    "/listing_09/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/listing_09/page.js"
     ]
   }
 }
