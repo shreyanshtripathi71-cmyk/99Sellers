@@ -2,102 +2,91 @@
 import React from "react";
 import { motion } from "framer-motion";
 
+// Mock Data for the Ticker
 const leads = [
-   { addr: "1024 Elm St", city: "Dallas, TX", profit: 124, type: "Foreclosure" },
-   { addr: "550 Maple Ave", city: "Austin, TX", profit: 89, type: "Tax Lien" },
-   { addr: "880 Oak Ln", city: "Houston, TX", profit: 145, type: "Probate" },
-   { addr: "202 Pine St", city: "Miami, FL", profit: 210, type: "Divorce" },
-   { addr: "15 Sunset Blvd", city: "LA, CA", profit: 350, type: "Foreclosure" },
+   { addr: "1024 Elm St", city: "Austin, TX", profit: "+$124k", type: "Foreclosure", color: "#EF4444" },
+   { addr: "550 Maple Ave", city: "Dallas, TX", profit: "+$89k", type: "Tax Lien", color: "#F59E0B" },
+   { addr: "880 Oak Ln", city: "Houston, TX", profit: "+$145k", type: "Divorce", color: "#3B82F6" },
+   { addr: "202 Pine St", city: "Miami, FL", profit: "+$210k", type: "Probate", color: "#6366F1" },
+   { addr: "15 Sunset Blvd", city: "Tampa, FL", profit: "+$350k", type: "Foreclosure", color: "#EF4444" },
 ];
 
-// Duplicate leads to ensure smooth seamless loop
-const marqueeLeads = [...leads, ...leads, ...leads];
+const duplicatedLeads = [...leads, ...leads, ...leads]; // Create loop
 
 const LiveDemo = ({ styles }: { styles: any }) => {
    return (
-      <div className="py-100 bg-light border-top border-bottom">
-         <div className="container">
-            <div className="row align-items-center">
+      <section id="live-data" className={styles.section_pad} style={{ background: '#F8FAFC', borderTop: '1px solid #E2E8F0', borderBottom: '1px solid #E2E8F0' }}>
+         <div className={styles.container}>
+            <div className={styles.grid_2}>
                
-               <div className="col-lg-5 mb-5 mb-lg-0">
-                  <motion.div
-                     initial={{ opacity: 0, x: -50 }}
-                     whileInView={{ opacity: 1, x: 0 }}
-                     viewport={{ once: true }}
-                     transition={{ duration: 0.8 }}
-                  >
-                     <h2 className="fw-900 text-dark display-6 mb-4">Real-Time Market Data.</h2>
-                     <p className="fs-18 text-secondary mb-4">
-                        See properties hit the market the second they are recorded at the county courthouse.
+               {/* Left: Text Context */}
+               <div>
+                  <div className={styles.mb_24}>
+                     <div className={styles.badge_pill} style={{ background: '#DCFCE7', color: '#166534' }}>
+                        <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#166534', marginRight: 8, display: 'inline-block' }}></span>
+                        Live Feed
+                     </div>
+                     <h2 style={{ fontSize: '42px', fontWeight: '800', marginBottom: '16px', color: '#0F172A' }}>
+                        Real-Time Data.
+                     </h2>
+                     <p style={{ fontSize: '18px', color: '#475569', marginBottom: '32px' }}>
+                        See properties hit the market the <strong>second</strong> they are recorded at the county courthouse. Don't wait for the MLS.
                      </p>
-                     <ul className="list-unstyled">
-                        {[
-                           "Nationwide Coverage (All 50 States)",
-                           "Daily Updates at 6:00 AM",
-                           "Export to Excel / CSV Instantly"
-                        ].map((text, i) => (
-                           <li key={i} className="d-flex align-items-center mb-3 fw-600 text-dark">
-                              <div className="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style={{width:24, height:24, fontSize:12}}>
-                                 <i className="fa-solid fa-check"></i>
-                              </div>
-                              {text}
-                           </li>
-                        ))}
-                     </ul>
-                  </motion.div>
+                  </div>
+                  
+                  <ul style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                     {[
+                        "Nationwide Coverage (50 States)",
+                        "Daily Updates at 6:00 AM EST",
+                        "Instant Excel / CSV Export"
+                     ].map((item, i) => (
+                        <li key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px', fontWeight: '600', color: '#0F172A' }}>
+                           <div style={{ width: 24, height: 24, borderRadius: '50%', background: '#DBEAFE', color: '#2563EB', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px' }}>
+                              <i className="fa-solid fa-check"></i>
+                           </div>
+                           {item}
+                        </li>
+                     ))}
+                  </ul>
                </div>
 
-               <div className="col-lg-7 ps-lg-5">
-                  <div className="bg-white border rounded-4 shadow-lg overflow-hidden p-4 position-relative" style={{ height: '500px' }}>
-                     {/* Header */}
-                     <div className="d-flex align-items-center justify-content-between mb-4 border-bottom pb-3 position-relative z-1 bg-white">
-                        <h5 className="fw-bold m-0">Recent Distressed Leads</h5>
-                        <div className="d-flex align-items-center gap-2 bg-light px-3 py-1 rounded-pill border">
-                           <span className={`bg-success rounded-circle ${styles.anim_pulse}`} style={{width:8, height:8}}></span>
-                           <span className="fs-12 fw-bold text-success">Live Feed</span>
-                        </div>
-                     </div>
-                     
-                     {/* Vertical Marquee Mask */}
-                     <div className="overflow-hidden position-relative" style={{ height: '400px' }}>
-                        {/* Gradient Masks for Top/Bottom Fade */}
-                        <div className="position-absolute top-0 start-0 w-100 bg-gradient-to-b from-white to-transparent" style={{ height: '50px', zIndex: 2, background: 'linear-gradient(to bottom, white, transparent)' }}></div>
-                        <div className="position-absolute bottom-0 start-0 w-100 bg-gradient-to-t from-white to-transparent" style={{ height: '50px', zIndex: 2, background: 'linear-gradient(to top, white, transparent)' }}></div>
+               {/* Right: The Ticker Visual */}
+               <div className={styles.browser_window} style={{ height: '400px', position: 'relative' }}>
+                  <div className={styles.browser_header}>
+                     <div></div><div></div>
+                     <span style={{ marginLeft: 'auto', fontSize: '11px', fontWeight: 'bold', color: '#94A3B8', textTransform: 'uppercase' }}>Incoming Stream</span>
+                  </div>
+                  
+                  <div style={{ padding: '0', height: '360px', overflow: 'hidden', position: 'relative' }}>
+                     {/* Gradient Masks */}
+                     <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '40px', background: 'linear-gradient(to bottom, white, transparent)', zIndex: 2 }}></div>
+                     <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '40px', background: 'linear-gradient(to top, white, transparent)', zIndex: 2 }}></div>
 
-                        <motion.div 
-                           className="d-flex flex-column gap-3"
-                           animate={{ y: [0, -600] }} // Adjust based on height of items
-                           transition={{ 
-                              repeat: Infinity, 
-                              ease: "linear", 
-                              duration: 15 // Speed of scroll
-                           }}
-                        >
-                           {marqueeLeads.map((item, i) => (
-                              <div key={i} className="d-flex align-items-center justify-content-between p-3 rounded-3 border bg-light">
-                                 <div className="d-flex align-items-center gap-3">
-                                    <div className="bg-white border rounded-circle d-flex align-items-center justify-content-center" style={{width: 45, height: 45}}>
-                                       <i className="fa-light fa-house-chimney text-primary"></i>
-                                    </div>
-                                    <div>
-                                       <div className="fw-bold text-dark fs-14">{item.addr}</div>
-                                       <div className="text-muted fs-12">{item.city} • Found Just Now</div>
-                                    </div>
-                                 </div>
-                                 <div className="text-end">
-                                    <div className="badge bg-danger bg-opacity-10 text-danger mb-1">{item.type}</div>
-                                    <div className="fw-bold text-success fs-13">+${item.profit}k Equity</div>
-                                 </div>
+                     <motion.div
+                        animate={{ y: [0, -400] }}
+                        transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
+                     >
+                        {duplicatedLeads.map((lead, i) => (
+                           <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 24px', borderBottom: '1px solid #F1F5F9' }}>
+                              <div>
+                                 <div style={{ fontWeight: '600', color: '#0F172A', fontSize: '14px' }}>{lead.addr}</div>
+                                 <div style={{ fontSize: '12px', color: '#64748B' }}>{lead.city}</div>
                               </div>
-                           ))}
-                        </motion.div>
-                     </div>
+                              <div style={{ textAlign: 'right' }}>
+                                 <span style={{ fontSize: '11px', fontWeight: '700', color: lead.color, background: `${lead.color}15`, padding: '4px 8px', borderRadius: '4px' }}>
+                                    {lead.type}
+                                 </span>
+                                 <div style={{ fontWeight: '700', color: '#10B981', fontSize: '14px', marginTop: '4px' }}>{lead.profit}</div>
+                              </div>
+                           </div>
+                        ))}
+                     </motion.div>
                   </div>
                </div>
 
             </div>
          </div>
-      </div>
+      </section>
    );
 };
 

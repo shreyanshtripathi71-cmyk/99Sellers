@@ -1,75 +1,151 @@
 "use client"
 import React from "react";
-import SpotlightCard from "../common/SpotlightCard"; // Adjust import path as needed
+import { motion } from "framer-motion";
 
 const Features = ({ styles }: { styles: any }) => {
    return (
-      <div id="features" className="py-100">
-         <div className="container">
-            <div className="text-center mb-5">
-               <span className="text-primary fw-bold text-uppercase fs-12 tracking-wide bg-blue-50 px-3 py-1 rounded-pill">Power Features</span>
-               <h2 className="display-5 fw-900 text-dark mt-3 mb-3">Built for speed.</h2>
-               <p className="text-secondary fs-18">Search, Skip-Trace, and Analyze in one dashboard.</p>
+      <section className={styles.section_pad} style={{ background: '#FFFFFF' }}>
+         <div className={styles.container}>
+            
+            {/* Section Header */}
+            <div className={styles.mb_48} style={{ maxWidth: '700px' }}>
+               <h2 style={{ fontSize: '48px', fontWeight: '800', marginBottom: '16px' }}>
+                  The Deal Terminal.
+               </h2>
+               <p style={{ fontSize: '20px', color: '#475569' }}>
+                  We replaced the manual grunt work with a 
+                  <span style={{ color: '#0F172A', fontWeight: '700' }}> high-speed auction database</span>.
+               </p>
             </div>
 
-            <div className="row g-4">
-               {/* Card 1 */}
-               <div className="col-lg-4">
-                  <SpotlightCard className="h-100 p-4">
-                     <div className={styles.icon_box_blue}><i className="fa-light fa-layer-group"></i></div>
-                     <h4 className="fw-bold text-dark mb-3">Lead Stacking</h4>
-                     <p className="text-secondary mb-4">Don't just find a foreclosure. Find a foreclosure owned by a tired landlord going through a divorce.</p>
-                     <div className="d-flex flex-wrap gap-2">
-                        {['Divorce', 'Tax Liens', 'Vacant'].map(t => (
-                           <span key={t} className="badge bg-light text-dark border">{t}</span>
-                        ))}
+            {/* THE COMMAND CENTER GRID */}
+            <div className={styles.bento_grid}>
+               
+               {/* 1. FILTERING (Removed AI) */}
+               <motion.div 
+                  className={styles.box_card} 
+                  style={{ gridColumn: 'span 2' }}
+                  whileHover={{ y: -4 }}
+               >
+                  <div className={styles.mb_24}>
+                     <div className={styles.badge_pill} style={{ background: '#EFF6FF', color: '#2563EB' }}>
+                        Step 1: Discovery
                      </div>
-                  </SpotlightCard>
-               </div>
+                     <h3 style={{ fontSize: '28px', fontWeight: 'bold', marginBottom: '12px' }}>Granular Filtering</h3>
+                     <p style={{ maxWidth: '500px' }}>Drill down by <strong>State &gt; County &gt; City</strong>. Filter specifically for Auction Dates, Unpaid Tax Amounts, or Divorce Filing Dates.</p>
+                  </div>
 
-               {/* Card 2 */}
-               <div className="col-lg-4">
-                  <SpotlightCard className="h-100 p-4">
-                     <div className={styles.icon_box_blue}><i className="fa-light fa-address-book"></i></div>
-                     <h4 className="fw-bold text-dark mb-3">Skip Tracing</h4>
-                     <p className="text-secondary mb-4">Get verified mobile numbers & emails instantly. 98% accuracy rate.</p>
-                     <div className="p-3 bg-light rounded-3 border">
-                        <div className="d-flex justify-content-between mb-2 border-bottom pb-2">
-                           <span className="fs-12 fw-bold text-muted">MOBILE</span>
-                           <span className="fs-13 fw-bold text-dark font-monospace">(512) 555-0199</span>
+                  {/* Visual: Manual Filters */}
+                  <div style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: '8px', padding: '20px', display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+                     <div style={{ background: 'white', border: '1px solid #CBD5E1', padding: '8px 16px', borderRadius: '6px', fontSize: '14px', fontWeight: '600', color: '#0F172A', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span style={{color: '#94A3B8'}}>State:</span> Texas <i className="fa-solid fa-chevron-down" style={{fontSize: 10}}></i>
+                     </div>
+                     <div style={{ background: 'white', border: '1px solid #CBD5E1', padding: '8px 16px', borderRadius: '6px', fontSize: '14px', fontWeight: '600', color: '#0F172A', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span style={{color: '#94A3B8'}}>Type:</span> Foreclosure <i className="fa-solid fa-chevron-down" style={{fontSize: 10}}></i>
+                     </div>
+                     <div style={{ background: 'white', border: '1px solid #CBD5E1', padding: '8px 16px', borderRadius: '6px', fontSize: '14px', fontWeight: '600', color: '#0F172A', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span style={{color: '#94A3B8'}}>Equity:</span> &gt; 30% <i className="fa-solid fa-chevron-down" style={{fontSize: 10}}></i>
+                     </div>
+                  </div>
+               </motion.div>
+
+               {/* 2. MATH CALCULATOR (Pure Logic) */}
+               <motion.div 
+                  className={styles.box_card}
+                  whileHover={{ y: -4 }}
+               >
+                  <div className={styles.badge_pill} style={{ background: '#F0FDF4', color: '#10B981' }}>
+                     Step 2: Analysis
+                  </div>
+                  <h3 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '12px' }}>Equity Calculator</h3>
+                  <p style={{marginBottom: '20px', fontSize: '14px'}}>We subtract total debt from estimated value.</p>
+                  
+                  <div style={{ marginTop: 'auto' }}>
+                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+                        <span className={styles.stat_label}>Market Value</span>
+                        <span className={styles.font_mono}>$450,000</span>
+                     </div>
+                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '16px', borderBottom: '1px dashed #E2E8F0', paddingBottom: '16px' }}>
+                        <span className={styles.stat_label}>Total Debt</span>
+                        <span className={styles.font_mono} style={{ color: '#EF4444' }}>-$120,000</span>
+                     </div>
+                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <span className={styles.stat_label} style={{ color: '#10B981' }}>GROSS EQUITY</span>
+                        <span className={styles.stat_value} style={{ color: '#10B981' }}>$330k</span>
+                     </div>
+                  </div>
+               </motion.div>
+
+               {/* 3. SKIP TRACING (Contact Info) */}
+               <motion.div 
+                  className={styles.box_card}
+                  whileHover={{ y: -4 }}
+               >
+                  <div className={styles.badge_pill} style={{ background: '#FEF2F2', color: '#EF4444' }}>
+                     Step 3: Contact
+                  </div>
+                  <h3 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '12px' }}>Owner Lookup</h3>
+                  <p style={{marginBottom: '20px', fontSize: '14px'}}>Get verified phone numbers.</p>
+                  
+                  <div style={{ background: '#1E293B', borderRadius: '8px', padding: '20px', marginTop: '24px', color: 'white' }}>
+                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
+                        <div style={{ width: 32, height: 32, borderRadius: '50%', background: '#334155', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                           <i className="fa-solid fa-user" style={{ fontSize: '12px' }}></i>
                         </div>
-                        <div className="d-flex justify-content-between">
-                           <span className="fs-12 fw-bold text-muted">EMAIL</span>
-                           <span className="fs-13 fw-bold text-dark font-monospace">jason@gmail.com</span>
+                        <div>
+                           <div style={{ fontSize: '14px', fontWeight: 'bold' }}>John Doe</div>
+                           <div style={{ fontSize: '12px', opacity: 0.7 }}>Homeowner</div>
                         </div>
                      </div>
-                  </SpotlightCard>
-               </div>
-
-               {/* Card 3 */}
-               <div className="col-lg-4">
-                  <SpotlightCard className="h-100 p-4">
-                     <div className={styles.icon_box_blue}><i className="fa-light fa-calculator"></i></div>
-                     <h4 className="fw-bold text-dark mb-3">Equity Calculator</h4>
-                     <p className="text-secondary mb-4">We instantly calculate the spread between Market Value and Total Debt.</p>
                      
-                     <div className="d-flex align-items-center justify-content-between mb-2">
-                        <span className="fs-12 fw-bold text-muted">Equity Spread</span>
-                        <span className="fs-12 fw-bold text-primary">65%</span>
+                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px', background: 'rgba(255,255,255,0.1)', padding: '8px 12px', borderRadius: '4px' }}>
+                        <i className="fa-solid fa-phone" style={{ color: '#4ADE80', fontSize: '12px' }}></i>
+                        <span className={styles.font_mono} style={{ fontSize: '14px' }}>(512) 555-0199</span>
                      </div>
-                     <div className="progress mb-3" style={{height: 6}}>
-                        <div className="progress-bar bg-primary" style={{width: '65%'}}></div>
+                  </div>
+               </motion.div>
+
+               {/* 4. LEAD STACKING */}
+               <motion.div 
+                  className={styles.box_card} 
+                  style={{ gridColumn: 'span 2' }}
+                  whileHover={{ y: -4 }}
+               >
+                  <div className={styles.mb_24}>
+                     <div className={styles.badge_pill} style={{ background: '#FFF7ED', color: '#F97316' }}>
+                        Step 4: Targeting
                      </div>
-                     <div className="d-flex justify-content-between bg-green-50 p-2 rounded border border-green-100">
-                        <span className="fw-bold text-success fs-14">Profit</span>
-                        <span className="fw-900 text-success fs-14">+$145,000</span>
-                     </div>
-                  </SpotlightCard>
-               </div>
+                     <h3 style={{ fontSize: '28px', fontWeight: 'bold', marginBottom: '12px' }}>Lead Stacking</h3>
+                     <p>Layer multiple distress signals to find highly motivated sellers. (e.g. <strong>Divorce + Tax Delinquent</strong>).</p>
+                  </div>
+
+                  {/* Visual: Tag Cloud */}
+                  <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+                     {[
+                        { label: 'Absentee Owner', icon: 'fa-plane' },
+                        { label: 'Tax Delinquent', icon: 'fa-file-invoice-dollar' },
+                        { label: 'Vacant', icon: 'fa-ghost' },
+                        { label: 'Probate', icon: 'fa-scroll' }
+                     ].map((tag, i) => (
+                        <div key={i} style={{ 
+                           display: 'flex', alignItems: 'center', gap: '8px', 
+                           padding: '10px 16px', 
+                           border: '1px solid #E2E8F0', 
+                           borderRadius: '6px',
+                           background: '#F8FAFC',
+                           fontWeight: '600',
+                           color: '#475569'
+                        }}>
+                           <i className={`fa-solid ${tag.icon}`} style={{ color: '#94A3B8' }}></i>
+                           {tag.label}
+                        </div>
+                     ))}
+                  </div>
+               </motion.div>
+
             </div>
          </div>
-      </div>
+      </section>
    );
 };
-
 export default Features;

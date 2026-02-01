@@ -1,7 +1,7 @@
 "use client"
 import Link from "next/link";
-import React, { useState, useEffect } from "react";
-import { motion, useScroll, useMotionValueEvent } from "framer-motion";
+import React, { useState } from "react";
+import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 
 const PublicHeader = () => {
    const [isScrolled, setIsScrolled] = useState(false);
@@ -14,33 +14,55 @@ const PublicHeader = () => {
    return (
       <motion.header 
          className="fixed-top w-100"
-         animate={{
+         initial={{ y: -100 }}
+         animate={{ y: 0 }}
+         transition={{ duration: 0.5 }}
+         style={{ 
+            zIndex: 1000,
+            background: isScrolled ? 'rgba(255, 255, 255, 0.9)' : 'transparent',
+            backdropFilter: isScrolled ? 'blur(16px)' : 'none',
+            borderBottom: isScrolled ? '1px solid #E2E8F0' : '1px solid transparent',
             padding: isScrolled ? '16px 0' : '24px 0',
-            backgroundColor: isScrolled ? 'rgba(255, 255, 255, 0.7)' : 'rgba(255, 255, 255, 0)',
-            backdropFilter: isScrolled ? 'blur(16px)' : 'blur(0px)',
-            borderBottom: isScrolled ? '1px solid rgba(0,0,0,0.05)' : '1px solid rgba(0,0,0,0)',
+            transition: 'all 0.3s ease'
          }}
-         transition={{ duration: 0.3 }}
-         style={{ zIndex: 1000 }}
       >
-         <div className="container d-flex align-items-center justify-content-between">
-            {/* Minimalist Logo */}
-            <Link href="/" className="text-decoration-none">
-               <h4 className="m-0 fw-bold text-dark" style={{fontSize: '20px', letterSpacing: '-0.5px'}}>
-                  99Sellers.
-               </h4>
-            </Link>
-
-            {/* Action Group */}
-            <div className="d-flex align-items-center gap-3">
-               <Link href="/login" className="fw-600 text-dark text-decoration-none fs-14 px-3" style={{opacity: 0.8}}>
-                  Log in
+         <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px' }}>
+            <div className="d-flex align-items-center justify-content-between">
+               
+               {/* Logo Area */}
+               <Link href="/" className="text-decoration-none d-flex align-items-center gap-2">
+                  <div style={{ width: 24, height: 24, background: '#2563EB', borderRadius: 6 }}></div>
+                  <h4 className="m-0 fw-bold text-dark" style={{ fontSize: '20px', letterSpacing: '-0.03em', color: '#0F172A' }}>
+                     99Sellers.
+                  </h4>
                </Link>
-               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  <Link href="/search" className="btn btn-dark rounded-pill fw-600 px-4 py-2 fs-14 shadow-lg border-0">
-                     Start Free
+
+               {/* Desktop Navigation (Optional) */}
+               <div className="d-none d-md-flex align-items-center gap-4">
+                  {['Features', 'Live Data', 'Pricing'].map((item) => (
+                     <Link key={item} href={`#${item.toLowerCase().replace(' ', '-')}`} style={{ fontSize: '14px', fontWeight: '500', color: '#475569' }}>
+                        {item}
+                     </Link>
+                  ))}
+               </div>
+
+               {/* Action Buttons */}
+               <div className="d-flex align-items-center gap-3">
+                  <Link href="/login" style={{ fontSize: '14px', fontWeight: '600', color: '#0F172A' }}>
+                     Log in
                   </Link>
-               </motion.div>
+                  <Link href="/search" style={{ 
+                     background: '#0F172A', 
+                     color: 'white', 
+                     padding: '10px 20px', 
+                     borderRadius: '6px', 
+                     fontSize: '14px', 
+                     fontWeight: '600',
+                     textDecoration: 'none'
+                  }}>
+                     Start Free Trial
+                  </Link>
+               </div>
             </div>
          </div>
       </motion.header>

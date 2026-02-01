@@ -1,61 +1,83 @@
 "use client"
-import Link from "next/link";
 import React from "react";
+import Link from "next/link";
 import { motion } from "framer-motion";
 
 const Pricing = ({ styles }: { styles: any }) => {
    return (
-      <div className="py-5 bg-black">
-         <div className="container">
-            <div className="text-center mb-5">
-               <h2 className="fw-900 text-white display-5">Simple Pricing.</h2>
-               <p className="fs-5 text-white-50">Start your 7-day free trial. Cancel anytime.</p>
+      <section id="pricing" className={styles.section_pad} style={{ background: 'white' }}>
+         <div className={styles.container}>
+            <div className={styles.text_center} style={{ marginBottom: '60px' }}>
+               <h2 style={{ fontSize: '42px', fontWeight: '800', marginBottom: '16px', color: '#0F172A' }}>
+                  Simple Pricing.
+               </h2>
+               <p style={{ fontSize: '18px', color: '#475569' }}>
+                  Start your 7-day free trial. Cancel anytime.
+               </p>
             </div>
 
-            <div className="row justify-content-center g-4 align-items-center">
-               {/* Starter */}
-               <div className="col-lg-4 col-md-6">
-                  <motion.div 
-                     whileHover={{ y: -5 }}
-                     className={`h-100 rounded-4 p-5 text-center ${styles.bg_glass} ${styles.feature_card} border border-white border-opacity-10`}
-                  >
-                     <div className="fw-bold text-white-50 text-uppercase small mb-3">Starter</div>
-                     <h2 className="display-4 fw-bold text-white mb-0">$49</h2>
-                     <span className="text-white-50 small">per month</span>
-                     <hr className="my-4 border-white opacity-10" />
-                     <ul className="list-unstyled text-start mb-5 d-inline-block mx-auto text-white-50">
-                        <li className="mb-3"><i className="fa-solid fa-check text-white me-2"></i> 500 Leads / Mo</li>
-                        <li className="mb-3"><i className="fa-solid fa-check text-white me-2"></i> County Search</li>
-                        <li className="mb-3"><i className="fa-solid fa-check text-white me-2"></i> Basic Filters</li>
-                     </ul>
-                     <Link href="/signup" className="btn btn-outline-light fw-bold w-100 py-3 rounded-pill">Start Free Trial</Link>
-                  </motion.div>
+            <div className={styles.bento_grid}>
+               
+               {/* 1. Starter */}
+               <div className={styles.box_card} style={{ borderColor: '#E2E8F0' }}>
+                  <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: '#0F172A', marginBottom: '8px' }}>Guest</h3>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px', marginBottom: '24px' }}>
+                     <span style={{ fontSize: '48px', fontWeight: '900', color: '#0F172A' }}>$0</span>
+                     <span style={{ color: '#64748B' }}>/mo</span>
+                  </div>
+                  <Link href="/search" style={{ display: 'block', width: '100%', padding: '14px', textAlign: 'center', borderRadius: '8px', border: '1px solid #E2E8F0', color: '#0F172A', fontWeight: '600', marginBottom: '32px' }}>
+                     Browse Leads
+                  </Link>
+                  <ul style={{ display: 'flex', flexDirection: 'column', gap: '16px', color: '#475569' }}>
+                     <li><i className="fa-solid fa-check me-2 text-dark"></i> Nationwide Search</li>
+                     <li><i className="fa-solid fa-check me-2 text-dark"></i> Basic Filters</li>
+                     <li style={{ opacity: 0.5, textDecoration: 'line-through' }}>Owner Phone Numbers</li>
+                  </ul>
                </div>
 
-               {/* PRO */}
-               <div className="col-lg-4 col-md-6">
-                  <motion.div 
-                     initial={{ scale: 1 }}
-                     whileHover={{ scale: 1.03 }}
-                     className="bg-white text-dark rounded-4 p-5 h-100 text-center position-relative overflow-hidden shadow-lg border border-white"
-                  >
-                     <div className="position-absolute top-0 start-0 w-100 bg-primary py-1 text-white small fw-bold text-uppercase">Recommended</div>
-                     <div className="fw-bold text-muted text-uppercase small mb-3 mt-3">Pro Investor</div>
-                     <h2 className="display-4 fw-bold text-dark mb-0">$99</h2>
-                     <span className="text-muted small">per month</span>
-                     <hr className="my-4 opacity-25" />
-                     <ul className="list-unstyled text-start mb-5 d-inline-block mx-auto text-dark fw-500">
-                        <li className="mb-3"><i className="fa-solid fa-check text-primary me-2"></i> <strong>5,000 Leads</strong> / Mo</li>
-                        <li className="mb-3"><i className="fa-solid fa-check text-primary me-2"></i> Nationwide Search</li>
-                        <li className="mb-3"><i className="fa-solid fa-check text-primary me-2"></i> <strong>Skip Tracing</strong> (100 credits)</li>
-                        <li className="mb-3"><i className="fa-solid fa-check text-primary me-2"></i> Equity Calculator</li>
-                     </ul>
-                     <Link href="/signup" className="btn btn-dark fw-bold w-100 py-3 rounded-pill text-uppercase shadow-lg">Get Started</Link>
-                  </motion.div>
+               {/* 2. Pro (Highlighted) */}
+               <motion.div 
+                  className={styles.box_card} 
+                  style={{ border: '2px solid #2563EB', background: '#F8FAFC' }}
+                  whileHover={{ y: -8 }}
+               >
+                  <div style={{ position: 'absolute', top: 0, right: 0, background: '#2563EB', color: 'white', fontSize: '11px', fontWeight: 'bold', padding: '6px 12px', borderRadius: '0 0 0 8px' }}>POPULAR</div>
+                  <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: '#2563EB', marginBottom: '8px' }}>Pro Investor</h3>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px', marginBottom: '24px' }}>
+                     <span style={{ fontSize: '48px', fontWeight: '900', color: '#0F172A' }}>$99</span>
+                     <span style={{ color: '#64748B' }}>/mo</span>
+                  </div>
+                  <Link href="/signup" style={{ display: 'block', width: '100%', padding: '14px', textAlign: 'center', borderRadius: '8px', background: '#2563EB', color: 'white', fontWeight: '600', marginBottom: '32px' }}>
+                     Start 7-Day Free Trial
+                  </Link>
+                  <ul style={{ display: 'flex', flexDirection: 'column', gap: '16px', color: '#0F172A', fontWeight: '500' }}>
+                     <li><i className="fa-solid fa-check me-2" style={{ color: '#2563EB' }}></i> <strong>Unlimited</strong> Searches</li>
+                     <li><i className="fa-solid fa-check me-2" style={{ color: '#2563EB' }}></i> <strong>Owner Phone & Email</strong></li>
+                     <li><i className="fa-solid fa-check me-2" style={{ color: '#2563EB' }}></i> Equity Calculator</li>
+                     <li><i className="fa-solid fa-check me-2" style={{ color: '#2563EB' }}></i> Daily "Fresh" Updates</li>
+                  </ul>
+               </motion.div>
+
+               {/* 3. Team */}
+               <div className={styles.box_card} style={{ borderColor: '#E2E8F0' }}>
+                  <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: '#0F172A', marginBottom: '8px' }}>Team</h3>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px', marginBottom: '24px' }}>
+                     <span style={{ fontSize: '48px', fontWeight: '900', color: '#0F172A' }}>$299</span>
+                     <span style={{ color: '#64748B' }}>/mo</span>
+                  </div>
+                  <Link href="/contact" style={{ display: 'block', width: '100%', padding: '14px', textAlign: 'center', borderRadius: '8px', border: '1px solid #E2E8F0', color: '#0F172A', fontWeight: '600', marginBottom: '32px' }}>
+                     Contact Sales
+                  </Link>
+                  <ul style={{ display: 'flex', flexDirection: 'column', gap: '16px', color: '#475569' }}>
+                     <li><i className="fa-solid fa-check me-2 text-dark"></i> 5 User Seats</li>
+                     <li><i className="fa-solid fa-check me-2 text-dark"></i> API Access</li>
+                     <li><i className="fa-solid fa-check me-2 text-dark"></i> Priority Support</li>
+                  </ul>
                </div>
+
             </div>
          </div>
-      </div>
+      </section>
    );
 };
 

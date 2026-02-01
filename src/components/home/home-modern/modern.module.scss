@@ -1,145 +1,226 @@
-// src/components/homes/home-modern/modern.module.scss
+// --- 1. DESIGN TOKENS (The "Titan" Palette) ---
+$primary: #2563EB;       // Electric Blue (Action)
+$primary-dark: #1E40AF;  // Deep Blue (Hover)
+$primary-dim: #EFF6FF;   // Light Blue (Backgrounds)
 
-// --- 1. Variables ---
-$primary: #3b82f6;       // Electric Blue
-$primary-dark: #1e40af;  // Deep Blue
-$text-main: #0f172a;     // Navy Black
-$text-sub: #475569;      // Slate Grey
-$bg-white: #ffffff;
+$text-main: #0F172A;     // Deep Navy (Headings)
+$text-body: #475569;     // Slate (Paragraphs)
+$text-muted: #94A3B8;    // Light Grey (Labels)
 
-// --- 2. Main Wrapper ---
+$bg-main: #FFFFFF;       // Pure White
+$bg-subtle: #F8FAFC;     // Off-White (Section BGs)
+$border: #E2E8F0;        // The "Boxy" Border (Critical)
+
+$success: #10B981;       // Profit Green
+$danger: #EF4444;        // Alert Red
+
+// --- 2. GLOBAL RESET & TYPOGRAPHY ---
 .modern_wrapper {
-    background-color: $bg-white;
+    background-color: $bg-main;
     color: $text-main;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    width: 100%;
+    min-height: 100vh;
     overflow-x: hidden;
     position: relative;
-    width: 100%;
+    -webkit-font-smoothing: antialiased; // Crisper text on Mac
 
-    // Cool Background Mesh
+    // Background Grid (Subtle Technical Feel)
     background-image: 
-        radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.05) 0px, transparent 50%),
-        radial-gradient(at 100% 100%, rgba(99, 102, 241, 0.05) 0px, transparent 50%);
-    background-attachment: fixed;
+        linear-gradient(to right, rgba(0,0,0,0.02) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0,0,0,0.02) 1px, transparent 1px);
+    background-size: 60px 60px;
 
-    // --- 3. Global Utility Overrides (Apply to children) ---
-    // These fix the "pt-150", "fs-12", "bg-blue-50" classes 
-    // without needing Tailwind.
-    
+    // Force styles to override any bootstrap conflicts
     :global {
-        // Spacing
-        .pt-150 { padding-top: 150px; }
-        .pb-100 { padding-bottom: 100px; }
-        .lg-pt-120 { @media(min-width: 992px) { padding-top: 120px; } }
-        
-        // Font Weights
-        .fw-500 { font-weight: 500; }
-        .fw-600 { font-weight: 600; }
-        .fw-900 { font-weight: 900; }
-        
-        // Font Sizes
-        .fs-12 { font-size: 12px; }
-        .fs-13 { font-size: 13px; }
-        .fs-14 { font-size: 14px; }
-        .fs-16 { font-size: 16px; }
-        .fs-18 { font-size: 18px; }
-        
-        // Colors & Backgrounds
-        .text-primary { color: $primary !important; }
-        .bg-primary { background-color: $primary !important; }
-        
-        .bg-blue-50 { background-color: #eff6ff !important; }
-        .border-blue-100 { border-color: #dbeafe !important; }
-        
-        .bg-green-50 { background-color: #f0fdf4 !important; }
-        .border-green-100 { border-color: #dcfce7 !important; }
-        
-        .bg-light { background-color: #f8fafc !important; }
-        
-        // Misc
-        .rounded-4 { border-radius: 20px !important; }
-        .shadow-lg { box-shadow: 0 10px 40px -10px rgba(0,0,0,0.1) !important; }
-        .cursor-pointer { cursor: pointer; }
+        h1, h2, h3, h4, h5 { color: $text-main !important; margin: 0; letter-spacing: -0.02em; line-height: 1.1; }
+        p { color: $text-body !important; line-height: 1.6; margin: 0; }
+        a { text-decoration: none; color: inherit; transition: all 0.2s; }
+        ul { padding: 0; list-style: none; margin: 0; }
+        button { border: none; outline: none; background: none; cursor: pointer; }
     }
 }
 
-// --- 4. Component Specific Styles ---
-
-.text_gradient {
-    background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    display: inline-block;
+// --- 3. LAYOUT UTILITIES ---
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    position: relative;
+    width: 100%;
 }
 
-// Glow Background for CTA
-.glow_bg {
-    position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    background: radial-gradient(circle, rgba(59,130,246,0.5) 0%, rgba(59,130,246,0) 70%);
-    pointer-events: none;
-    z-index: 0;
+.section_pad { padding: 120px 0; }
+
+.mb_24 { margin-bottom: 24px; }
+.mb_48 { margin-bottom: 48px; }
+.text_center { text-align: center; }
+
+// The "Boxy" Bento Grid
+.bento_grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    
+    @media (max-width: 992px) {
+        grid-template-columns: 1fr;
+    }
 }
 
-// Glassmorphism Card
-.bg_glass {
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+// Standard 2-Column Grid
+.grid_2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+
+    @media (max-width: 992px) {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
 }
 
-// --- 5. Animations ---
+// --- 4. COMPONENTS ---
 
-.anim_float { 
-    animation: float 6s ease-in-out infinite; 
+// The "Boxy" Card
+.box_card {
+    background: #fff;
+    border: 1px solid $border;
+    border-radius: 12px; // Slightly rounded, but still "boxy"
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    
+    // The "Hover Lift"
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px -5px rgba(0,0,0,0.06);
+        border-color: $primary;
+        z-index: 2;
+    }
 }
 
-.anim_pulse { 
-    animation: pulse_blue 2s infinite; 
-}
-
-.hover_scale:hover {
-    transform: scale(1.02);
-}
-
-@keyframes float {
-    0% { transform: translateY(0px); }
-    50% { transform: translateY(-15px); }
-    100% { transform: translateY(0px); }
-}
-
-@keyframes pulse_blue {
-    0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4); }
-    70% { box-shadow: 0 0 0 10px rgba(59, 130, 246, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
-}
-
-// Button Styling
-.btn_primary {
-    background: #0f172a; 
-    color: white;
-    padding: 12px 30px;
-    border-radius: 100px;
+// Badges
+.badge_pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 14px;
+    background: $primary-dim;
+    color: $primary;
+    font-size: 13px;
     font-weight: 600;
-    text-decoration: none;
+    border-radius: 100px;
+    margin-bottom: 24px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+// Buttons
+.btn_titan {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px 32px;
+    background: $text-main; // Stark Black
+    color: white !important;
+    font-weight: 600;
+    font-size: 16px;
+    border-radius: 8px; // Boxy button
     transition: all 0.3s ease;
-    display: inline-block;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 
     &:hover {
-        background: $primary;
-        color: white;
+        background: $primary; // Blue on hover
         transform: translateY(-2px);
-        box-shadow: 0 10px 20px -5px rgba(59, 130, 246, 0.4);
+        box-shadow: 0 12px 24px rgba(37, 99, 235, 0.3);
     }
 }
 
-.icon_box_blue {
-    width: 60px; height: 60px;
-    border-radius: 14px;
-    background: #eff6ff;
-    color: $primary;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 24px;
-    margin-bottom: 20px;
+// Hero Title
+.hero_title {
+    font-size: 72px;
+    font-weight: 900;
+    line-height: 1.05;
+    letter-spacing: -0.04em;
+    margin-bottom: 24px;
+    color: $text-main;
+
+    span { color: $primary; }
+    
+    @media (max-width: 768px) { font-size: 48px; }
+}
+
+// --- 5. TERMINAL & DEAL UI STYLES ---
+
+.font_mono {
+    font-family: 'SF Mono', 'Fira Code', 'Roboto Mono', monospace;
+    letter-spacing: -0.03em;
+}
+
+.terminal_cursor {
+    display: inline-block;
+    width: 2px;
+    height: 1.2em;
+    background-color: $primary;
+    animation: blink 1s step-end infinite;
+    vertical-align: middle;
+    margin-left: 2px;
+}
+
+.stat_value {
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    color: $text-main;
+}
+
+.stat_label {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: $text-muted;
+    letter-spacing: 0.05em;
+}
+
+// "Fake Browser" Visual
+.browser_window {
+    background: #fff;
+    border: 1px solid $border;
+    border-radius: 12px;
+    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.1);
+    overflow: hidden;
+
+    .browser_header {
+        background: $bg-subtle;
+        border-bottom: 1px solid $border;
+        padding: 12px 20px;
+        display: flex;
+        gap: 8px;
+        
+        div { width: 10px; height: 10px; border-radius: 50%; background: #CBD5E1; }
+    }
+    
+    .browser_body {
+        padding: 0;
+    }
+}
+
+// --- 6. MODAL (The "Poppins") ---
+.poppin_modal {
+    position: fixed;
+    bottom: 30px; right: 30px;
+    width: 380px;
+    background: #fff;
+    border: 1px solid $border;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+    z-index: 9999;
+}
+
+// --- 7. ANIMATIONS ---
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
 }

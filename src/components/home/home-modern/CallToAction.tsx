@@ -1,23 +1,22 @@
-// src/components/homes/home-modern/CallToAction.tsx
+"use client"
 import Link from "next/link";
 import React from "react";
 
 const CallToAction = ({ styles }: { styles: any }) => {
    return (
-      <div className="py-5 text-center position-relative overflow-hidden" style={{marginTop: '50px', marginBottom: '100px'}}>
-         {/* Center Glow */}
-         <div className={styles.glow_bg} style={{ width: '600px', height: '600px', opacity: 0.4 }}></div>
-         
-         <div className="container position-relative z-1 border-top border-white border-opacity-10 pt-5">
-            <h2 className="text-white fw-900 display-4 mb-4">Ready to start digging?</h2>
-            <p className="text-white-50 fs-5 mb-5 col-lg-6 mx-auto">
-               Join 15,000+ investors using 99Sellers to find their next flip or wholesale deal.
+      <section className={styles.section_pad} style={{ background: '#2563EB', textAlign: 'center' }}>
+         <div className="container">
+            <h2 style={{ fontSize: '48px', fontWeight: '900', color: 'white', marginBottom: '24px' }}>
+               Ready to find your next deal?
+            </h2>
+            <p style={{ fontSize: '20px', color: 'rgba(255,255,255,0.9)', maxWidth: '600px', margin: '0 auto 40px auto' }}>
+               Join 15,000+ investors using 99Sellers to find off-market opportunities before they hit the MLS.
             </p>
-            <Link href="/search" className="btn btn-primary rounded-pill px-5 py-3 fw-bold fs-5 shadow-lg">
-               Launch Dashboard <i className="fa-light fa-arrow-right ms-2"></i>
+            <Link href="/search" className="btn btn-light rounded-pill px-5 py-3 fw-bold fs-5 shadow-lg" style={{ background: 'white', color: '#2563EB', border: 'none' }}>
+               Launch Dashboard
             </Link>
          </div>
-      </div>
+      </section>
    );
 };
 
