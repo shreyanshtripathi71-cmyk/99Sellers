@@ -1,15 +1,10 @@
-import DashboardMembership from "@/components/dashboard/membership";
-import Wrapper from "@/layouts/Wrapper";
+import React from 'react';
+import MembershipArea from '@/components/dashboard/membership/MembershipArea';
 
-export const metadata = {
-   title: "Dashboard Membership HOZN - Real Estate React Next js",
-};
-const index = () => {
+const MembershipPage = () => {
    return (
-      <Wrapper>
-         <DashboardMembership />
-      </Wrapper>
-   )
-}
+      <MembershipArea />
+   );
+};
 
-export default index
+export default MembershipPage;

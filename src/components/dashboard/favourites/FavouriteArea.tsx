@@ -1,111 +1,116 @@
 "use client"
-import UseShortedProperty from "@/hooks/useShortedProperty";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import ReactPaginate from "react-paginate";
+import useLeadPagination from "@/hooks/useLeadPagination";
+import DashboardHeaderTwo from "@/layouts/headers/dashboard/DashboardHeaderTwo";
 
-import icon from "@/assets/images/icon/icon_46.svg"
-import featureIcon_1 from "@/assets/images/icon/icon_04.svg"
-import featureIcon_2 from "@/assets/images/icon/icon_05.svg"
-import featureIcon_3 from "@/assets/images/icon/icon_06.svg"
+// FIX: Added 'zip', 'state', 'county', 'auction_date' to match the 'Lead' interface logic
+const fav_leads: any[] = [
+   { id: 1, address: "1234 Maple Ave", city: "Dallas", state: "TX", zip: "75001", county: "Dallas", price: 150000, status: "Foreclosure", auction_date: "Oct 24, 2023" },
+   { id: 2, address: "5678 Oak Lane", city: "Austin", state: "TX", zip: "78001", county: "Travis", price: 320000, status: "Tax Default", auction_date: "Oct 22, 2023" },
+   { id: 3, address: "999 Pine St", city: "Houston", state: "TX", zip: "77001", county: "Harris", price: 85000, status: "Divorce", auction_date: "Oct 20, 2023" },
+   { id: 4, address: "444 Elm Dr", city: "San Antonio", state: "TX", zip: "78201", county: "Bexar", price: 210000, status: "Pre-Foreclosure", auction_date: "Oct 18, 2023" },
+   { id: 5, address: "777 Cedar Rd", city: "Miami", state: "FL", zip: "33101", county: "Dade", price: 450000, status: "Auction", auction_date: "Oct 15, 2023" },
+];
 
 const FavouriteArea = () => {
+   // Pagination Hook
+   const { currentItems, pageCount, handlePageClick } = useLeadPagination(fav_leads, 8);
 
-   const itemsPerPage = 9;
-   const page = "listing_4";
-
-   const {
-      itemOffset,
-      sortedProperties,
-      currentItems,
-      pageCount,
-      handlePageClick,
-      handleBathroomChange,
-      handleBedroomChange,
-      handleSearchChange,
-      handlePriceChange,
-      maxPrice,
-      priceValue,
-      resetFilters,
-      selectedAmenities,
-      handleAmenityChange,
-      handleLocationChange,
-      handleStatusChange,
-      handleTypeChange,
-      handlePriceDropChange
-   } = UseShortedProperty({ itemsPerPage, page });
-
-   const handleResetFilter = () => {
-      resetFilters();
-   };
+   const [mounted, setMounted] = useState(false);
+   useEffect(() => setMounted(true), []);
+   if (!mounted) return null;
 
    return (
-      <>
-         <div className="row gx-xxl-5">
-            {currentItems.map((item: any) => (
-               <div key={item.id} className="col-lg-4 col-md-6 d-flex mb-50 wow fadeInUp" data-wow-delay={item.data_delay_time}>
-                  <div className="listing-card-one border-25 h-100 w-100 ">
-                     <div className="img-gallery p-15">
-                        <div className="position-relative border-25 overflow-hidden">
-                           <div className={`tag border-25 ${item.tag_bg}`}>{item.tag}</div>
-                           <Link href="#" className="fav-btn tran3s"><i className="fa-light fa-heart"></i></Link>
-                           <div id={`carousel${item.carousel}`} className="carousel slide">
-                              <div className="carousel-indicators">
-                                 <button type="button" data-bs-target={`#carousel${item.carousel}`} data-bs-slide-to="0" className="active" aria-current="true" aria-label="Slide 1"></button>
-                                 <button type="button" data-bs-target={`#carousel${item.carousel}`} data-bs-slide-to="1" aria-label="Slide 2"></button>
-                                 <button type="button" data-bs-target={`#carousel${item.carousel}`} data-bs-slide-to="2" aria-label="Slide 3"></button>
-                              </div>
-                              <div className="carousel-inner">
-                                 {item.carousel_thumb.map((item: any, i: any) => (
-                                    <div key={i} className={`carousel-item ${item.active}`} data-bs-interval="1000000">
-                                       <Link href="/listing_details_01" className="d-block"><Image src={item.img} className="w-100" alt="..." /></Link>
-                                    </div>
-                                 ))}
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                     <div className="property-info p-25">
-                        <Link href="/listing_details_03" className="title tran3s">{item.title}</Link>
-                        <div className="address">{item.address}</div>
-                        <ul className="style-none feature d-flex flex-wrap align-items-center justify-content-between">
-                           <li className="d-flex align-items-center">
-                              <Image src={featureIcon_1} alt=""
-                                 className="lazy-img icon me-2" />
-                              <span className="fs-16">{item.property_info.sqft} sqft</span>
-                           </li>
-                           <li className="d-flex align-items-center">
-                              <Image src={featureIcon_2} alt=""
-                                 className="lazy-img icon me-2" />
-                              <span className="fs-16">{item.property_info.bed} bed</span>
-                           </li>
-                           <li className="d-flex align-items-center">
-                              <Image src={featureIcon_3} alt=""
-                                 className="lazy-img icon me-2" />
-                              <span className="fs-16">{item.property_info.bath} bath</span>
-                           </li>
-                        </ul>
-                        <div className="pl-footer top-border d-flex align-items-center justify-content-between">
-                           <strong className="price fw-500 color-dark">${item.price.toLocaleString({ minimumFractionDigits: 2, maximumFractionDigits: 2 })} {item.price_text && <>/ <sub>m</sub></>}</strong>
-                           <Link href="/listing_details_03" className="btn-four rounded-circle"><i className="bi bi-arrow-up-right"></i></Link>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-            ))}
+      <div className="d-flex w-100 min-vh-100 bg-light overflow-hidden">
+         
+         <div className="flex-shrink-0">
+            <DashboardHeaderTwo />
          </div>
 
-         <ReactPaginate
-            breakLabel="..."
-            nextLabel={<Image src={icon} alt="" className="ms-2" />}
-            onPageChange={handlePageClick}
-            pageRangeDisplayed={pageCount}
-            pageCount={pageCount}
-            previousLabel={<Image src={icon} alt="" className="ms-2" />}
-            renderOnZeroPageCount={null}
-            className="pagination-one d-flex align-items-center style-none pt-20"
-         />
-      </>
+         <div className="flex-grow-1 d-flex flex-column" style={{ overflowX: "hidden" }}>
+            <div className="h-100 p-4 p-xl-5 overflow-auto">
+               
+               <div className="d-flex align-items-center justify-content-between mb-30 lg-mb-20">
+                  <div>
+                     <h3 className="fw-bold text-dark m0">Saved Leads</h3>
+                     <p className="fs-16 text-muted m0">Manage your shortlisted properties.</p>
+                  </div>
+                  <Link href="/search" className="btn-five text-uppercase rounded-3 fw-600 fs-14 shadow-sm">
+                     <i className="fa-light fa-plus me-2"></i> Add New
+                  </Link>
+               </div>
+
+               <div className="bg-white border-20 p-4 shadow-sm">
+                  <div className="table-responsive">
+                     <table className="table table-hover align-middle custom-table-2">
+                        <thead>
+                           <tr className="text-uppercase fs-11 text-muted bg-light">
+                              <th className="py-3 ps-3 rounded-start">Property</th>
+                              <th className="py-3">Status</th>
+                              <th className="py-3">Est. Equity</th>
+                              <th className="py-3">Date Added</th>
+                              <th className="py-3 text-end pe-3 rounded-end">Action</th>
+                           </tr>
+                        </thead>
+                        <tbody className="border-top-0">
+                           {currentItems.map((item: any) => (
+                              <tr key={item.id}>
+                                 <td className="ps-3">
+                                    <div className="d-flex align-items-center">
+                                       <div className="icon-box rounded-3 bg-light d-flex align-items-center justify-content-center me-3 text-dark" 
+                                            style={{width: 40, height: 40, fontSize: '18px'}}>
+                                          <i className="fa-light fa-house"></i>
+                                       </div>
+                                       <div>
+                                          <h6 className="m-0 fs-14 fw-bold text-dark">{item.address}</h6>
+                                          <span className="text-muted fs-12">{item.city}, {item.state}</span>
+                                       </div>
+                                    </div>
+                                 </td>
+                                 <td>
+                                    <span className={`badge px-2 py-1 rounded-pill fw-600 border fs-12 ${
+                                       item.status === 'Foreclosure' ? 'bg-danger-subtle text-danger border-danger-subtle' : 
+                                       'bg-warning-subtle text-dark border-warning-subtle'
+                                    }`}>
+                                       {item.status}
+                                    </span>
+                                 </td>
+                                 <td>
+                                    <div className="text-success fw-bold fs-14">${item.price.toLocaleString()}</div>
+                                 </td>
+                                 <td className="text-dark fs-14">{item.auction_date}</td>
+                                 <td className="text-end pe-3">
+                                    <button className="btn-four rounded-circle p-0 d-inline-flex align-items-center justify-content-center transition-3s me-2" 
+                                          title="Remove" style={{width: 30, height: 30}}>
+                                       <i className="fa-light fa-trash text-danger"></i>
+                                    </button>
+                                 </td>
+                              </tr>
+                           ))}
+                        </tbody>
+                     </table>
+                  </div>
+
+                  <div className="d-flex justify-content-end mt-4">
+                     <ReactPaginate
+                        breakLabel="..."
+                        nextLabel={<i className="fa-regular fa-chevron-right"></i>}
+                        onPageChange={handlePageClick}
+                        pageRangeDisplayed={3}
+                        pageCount={pageCount}
+                        previousLabel={<i className="fa-regular fa-chevron-left"></i>}
+                        renderOnZeroPageCount={null}
+                        className="pagination-one d-flex align-items-center justify-content-center style-none"
+                        pageClassName="page-item"
+                        activeClassName="active"
+                     />
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
    )
 }
 

@@ -2,7 +2,7 @@
 import Link from "next/link"
 import ReactPaginate from "react-paginate"
 import NiceSelect from "@/ui/NiceSelect"
-import UseShortedProperty from "@/hooks/useShortedProperty"
+import UseShortedProperty from "@/hooks/useLeadPagination.ts"
 import DropdownSeven from "@/components/search-dropdown/inner-dropdown/DropdownSeven"
 import { useState } from "react"
 import Fancybox from "@/components/common/Fancybox"

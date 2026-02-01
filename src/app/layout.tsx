@@ -14,13 +14,16 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning={isDev}>
       <head>
-        <meta name="keywords" content="Real estate, Property sale, Property buy" />
-        <meta name="description" content="HOZN is a beautiful website designed for Real Estate Agency." />
-        <meta property="og:site_name" content="HOZN" />
-        <meta property="og:url" content="https://creativegigstf.com" />
+        <meta name="keywords" content="Real estate, Off-market leads, Distressed property, Foreclosures, Investor data" />
+        <meta name="description" content="99Sellers - The #1 Platform for Off-Market Real Estate Leads. Find Foreclosures, Tax Defaults, and Divorce listings instantly." />
+        <meta property="og:site_name" content="99Sellers" />
+        <meta property="og:url" content="https://99sellers.com" />
         <meta property="og:type" content="website" />
-        <meta property="og:title" content="HOZN - Real Estate React Next js" />
+        <meta property="og:title" content="99Sellers - Investor Data & Off-Market Leads" />
+        
+        {/* You can update this image later with your own OpenGraph image */}
         <meta name='og:image' content='images/assets/ogg.png' />
+        
         {/* For IE  */}
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
         {/* For Resposive Device */}
@@ -32,11 +35,15 @@ export default function RootLayout({
         <meta name="msapplication-navbutton-color" content="#0D1A1C" />
         {/* iOS Safari */}
         <meta name="apple-mobile-web-app-status-bar-style" content="#0D1A1C" />
+        
         <link rel="icon" href="/favicon.png" sizes="any" />
+        
+        {/* Keep the fonts or change them if you have a specific brand font */}
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500&display=swap" />
       </head>
       <body suppressHydrationWarning={true}>
         <div className="main-page-wrapper">
+          {/* This Provider is CRITICAL for your Lead Search Table to work */}
           <Provider store={store}>
             {children}
           </Provider>

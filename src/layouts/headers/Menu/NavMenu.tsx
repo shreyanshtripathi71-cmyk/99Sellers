@@ -3,13 +3,27 @@ import menu_data from "@/data/home-data/MenuData";
 import Link from "next/link.js";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import logo from "@/assets/images/logo/logo_01.svg";
 
 const NavMenu = () => {
     const pathname = usePathname();
     const [navTitle, setNavTitle] = useState("");
+    
+    // NEW: User State
+    const [user, setUser] = useState<any>(null);
+
+    useEffect(() => {
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+            try {
+                setUser(JSON.parse(storedUser));
+            } catch (e) {
+                console.error("Error parsing user data");
+            }
+        }
+    }, []);
 
     const openMobileMenu = (menu: any) => {
         if (navTitle === menu) {
@@ -28,11 +42,24 @@ const NavMenu = () => {
                     </Link>
                 </div>
             </li>
+
+            {/* 1. Always Visible Dashboard Link (For Investors) */}
             <li className="nav-item dashboard-menu">
-                <Link className="nav-link" href="/dashboard/dashboard-index" target="_blank">
+                <Link className="nav-link" href="/dashboard/dashboard-index">
                     Dashboard
                 </Link>
             </li>
+
+            {/* 2. CONDITIONAL: Admin Link */}
+            {user?.UserType === 'Admin' && (
+                <li className="nav-item">
+                    <Link className="nav-link text-danger fw-bold" href="/admin/dashboard">
+                        Admin Panel
+                    </Link>
+                </li>
+            )}
+
+            {/* 3. Standard Menu Items from MenuData.ts */}
             {menu_data.map((menu: any) => (
                 <li
                     key={menu.id}
@@ -46,6 +73,8 @@ const NavMenu = () => {
                     >
                         {menu.title}
                     </Link>
+                    
+                    {/* Dropdown Logic */}
                     {menu.has_dropdown && menu.title !== "Home" && (
                         <ul className={`dropdown-menu ${navTitle === menu.title ? "show" : ""}`}>
                             {menu.sub_menus &&
@@ -59,29 +88,6 @@ const NavMenu = () => {
                                         </Link>
                                     </li>
                                 ))}
-                            {menu.menu_column && (
-                                <li className="row gx-1">
-                                    {menu.menu_column.map((item: any) => (
-                                        <div key={item.id} className="col-lg-4">
-                                            <div className="menu-column">
-                                                <h6 className="mega-menu-title">{item.mega_title}</h6>
-                                                <ul className="style-none mega-dropdown-list">
-                                                    {item.mega_menus.map((mega_m: any, i: any) => (
-                                                        <li key={i}>
-                                                            <Link
-                                                                href={mega_m.link}
-                                                                className={`dropdown-item ${pathname === mega_m.link ? "active" : ""}`}
-                                                            >
-                                                                <span>{mega_m.title}</span>
-                                                            </Link>
-                                                        </li>
-                                                    ))}
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </li>
-                            )}
                         </ul>
                     )}
                 </li>

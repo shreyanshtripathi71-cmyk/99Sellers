@@ -1,15 +1,10 @@
-import DashboardProfile from "@/components/dashboard/profile";
-import Wrapper from "@/layouts/Wrapper";
+import React from 'react';
+import ProfileArea from '@/components/dashboard/profile/ProfileArea';
 
-export const metadata = {
-   title: "Dashboard Profile HOZN - Real Estate React Next js",
-};
-const index = () => {
+const ProfilePage = () => {
    return (
-      <Wrapper>
-         <DashboardProfile />
-      </Wrapper>
-   )
-}
+      <ProfileArea />
+   );
+};
 
-export default index
+export default ProfilePage;

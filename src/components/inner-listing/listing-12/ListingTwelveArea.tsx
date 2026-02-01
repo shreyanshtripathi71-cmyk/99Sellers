@@ -1,5 +1,5 @@
 "use client"
-import UseShortedProperty from "@/hooks/useShortedProperty";
+import UseShortedProperty from "@/hooks/useLeadPagination.ts";
 import DropdownFive from "@/components/search-dropdown/inner-dropdown/DropdownFive";
 import ListingTwoArea from "../listing-02/ListingTwoArea";
 

@@ -1,15 +1,6 @@
-import DashboardFavourite from "@/components/dashboard/favourites";
-import Wrapper from "@/layouts/Wrapper";
+import React from 'react';
+import FavouriteArea from '@/components/dashboard/favourites/FavouriteArea';
 
-export const metadata = {
-   title: "Dashboard Favourite HOZN - Real Estate React Next js",
-};
-const index = () => {
-   return (
-      <Wrapper>
-         <DashboardFavourite />
-      </Wrapper>
-   )
+export default function FavouritesPage() {
+   return <FavouriteArea />;
 }
-
-export default index

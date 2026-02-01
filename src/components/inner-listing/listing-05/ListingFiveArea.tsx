@@ -3,7 +3,7 @@ import Image from "next/image"
 import Link from "next/link"
 import ReactPaginate from "react-paginate"
 import NiceSelect from "@/ui/NiceSelect"
-import UseShortedProperty from "@/hooks/useShortedProperty"
+import UseShortedProperty from "@/hooks/useLeadPagination.ts"
 import DropdownOne from "@/components/search-dropdown/inner-dropdown/DropdownOne"
 
 import icon from "@/assets/images/icon/icon_46.svg"

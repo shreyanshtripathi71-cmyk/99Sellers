@@ -1,6 +1,6 @@
 "use client"
 import DropdownThree from "@/components/search-dropdown/inner-dropdown/DropdownThree";
-import UseShortedProperty from "@/hooks/useShortedProperty";
+import UseShortedProperty from "@/hooks/useLeadPagination.ts";
 import NiceSelect from "@/ui/NiceSelect";
 import Link from "next/link";
 import Image from "next/image";

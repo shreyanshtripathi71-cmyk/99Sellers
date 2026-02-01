@@ -1,51 +1,75 @@
 "use client"
-import Image from "next/image"
 import Link from "next/link"
-import Notification from "./Notification";
-import Profile from "./Profile";
-import { useState } from "react";
-import DashboardHeaderOne from "./DashboardHeaderOne";
+import React from "react"
+import { usePathname } from "next/navigation"
 
-import dashboardIcon_1 from "@/assets/images/dashboard/icon/icon_43.svg";
-import dashboardIcon_2 from "@/assets/images/dashboard/icon/icon_11.svg";
-import dashboardAvatar from "@/assets/images/dashboard/avatar_01.jpg";
+const DashboardHeaderTwo = ({ isActive, setIsActive }: any) => {
+   const pathname = usePathname();
 
-const DashboardHeaderTwo = ({title}:any) => {
-
-   const [isActive, setIsActive] = useState<boolean>(false);
+   const menuItems = [
+      { title: "Dashboard", link: "/dashboard/dashboard-index", icon: "fa-light fa-grid-2" },
+      { title: "Search Leads", link: "/search", icon: "fa-light fa-search" },
+      { title: "Saved Leads", link: "/dashboard/favourites", icon: "fa-light fa-heart" },
+      { title: "Saved Searches", link: "/dashboard/saved-search", icon: "fa-light fa-bookmark" },
+      { title: "Membership", link: "/dashboard/membership", icon: "fa-light fa-credit-card-front" },
+      { title: "Profile", link: "/dashboard/profile", icon: "fa-light fa-user-gear" },
+   ];
 
    return (
-      <>
-         <header className="dashboard-header">
-            <div className="d-flex align-items-center justify-content-end">
-               <h4 className="m0 d-none d-lg-block">{title}</h4>
-               <button onClick={() => setIsActive(true)} className="dash-mobile-nav-toggler d-block d-md-none me-auto">
-                  <span></span>
-               </button>
-               <form onSubmit={(e) => e.preventDefault()} className="search-form ms-auto">
-                  <input type="text" placeholder="Search here.." />
-                  <button><Image src={dashboardIcon_1} alt="" className="lazy-img m-auto" /></button>
-               </form>
-               <div className="profile-notification position-relative dropdown-center ms-3 ms-md-5 me-4">
-                  <button className="noti-btn dropdown-toggle" type="button" id="notification-dropdown" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
-                     <Image src={dashboardIcon_2} alt="" className="lazy-img" />
-                     <div className="badge-pill"></div>
-                  </button>
-                  <Notification />
-               </div>
-               <div className="d-none d-md-block me-3">
-                  <Link href="/add-property" className="btn-two"><span>Add Listing</span> <i className="fa-thin fa-arrow-up-right"></i></Link>
-               </div>
-               <div className="user-data position-relative">
-                  <button className="user-avatar online position-relative rounded-circle dropdown-toggle" type="button" id="profile-dropdown" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
-                     <Image src={dashboardAvatar} alt="" className="lazy-img" />
-                  </button>
-                  <Profile />
+      <aside 
+         className={`dash-aside-navbar ${isActive ? "show" : ""} bg-white border-end`} 
+         style={{
+            width: "280px",
+            minWidth: "280px",
+            height: "100vh",
+            position: "sticky", 
+            top: 0
+         }}
+      >
+         <div className="d-flex flex-column h-100">
+            <div className="logo px-4 pt-4 pb-4 mb-2">
+               <Link href="/" className="d-block text-decoration-none">
+                  <h4 className="fw-bold m-0 text-dark tracking-tight text-nowrap">
+                     99Sellers<span className="text-primary">.</span>
+                  </h4>
+               </Link>
+            </div>
+            
+            <nav className="dasboard-main-nav px-3 flex-grow-1">
+               <ul className="style-none">
+                  {menuItems.map((item, index) => {
+                     const isActiveLink = pathname === item.link;
+                     return (
+                        <li key={index} className="mb-2">
+                           <Link 
+                              href={item.link} 
+                              // FIX: Added text-decoration-none and border-0 to kill the line
+                              className={`d-flex align-items-center px-3 py-3 rounded-3 transition-3s fw-500 text-decoration-none border-0
+                                 ${isActiveLink 
+                                    ? "bg-dark text-white shadow-lg" 
+                                    : "text-muted hover-bg-light text-dark-hover"
+                                 }`}
+                           >
+                              <i className={`${item.icon} fs-5 me-3 ${isActiveLink ? "text-white" : "text-dark"}`}></i>
+                              <span className="fs-16">{item.title}</span>
+                           </Link>
+                        </li>
+                     )
+                  })}
+               </ul>
+            </nav>
+
+            <div className="px-4 pb-4 pt-3 mt-auto">
+               <Link href="#" className="d-flex align-items-center justify-content-center px-3 py-3 rounded-3 text-danger bg-danger-subtle hover-bg-danger hover-text-white transition-3s fw-600 text-decoration-none">
+                  <i className="fa-light fa-arrow-right-from-bracket me-2"></i>
+                  <span>Sign Out</span>
+               </Link>
+               <div className="mt-3 text-center">
+                  <p className="fs-12 text-muted m-0 opacity-75">v2.4.0 (Pro)</p>
                </div>
             </div>
-         </header>
-         <DashboardHeaderOne isActive={isActive} setIsActive={setIsActive} />
-      </>
+         </div>
+      </aside>
    )
 }
 

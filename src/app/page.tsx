@@ -1,15 +1,18 @@
+import React from "react";
+import Wrapper from "@/layouts/Wrapper"; // Assuming you have this layout wrapper
+import ModernHome from "@/components/home/home-modern"; // Fixed path to 'homes'
 
-import Wrapper from "@/layouts/Wrapper";
-import HomeTwo from "@/components/homes/home-two";
 export const metadata = {
-  title: "HOZN - Real Estate React Next js",
+  title: "99Sellers - The #1 Off-Market Lead Finder",
+  description: "Find off-market real estate deals including foreclosure, divorce, and tax liens.",
 };
-const index = () => {
+
+const MainRoot = () => {
   return (
     <Wrapper>
-      <HomeTwo />
+      <ModernHome />
     </Wrapper>
   )
 }
 
-export default index
+export default MainRoot;

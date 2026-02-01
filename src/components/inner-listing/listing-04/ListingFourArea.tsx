@@ -1,6 +1,6 @@
 "use client"
 import DropdownTwo from "@/components/search-dropdown/inner-dropdown/DropdownTwo";
-import UseShortedProperty from "@/hooks/useShortedProperty";
+import UseShortedProperty from "@/hooks/useLeadPagination.ts";
 import NiceSelect from "@/ui/NiceSelect";
 import Link from "next/link";
 import ReactPaginate from "react-paginate";

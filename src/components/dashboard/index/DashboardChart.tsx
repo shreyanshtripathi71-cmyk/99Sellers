@@ -1,42 +1,99 @@
 "use client"
-import { Bar } from 'react-chartjs-2';
-import 'chart.js/auto';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler // Import Filler for Area Charts
+} from 'chart.js';
+import { Line } from 'react-chartjs-2';
 
-const BarChart = () => {
-  // Sample data for the bar chart
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler
+);
+
+const DashboardChart = () => {
   const data = {
-    labels: ['Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
     datasets: [
       {
-        label: 'Total View',
-        width: "14px",
-        backgroundColor: '#ff6725',
-        borderColor: '#ff6725',
-        borderWidth: 1,
-        hoverBackgroundColor: '#ff6725',
-        hoverBorderColor: '#ff6725',
-        data: [20000, 12000, 6000, 16000, 10000, 5000, 11000],
+        label: 'Equity Potential ($)',
+        data: [120000, 190000, 150000, 250000, 220000, 300000, 380000],
+        fill: true, // Fill area under line
+        backgroundColor: (context: any) => {
+          const ctx = context.chart.ctx;
+          const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+          gradient.addColorStop(0, 'rgba(25, 135, 84, 0.2)'); // Green
+          gradient.addColorStop(1, 'rgba(25, 135, 84, 0.0)');
+          return gradient;
+        },
+        borderColor: '#198754', // Bootstrap Success Green
+        borderWidth: 2,
+        tension: 0.4, // Smooth curve
+        pointBackgroundColor: '#fff',
+        pointBorderColor: '#198754',
+        pointBorderWidth: 2,
+        pointRadius: 4,
+        pointHoverRadius: 6,
       },
     ],
   };
 
-  // Bar chart options
   const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+       legend: { display: false },
+       tooltip: {
+          backgroundColor: '#fff',
+          titleColor: '#000',
+          bodyColor: '#666',
+          borderColor: '#e5e7eb',
+          borderWidth: 1,
+          padding: 10,
+          displayColors: false,
+          callbacks: {
+             label: function(context: any) {
+                return ' $' + context.raw.toLocaleString();
+             }
+          }
+       }
+    },
     scales: {
       y: {
-        // type: 'linear',
         beginAtZero: true,
+        border: { display: false },
+        grid: { color: '#f3f3f3', drawBorder: false },
+        ticks: { 
+           color: '#999',
+           font: { size: 11 },
+           callback: function(value: any) {
+              return '$' + value / 1000 + 'k';
+           }
+        }
       },
+      x: {
+         border: { display: false },
+         grid: { display: false },
+         ticks: { color: '#999', font: { size: 11 } }
+      }
     },
   };
 
   return (
-    <>
-      <Bar data={data} options={options} />
-    </>
+    <Line data={data} options={options} />
   );
 };
 
-export default BarChart;
-
-
+export default DashboardChart;

@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import DropdownSix from '@/components/search-dropdown/inner-dropdown/DropdownSix';
-import UseShortedProperty from '@/hooks/useShortedProperty';
+import UseShortedProperty from '@/hooks/useLeadPagination.ts';
 import NiceSelect from '@/ui/NiceSelect';
 import Image from 'next/image';
 import ReactPaginate from 'react-paginate';

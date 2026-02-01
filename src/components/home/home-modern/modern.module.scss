@@ -1,0 +1,145 @@
+// src/components/homes/home-modern/modern.module.scss
+
+// --- 1. Variables ---
+$primary: #3b82f6;       // Electric Blue
+$primary-dark: #1e40af;  // Deep Blue
+$text-main: #0f172a;     // Navy Black
+$text-sub: #475569;      // Slate Grey
+$bg-white: #ffffff;
+
+// --- 2. Main Wrapper ---
+.modern_wrapper {
+    background-color: $bg-white;
+    color: $text-main;
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+    position: relative;
+    width: 100%;
+
+    // Cool Background Mesh
+    background-image: 
+        radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.05) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(99, 102, 241, 0.05) 0px, transparent 50%);
+    background-attachment: fixed;
+
+    // --- 3. Global Utility Overrides (Apply to children) ---
+    // These fix the "pt-150", "fs-12", "bg-blue-50" classes 
+    // without needing Tailwind.
+    
+    :global {
+        // Spacing
+        .pt-150 { padding-top: 150px; }
+        .pb-100 { padding-bottom: 100px; }
+        .lg-pt-120 { @media(min-width: 992px) { padding-top: 120px; } }
+        
+        // Font Weights
+        .fw-500 { font-weight: 500; }
+        .fw-600 { font-weight: 600; }
+        .fw-900 { font-weight: 900; }
+        
+        // Font Sizes
+        .fs-12 { font-size: 12px; }
+        .fs-13 { font-size: 13px; }
+        .fs-14 { font-size: 14px; }
+        .fs-16 { font-size: 16px; }
+        .fs-18 { font-size: 18px; }
+        
+        // Colors & Backgrounds
+        .text-primary { color: $primary !important; }
+        .bg-primary { background-color: $primary !important; }
+        
+        .bg-blue-50 { background-color: #eff6ff !important; }
+        .border-blue-100 { border-color: #dbeafe !important; }
+        
+        .bg-green-50 { background-color: #f0fdf4 !important; }
+        .border-green-100 { border-color: #dcfce7 !important; }
+        
+        .bg-light { background-color: #f8fafc !important; }
+        
+        // Misc
+        .rounded-4 { border-radius: 20px !important; }
+        .shadow-lg { box-shadow: 0 10px 40px -10px rgba(0,0,0,0.1) !important; }
+        .cursor-pointer { cursor: pointer; }
+    }
+}
+
+// --- 4. Component Specific Styles ---
+
+.text_gradient {
+    background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+}
+
+// Glow Background for CTA
+.glow_bg {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, rgba(59,130,246,0.5) 0%, rgba(59,130,246,0) 70%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+// Glassmorphism Card
+.bg_glass {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+// --- 5. Animations ---
+
+.anim_float { 
+    animation: float 6s ease-in-out infinite; 
+}
+
+.anim_pulse { 
+    animation: pulse_blue 2s infinite; 
+}
+
+.hover_scale:hover {
+    transform: scale(1.02);
+}
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-15px); }
+    100% { transform: translateY(0px); }
+}
+
+@keyframes pulse_blue {
+    0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(59, 130, 246, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+}
+
+// Button Styling
+.btn_primary {
+    background: #0f172a; 
+    color: white;
+    padding: 12px 30px;
+    border-radius: 100px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: inline-block;
+
+    &:hover {
+        background: $primary;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px -5px rgba(59, 130, 246, 0.4);
+    }
+}
+
+.icon_box_blue {
+    width: 60px; height: 60px;
+    border-radius: 14px;
+    background: #eff6ff;
+    color: $primary;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+}

@@ -1,7 +1,7 @@
 "use client"
 import Fancybox from "@/components/common/Fancybox";
 import DropdownSeven from "@/components/search-dropdown/inner-dropdown/DropdownSeven"
-import UseShortedProperty from "@/hooks/useShortedProperty";
+import UseShortedProperty from "@/hooks/useLeadPagination.ts";
 import NiceSelect from "@/ui/NiceSelect";
 import Image from "next/image";
 import Link from "next/link";

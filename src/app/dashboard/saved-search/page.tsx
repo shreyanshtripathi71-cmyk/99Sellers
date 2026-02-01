@@ -1,15 +1,6 @@
-import DashboardSavedSearch from "@/components/dashboard/saved-search";
-import Wrapper from "@/layouts/Wrapper";
+import React from 'react';
+import SavedSearchArea from '@/components/dashboard/saved-search/SavedSearchArea';
 
-export const metadata = {
-   title: "Dashboard Saved Search HOZN - Real Estate React Next js",
-};
-const index = () => {
-   return (
-      <Wrapper>
-         <DashboardSavedSearch />
-      </Wrapper>
-   )
+export default function SavedSearchPage() {
+   return <SavedSearchArea />;
 }
-
-export default index

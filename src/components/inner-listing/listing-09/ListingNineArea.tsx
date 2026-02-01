@@ -1,7 +1,7 @@
 "use client"
 import DropdownFour from "@/components/search-dropdown/inner-dropdown/DropdownFour"
 import ListingSevenArea from "../listing-07/ListingSevenArea"
-import UseShortedProperty from "@/hooks/useShortedProperty";
+import UseShortedProperty from "@/hooks/useLeadPagination.ts";
 
 const ListingNineArea = () => {
 
