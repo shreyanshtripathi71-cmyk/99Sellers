@@ -5,7 +5,7 @@ import LiveDemo from "./LiveDemo";
 import Pricing from "./Pricing";
 import CallToAction from "./CallToAction";
 import MarketingPoppins from "./MarketingPoppins";
-import PublicHeader from "@/layouts/headers/PublicHeader";
+import PublicHeader from "../../../layouts/headers/PublicHeader";
 import styles from "./modern.module.scss"; 
 
 const ModernHome = () => {

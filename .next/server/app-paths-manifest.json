@@ -1,4 +1,7 @@
 {
+  "/search/page": "app/search/page.js",
   "/page": "app/page.js",
-  "/search/page": "app/search/page.js"
+  "/[...not-found]/page": "app/[...not-found]/page.js",
+  "/dashboard/saved-search/page": "app/dashboard/saved-search/page.js",
+  "/dashboard/profile/page": "app/dashboard/profile/page.js"
 }

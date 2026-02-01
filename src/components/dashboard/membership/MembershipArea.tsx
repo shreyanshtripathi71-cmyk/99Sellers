@@ -1,56 +1,48 @@
 "use client"
 import React from "react";
-import DashboardHeaderTwo from "@/layouts/headers/dashboard/DashboardHeaderTwo";
+import styles from "@/components/search/dashboard.module.scss"; // Reuse Styles
+import Link from "next/link";
 
 const MembershipArea = () => {
    return (
-      <div className="d-flex w-100 min-vh-100 bg-light overflow-hidden">
-         
-         {/* Sidebar */}
-         <div className="flex-shrink-0">
-            <DashboardHeaderTwo />
-         </div>
+      <div className={styles.dashboard_layout}>
+         <aside className={styles.sidebar}>
+            <Link href="/" className={styles.logo_area}>
+                <div style={{width: 18, height: 18, background: '#2563EB', borderRadius: 4}}></div>
+                99Sellers.
+            </Link>
+            <nav className={styles.nav_menu}>
+               <Link href="/search" className={styles.nav_item}><i className="fa-solid fa-list"></i> Search List</Link>
+               <div className={`${styles.nav_item} ${styles.active}`}><i className="fa-solid fa-credit-card"></i> Membership</div>
+            </nav>
+         </aside>
 
-         {/* Content */}
-         <div className="flex-grow-1 d-flex flex-column" style={{ overflowX: "hidden" }}>
-            <div className="h-100 p-4 p-xl-5 overflow-auto">
-               
-               <h3 className="fw-bold text-dark mb-4">Membership Plan</h3>
+         <main className={styles.main_content}>
+            <header className={styles.top_header}>
+               <h3>Subscription & Billing</h3>
+            </header>
 
-               <div className="row">
-                  {/* Current Plan */}
-                  <div className="col-lg-6 mb-4">
-                     <div className="card-box border-20 bg-dark text-white p-5 shadow-lg position-relative overflow-hidden">
-                        <div className="position-absolute top-0 end-0 m-4 opacity-25">
-                           <i className="fa-light fa-crown" style={{ fontSize: '100px' }}></i>
-                        </div>
-                        <h5 className="text-white-50 text-uppercase tracking-wide mb-2">Current Plan</h5>
-                        <h1 className="fw-bold mb-3 display-4">Pro Investor</h1>
-                        <p className="fs-18 opacity-75 mb-4">Unlimited Searches • Daily Alerts • CSV Exports</p>
-                        <button className="btn btn-light text-dark fw-bold rounded-pill px-4 py-2">Manage Subscription</button>
+            <div className={styles.scroll_area}>
+               <div style={{ maxWidth: '800px' }}>
+                  
+                  {/* CURRENT PLAN CARD */}
+                  <div style={{ background: 'white', border: '1px solid #E2E8F0', borderRadius: '12px', padding: '32px', marginBottom: '32px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                     <div>
+                        <span className={styles.badge + " " + styles.badge_blue} style={{ marginBottom: '12px' }}>Current Plan</span>
+                        <h2 style={{ fontSize: '24px', fontWeight: '800', color: '#0F172A', margin: '0 0 8px 0' }}>Pro Investor</h2>
+                        <p style={{ color: '#64748B', fontSize: '14px' }}>$99.00 / month • Next billing on Feb 14, 2026</p>
+                     </div>
+                     <div style={{ display: 'flex', gap: '12px' }}>
+                        <button className={styles.btn_details}>Cancel Subscription</button>
+                        <button className={styles.btn_primary_small}>Update Card</button>
                      </div>
                   </div>
 
-                  {/* Payment Method */}
-                  <div className="col-lg-6 mb-4">
-                     <div className="card-box border-20 bg-white p-5 shadow-sm h-100">
-                        <h5 className="fw-bold text-dark mb-4">Payment Method</h5>
-                        <div className="d-flex align-items-center border rounded-3 p-3 mb-3">
-                           <i className="fa-brands fa-cc-visa fs-1 text-primary me-3"></i>
-                           <div>
-                              <div className="fw-bold text-dark">Visa ending in 4242</div>
-                              <div className="text-muted fs-14">Expires 12/28</div>
-                           </div>
-                        </div>
-                        <button className="btn-line fw-600 text-primary">Update Card</button>
-                     </div>
-                  </div>
                </div>
-
             </div>
-         </div>
+         </main>
       </div>
-   )
-}
+   );
+};
 
 export default MembershipArea;
