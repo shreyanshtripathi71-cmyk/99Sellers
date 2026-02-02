@@ -18,61 +18,6 @@
       "static/css/app/signin/page.css",
       "static/chunks/app/signin/page.js"
     ],
-    "/admin/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/admin/page.js"
-    ],
-    "/admin/layout": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/admin/layout.js"
-    ],
-    "/admin/analytics/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/admin/analytics/page.js"
-    ],
-    "/admin/users/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/admin/users/page.js"
-    ],
-    "/admin/subscriptions/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/admin/subscriptions/page.js"
-    ],
-    "/admin/poppins/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/admin/poppins/page.js"
-    ],
-    "/admin/properties/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/admin/properties/page.js"
-    ],
-    "/admin/auctions/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/admin/auctions/page.js"
-    ],
-    "/admin/data-import/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/admin/data-import/page.js"
-    ],
-    "/admin/crawler/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/admin/crawler/page.js"
-    ],
-    "/admin/settings/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/admin/settings/page.js"
-    ],
     "/search/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
@@ -84,40 +29,11 @@
       "static/chunks/main-app.js",
       "static/chunks/app/search/layout.js"
     ],
-    "/dashboard/layout": [
+    "/property/[id]/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/dashboard/layout.js"
-    ],
-    "/dashboard/saved-leads/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/dashboard/saved-leads/page.css",
-      "static/chunks/app/dashboard/saved-leads/page.js"
-    ],
-    "/dashboard/saved-searches/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/dashboard/saved-searches/page.css",
-      "static/chunks/app/dashboard/saved-searches/page.js"
-    ],
-    "/dashboard/export/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/dashboard/export/page.css",
-      "static/chunks/app/dashboard/export/page.js"
-    ],
-    "/dashboard/profile/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/dashboard/profile/page.css",
-      "static/chunks/app/dashboard/profile/page.js"
-    ],
-    "/dashboard/billing/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/dashboard/billing/page.css",
-      "static/chunks/app/dashboard/billing/page.js"
+      "static/css/app/property/[id]/page.css",
+      "static/chunks/app/property/[id]/page.js"
     ],
     "/dashboard/subscription/page": [
       "static/chunks/webpack.js",
@@ -125,17 +41,10 @@
       "static/css/app/dashboard/subscription/page.css",
       "static/chunks/app/dashboard/subscription/page.js"
     ],
-    "/dashboard/account-settings/page": [
+    "/dashboard/layout": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/css/app/dashboard/account-settings/page.css",
-      "static/chunks/app/dashboard/account-settings/page.js"
-    ],
-    "/property/[id]/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/property/[id]/page.css",
-      "static/chunks/app/property/[id]/page.js"
+      "static/chunks/app/dashboard/layout.js"
     ]
   }
 }

@@ -5,18 +5,14 @@ const xlsx = require('xlsx');
 
 /**
  * Import data from CSV/Excel file to database
+ * Automatically detects and imports properties, owners, auctions, and loans
  */
 exports.importData = async (req, res) => {
     try {
-        const { target } = req.body;
         const file = req.file;
 
         if (!file) {
             return res.status(400).json({ error: 'No file uploaded' });
-        }
-
-        if (!target) {
-            return res.status(400).json({ error: 'Import target not specified' });
         }
 
         let data = [];
@@ -33,18 +29,24 @@ exports.importData = async (req, res) => {
             return res.status(400).json({ error: 'Unsupported file format. Use CSV or Excel.' });
         }
 
-        // Import to appropriate table
-        const result = await importToTable(target, data);
+        // Automatically parse and import all entity types
+        const result = await parseAndImportAll(data);
 
         // Clean up uploaded file
         fs.unlinkSync(filePath);
 
         res.status(200).json({
             success: true,
-            totalRows: data.length,
-            imported: result.imported,
-            failed: result.failed,
-            errors: result.errors
+            message: 'Data imported successfully',
+            stats: {
+                totalRows: data.length,
+                properties: result.properties.imported,
+                owners: result.owners.imported,
+                auctions: result.auctions.imported,
+                loans: result.loans.imported,
+                errors: result.totalErrors
+            },
+            errors: result.allErrors
         });
 
     } catch (error) {
@@ -75,6 +77,93 @@ function parseExcel(filePath) {
     const sheetName = workbook.SheetNames[0];
     const sheet = workbook.Sheets[sheetName];
     return xlsx.utils.sheet_to_json(sheet);
+}
+
+/**
+ * Parse and import all entity types from a single CSV file
+ * Detects properties, owners, auctions, and loans based on column patterns
+ */
+async function parseAndImportAll(data) {
+    const results = {
+        properties: { imported: 0, failed: 0, errors: [] },
+        owners: { imported: 0, failed: 0, errors: [] },
+        auctions: { imported: 0, failed: 0, errors: [] },
+        loans: { imported: 0, failed: 0, errors: [] },
+        totalErrors: 0,
+        allErrors: []
+    };
+
+    // Categorize rows by entity type based on column presence
+    const categorizedData = {
+        properties: [],
+        owners: [],
+        auctions: [],
+        loans: []
+    };
+
+    // Property indicators: address, city, state, zip, property-specific fields
+    const propertyColumns = ['address', 'city', 'state', 'zip', 'propertytype', 'bedrooms', 'bathrooms', 'squarefeet', 'yearbuilt', 'price', 'county', 'apn', 'lotsize'];
+    // Owner indicators: owner name, owner contact info
+    const ownerColumns = ['ownername', 'firstname', 'lastname', 'email', 'phone', 'contact', 'owneraddress'];
+    // Auction indicators: auction date, bid, auction status
+    const auctionColumns = ['auctiondate', 'auctiontime', 'startingbid', 'auctionstatus', 'auctioneer', 'saletype', 'openingbid'];
+    // Loan indicators: loan amount, lender, interest rate
+    const loanColumns = ['loanamount', 'loantype', 'interestrate', 'lendername', 'lender', 'mortgageamount', 'deedtype'];
+
+    for (const row of data) {
+        const lowerKeys = Object.keys(row).map(k => k.toLowerCase().replace(/[^a-z]/g, ''));
+        
+        // Check if row contains property data
+        if (propertyColumns.some(col => lowerKeys.includes(col))) {
+            categorizedData.properties.push(row);
+        }
+        
+        // Check if row contains owner data
+        if (ownerColumns.some(col => lowerKeys.includes(col))) {
+            categorizedData.owners.push(row);
+        }
+        
+        // Check if row contains auction data
+        if (auctionColumns.some(col => lowerKeys.includes(col))) {
+            categorizedData.auctions.push(row);
+        }
+        
+        // Check if row contains loan data
+        if (loanColumns.some(col => lowerKeys.includes(col))) {
+            categorizedData.loans.push(row);
+        }
+    }
+
+    // Import each category
+    if (categorizedData.properties.length > 0) {
+        const result = await importToTable('properties', categorizedData.properties);
+        results.properties = result;
+        results.totalErrors += result.failed;
+        results.allErrors.push(...result.errors);
+    }
+
+    if (categorizedData.owners.length > 0) {
+        const result = await importToTable('owners', categorizedData.owners);
+        results.owners = result;
+        results.totalErrors += result.failed;
+        results.allErrors.push(...result.errors);
+    }
+
+    if (categorizedData.auctions.length > 0) {
+        const result = await importToTable('auctions', categorizedData.auctions);
+        results.auctions = result;
+        results.totalErrors += result.failed;
+        results.allErrors.push(...result.errors);
+    }
+
+    if (categorizedData.loans.length > 0) {
+        const result = await importToTable('loans', categorizedData.loans);
+        results.loans = result;
+        results.totalErrors += result.failed;
+        results.allErrors.push(...result.errors);
+    }
+
+    return results;
 }
 
 /**

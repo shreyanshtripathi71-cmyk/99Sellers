@@ -97,6 +97,36 @@ export const authAPI = {
     removeToken();
   },
 
+  // User profile management
+  getProfile: async () => {
+    const response = await fetchWithAuth('/api/user/profile');
+    return handleResponse<any>(response);
+  },
+
+  updateProfile: async (data: {
+    firstName?: string;
+    lastName?: string;
+    phone?: string;
+    address?: string;
+    city?: string;
+    state?: string;
+    zip?: string;
+  }) => {
+    const response = await fetchWithAuth('/api/user/profile', {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+    return handleResponse<any>(response);
+  },
+
+  changePassword: async (currentPassword: string, newPassword: string) => {
+    const response = await fetchWithAuth('/api/user/change-password', {
+      method: 'PUT',
+      body: JSON.stringify({ currentPassword, newPassword }),
+    });
+    return handleResponse<{ message: string }>(response);
+  },
+
   getToken,
   setToken,
   removeToken,
@@ -170,6 +200,44 @@ export const auctionsAPI = {
   getLive: async () => {
     const response = await fetchWithAuth('/api/auctions');
     return handleResponse<Auction[]>(response);
+  },
+};
+
+// ============================================
+// SAVED LEADS / FAVORITES API
+// ============================================
+export const savedLeadsAPI = {
+  getAll: async () => {
+    const response = await fetchWithAuth('/api/user/saved-leads');
+    return handleResponse<any[]>(response);
+  },
+  
+  save: async (type: 'property' | 'auction' | 'owner' | 'loan', itemId: number) => {
+    const response = await fetchWithAuth('/api/user/saved-leads', {
+      method: 'POST',
+      body: JSON.stringify({ type, itemId }),
+    });
+    return handleResponse<{ message: string }>(response);
+  },
+  
+  remove: async (id: number) => {
+    const response = await fetchWithAuth(`/api/user/saved-leads/${id}`, {
+      method: 'DELETE',
+    });
+    return handleResponse<{ message: string }>(response);
+  },
+  
+  export: async (format: 'csv' | 'excel') => {
+    const token = getToken();
+    const response = await fetch(`${API_BASE_URL}/api/user/saved-leads/export?format=${format}`, {
+      headers: token ? { 'Authorization': `Bearer ${token}` } : {},
+    });
+    
+    if (response.ok) {
+      const blob = await response.blob();
+      return { success: true, data: blob };
+    }
+    return { success: false, error: 'Export failed' };
   },
 };
 
@@ -300,9 +368,98 @@ export const subscriptionAPI = {
     });
     return handleResponse<{ message: string }>(response);
   },
+  
+  getBillingHistory: async () => {
+    const response = await fetchWithAuth('/api/subscription/billing-history');
+    return handleResponse<any[]>(response);
+  },
+  
+  getInvoice: async (invoiceId: string) => {
+    const response = await fetchWithAuth(`/api/subscription/invoices/${invoiceId}`);
+    return handleResponse<any>(response);
+  },
 };
 
 // ============================================
+// NOTIFICATIONS API
+// ============================================
+export const notificationsAPI = {
+  getAll: async () => {
+    const response = await fetchWithAuth('/api/user/notifications');
+    return handleResponse<any[]>(response);
+  },
+  
+  markAsRead: async (id: number) => {
+    const response = await fetchWithAuth(`/api/user/notifications/${id}/read`, {
+      method: 'PUT',
+    });
+    return handleResponse<{ message: string }>(response);
+  },
+  
+  markAllAsRead: async () => {
+    const response = await fetchWithAuth('/api/user/notifications/read-all', {
+      method: 'PUT',
+    });
+    return handleResponse<{ message: string }>(response);
+  },
+  
+  delete: async (id: number) => {
+    const response = await fetchWithAuth(`/api/user/notifications/${id}`, {
+      method: 'DELETE',
+    });
+    return handleResponse<{ message: string }>(response);
+  },
+  
+  getPreferences: async () => {
+    const response = await fetchWithAuth('/api/user/notification-preferences');
+    return handleResponse<any>(response);
+  },
+  
+    updatePreferences: async (preferences: any) => {
+    const response = await fetchWithAuth('/api/user/notification-preferences', {
+      method: 'PUT',
+      body: JSON.stringify(preferences),
+    });
+    return handleResponse<{ message: string }>(response);
+  },
+};
+
+// ============================================
+// DASHBOARD & ANALYTICS API
+// ============================================
+export const dashboardAPI = {
+  getStats: async () => {
+    const response = await fetchWithAuth('/api/user/dashboard/stats');
+    return handleResponse<any>(response);
+  },
+  
+  getRecentActivity: async (limit = 10) => {
+    const response = await fetchWithAuth(`/api/user/dashboard/activity?limit=${limit}`);
+    return handleResponse<any[]>(response);
+  },
+  
+  getSearchHistory: async (limit = 20) => {
+    const response = await fetchWithAuth(`/api/user/search-history?limit=${limit}`);
+    return handleResponse<any[]>(response);
+  },
+  
+  clearSearchHistory: async () => {
+    const response = await fetchWithAuth('/api/user/search-history', {
+      method: 'DELETE',
+    });
+    return handleResponse<{ message: string }>(response);
+  },
+};
+
+// ============================================
+// PUBLIC POPPINS API
+// ============================================
+export const poppinsAPI = {
+  getActive: async () => {
+    const response = await fetchWithAuth('/api/poppins');
+    return handleResponse<any[]>(response);
+  },
+};// ============================================
 // ADMIN API
 // ============================================
 export const adminAPI = {
@@ -506,6 +663,39 @@ export const adminAPI = {
       const response = await fetchWithAuth('/api/admin/subscriptions/stats');
       return handleResponse<any>(response);
     },
+    getPlans: async () => {
+      const response = await fetchWithAuth('/api/admin/subscriptions/plans');
+      return handleResponse<any[]>(response);
+    },
+    createOrUpdatePlan: async (data: any) => {
+      const response = await fetchWithAuth('/api/admin/subscriptions/plans', {
+        method: 'POST',
+        body: JSON.stringify(data),
+      });
+      return handleResponse<any>(response);
+    },
+    deletePlan: async (id: number) => {
+      const response = await fetchWithAuth(`/api/admin/subscriptions/plans/${id}`, {
+        method: 'DELETE',
+      });
+      return handleResponse<{ message: string }>(response);
+    },
+    getUserSubscription: async (userId: number) => {
+      const response = await fetchWithAuth(`/api/admin/subscriptions/user/${userId}`);
+      return handleResponse<any>(response);
+    },
+    createTrialForUser: async (userId: number) => {
+      const response = await fetchWithAuth(`/api/admin/subscriptions/user/${userId}/trial`, {
+        method: 'POST',
+      });
+      return handleResponse<any>(response);
+    },
+    cancelUserSubscription: async (userId: number) => {
+      const response = await fetchWithAuth(`/api/admin/subscriptions/user/${userId}/cancel`, {
+        method: 'PUT',
+      });
+      return handleResponse<any>(response);
+    },
     cancel: async (id: number) => {
       const response = await fetchWithAuth(`/api/admin/subscriptions/${id}/cancel`, {
         method: 'PUT',
@@ -532,6 +722,63 @@ export const adminAPI = {
       return handleResponse<any[]>(response);
     },
   },
+
+  // Data Import/Export
+  dataImport: {
+    import: async (formData: FormData) => {
+      const token = getToken();
+      const response = await fetch(`${API_BASE_URL}/api/admin/import`, {
+        method: 'POST',
+        headers: token ? { 'Authorization': `Bearer ${token}` } : {},
+        body: formData,
+      });
+      return handleResponse<any>(response);
+    },
+    getTemplate: async (target: string) => {
+      const response = await fetchWithAuth(`/api/admin/import/template/${target}`);
+      return handleResponse<any>(response);
+    },
+  },
+
+  // Settings
+  settings: {
+    get: async () => {
+      const response = await fetchWithAuth('/api/admin/settings');
+      return handleResponse<any>(response);
+    },
+    update: async (data: any) => {
+      const response = await fetchWithAuth('/api/admin/settings', {
+        method: 'PUT',
+        body: JSON.stringify(data),
+      });
+      return handleResponse<any>(response);
+    },
+    checkDownloadAccess: async () => {
+      const response = await fetchWithAuth('/api/admin/settings/download-access');
+      return handleResponse<any>(response);
+    },
+  },
+
+  // Poppins (Popups)
+  poppins: {
+    getAll: async () => {
+      const response = await fetchWithAuth('/api/admin/poppins');
+      return handleResponse<any[]>(response);
+    },
+    save: async (data: any) => {
+      const response = await fetchWithAuth('/api/admin/poppins', {
+        method: 'POST',
+        body: JSON.stringify(data),
+      });
+      return handleResponse<any>(response);
+    },
+    delete: async (id: number) => {
+      const response = await fetchWithAuth(`/api/admin/poppins/${id}`, {
+        method: 'DELETE',
+      });
+      return handleResponse<{ message: string }>(response);
+    },
+  },
 };
 
 // Export all APIs
@@ -539,7 +786,11 @@ export default {
   auth: authAPI,
   properties: propertiesAPI,
   auctions: auctionsAPI,
+  savedLeads: savedLeadsAPI,
   premium: premiumAPI,
   subscription: subscriptionAPI,
+  notifications: notificationsAPI,
+  dashboard: dashboardAPI,
+  poppins: poppinsAPI,
   admin: adminAPI,
 };

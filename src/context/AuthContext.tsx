@@ -154,12 +154,15 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const login = async (email: string, password: string): Promise<{ success: boolean; message: string; userType?: string }> => {
     try {
+      console.log("Attempting login to:", API_BASE_URL + "/api/login");
       const response = await fetch(API_BASE_URL + "/api/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
 
+      console.log("Login response status:", response.status);
+      
       if (response.ok) {
         const data = await response.json();
         const tokenPayload = JSON.parse(atob(data.token.split(".")[1]));
@@ -197,16 +200,24 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         return { success: true, message: "Login successful", userType: data.userType };
       } else {
         const error = await response.json();
+        console.log("Login failed with error:", error);
         return { success: false, message: error.error || "Invalid credentials" };
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Login error:", error);
-      return { success: false, message: "Unable to connect to server. Please try again." };
+      console.error("Error name:", error?.name);
+      console.error("Error message:", error?.message);
+      // Provide more specific error messages
+      if (error?.name === "TypeError" && error?.message?.includes("fetch")) {
+        return { success: false, message: "Server is not running. Please start the backend server." };
+      }
+      return { success: false, message: "Unable to connect to server. Please check your connection and try again." };
     }
   };
 
   const register = async (data: { firstName: string; lastName: string; email: string; password: string }): Promise<{ success: boolean; message: string; userType?: string }> => {
     try {
+      console.log("Attempting registration to:", API_BASE_URL + "/api/register");
       const response = await fetch(API_BASE_URL + "/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -218,6 +229,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         }),
       });
 
+      console.log("Register response status:", response.status);
+      
       if (response.ok) {
         const loginResult = await login(data.email, data.password);
         if (loginResult.success) {
@@ -232,11 +245,17 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         return loginResult;
       } else {
         const error = await response.json();
+        console.log("Registration failed with error:", error);
         return { success: false, message: error.error || "Registration failed" };
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Registration error:", error);
-      return { success: false, message: "Unable to connect to server. Please try again." };
+      console.error("Error name:", error?.name);
+      console.error("Error message:", error?.message);
+      if (error?.name === "TypeError" && error?.message?.includes("fetch")) {
+        return { success: false, message: "Server is not running. Please start the backend server." };
+      }
+      return { success: false, message: "Unable to connect to server. Please check your connection and try again." };
     }
   };
 

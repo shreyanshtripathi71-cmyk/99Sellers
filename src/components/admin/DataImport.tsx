@@ -1,31 +1,28 @@
 "use client";
 
 import React, { useState, useRef } from "react";
-import { toast } from "react-toastify";
+import { adminAPI } from "@/services/api";
 
 interface ImportResult {
   success: boolean;
-  totalRows: number;
-  imported: number;
-  failed: number;
+  message: string;
+  stats: {
+    totalRows: number;
+    properties: number;
+    owners: number;
+    auctions: number;
+    loans: number;
+    errors: number;
+  };
   errors: string[];
 }
 
-const IMPORT_TARGETS = [
-  { id: "properties", name: "Properties", icon: "fa-building", description: "Import property listings" },
-  { id: "owners", name: "Owners", icon: "fa-user-tie", description: "Import owner information" },
-  { id: "auctions", name: "Auctions", icon: "fa-gavel", description: "Import auction data" },
-  { id: "loans", name: "Loans", icon: "fa-money-bill-wave", description: "Import loan records" },
-  { id: "users", name: "Users", icon: "fa-users", description: "Import user accounts" },
-];
-
 const DataImport = () => {
-  const [selectedTarget, setSelectedTarget] = useState<string>("properties");
   const [file, setFile] = useState<File | null>(null);
   const [importing, setImporting] = useState(false);
-  const [preview, setPreview] = useState<any[] | null>(null);
   const [result, setResult] = useState<ImportResult | null>(null);
   const [dragActive, setDragActive] = useState(false);
+  const [preview, setPreview] = useState<string[][] | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleDrag = (e: React.DragEvent) => {
@@ -48,15 +45,15 @@ const DataImport = () => {
     }
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      handleFile(e.target.files[0]);
+    }
+  };
+
   const handleFile = (selectedFile: File) => {
-    const validTypes = [
-      "text/csv",
-      "application/vnd.ms-excel",
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    ];
-    
-    if (!validTypes.includes(selectedFile.type) && !selectedFile.name.endsWith(".csv")) {
-      toast.error("Please upload a CSV or Excel file");
+    if (!selectedFile.name.endsWith(".csv") && selectedFile.type !== "text/csv") {
+      alert("Please upload a CSV file");
       return;
     }
     
@@ -66,16 +63,21 @@ const DataImport = () => {
   };
 
   const parsePreview = async (file: File) => {
-    // Simple CSV preview parser
-    const text = await file.text();
-    const lines = text.split("\n").slice(0, 6); // Header + 5 rows
-    const parsed = lines.map(line => line.split(",").map(cell => cell.trim().replace(/^"|"$/g, "")));
-    setPreview(parsed);
+    try {
+      const text = await file.text();
+      const lines = text.split("\n").slice(0, 11); // Header + 10 rows
+      const parsed = lines.map(line => 
+        line.split(",").map(cell => cell.trim().replace(/^"|"$/g, ""))
+      );
+      setPreview(parsed);
+    } catch (error) {
+      console.error("Preview error:", error);
+    }
   };
 
   const handleImport = async () => {
     if (!file) {
-      toast.error("Please select a file first");
+      alert("Please select a file first");
       return;
     }
 
@@ -85,32 +87,28 @@ const DataImport = () => {
     try {
       const formData = new FormData();
       formData.append("file", file);
-      formData.append("target", selectedTarget);
 
-      // Simulate API call - in production this would be a real endpoint
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      const response = await adminAPI.dataImport.import(formData);
 
-      // Mock result
-      const mockResult: ImportResult = {
-        success: true,
-        totalRows: Math.floor(Math.random() * 100) + 50,
-        imported: Math.floor(Math.random() * 90) + 40,
-        failed: Math.floor(Math.random() * 10),
-        errors: [],
-      };
-      mockResult.errors = mockResult.failed > 0 
-        ? [`Row 12: Invalid email format`, `Row 45: Missing required field 'address'`]
-        : [];
-
-      setResult(mockResult);
-      toast.success(`Successfully imported ${mockResult.imported} records!`);
+      if (response.success) {
+        setResult(response.data);
+        alert("Data imported successfully!");
+      } else {
+        alert(response.error || "Import failed");
+        setResult({
+          success: false,
+          message: response.error || "Import failed",
+          stats: { totalRows: 0, properties: 0, owners: 0, auctions: 0, loans: 0, errors: 0 },
+          errors: [response.error || "Unknown error"],
+        });
+      }
     } catch (error) {
-      toast.error("Import failed. Please try again.");
+      console.error("Import error:", error);
+      alert("An error occurred during import");
       setResult({
         success: false,
-        totalRows: 0,
-        imported: 0,
-        failed: 0,
+        message: "Connection error",
+        stats: { totalRows: 0, properties: 0, owners: 0, auctions: 0, loans: 0, errors: 0 },
         errors: ["Connection error. Please try again."],
       });
     } finally {
@@ -128,67 +126,55 @@ const DataImport = () => {
   };
 
   return (
-    <div style={{ padding: 32 }}>
+    <div style={{ padding: 32, backgroundColor: "#f8fafc", minHeight: "100vh" }}>
+      {/* Header */}
       <div style={{ marginBottom: 32 }}>
-        <h2 style={{ fontSize: 24, fontWeight: 600, color: "#0f172a", marginBottom: 8 }}>
+        <h1 style={{ fontSize: 28, fontWeight: 700, color: "#0f172a", margin: 0 }}>
           Data Import
-        </h2>
-        <p style={{ color: "#64748b", fontSize: 14 }}>
-          Upload CSV or Excel files to import data directly to the database
+        </h1>
+        <p style={{ color: "#64748b", marginTop: 4 }}>
+          Upload your daily CSV file containing all property, auction, owner, and loan data
         </p>
       </div>
 
-      {/* Target Selection */}
+      {/* Info Card */}
       <div style={{
-        background: "#fff",
+        background: "#dbeafe",
+        border: "1px solid #3b82f6",
         borderRadius: 12,
-        padding: 24,
+        padding: 20,
         marginBottom: 24,
-        boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
       }}>
-        <h3 style={{ fontSize: 16, fontWeight: 600, color: "#0f172a", marginBottom: 16 }}>
-          1. Select Import Target
-        </h3>
-        
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: 12 }}>
-          {IMPORT_TARGETS.map((target) => (
-            <button
-              key={target.id}
-              onClick={() => setSelectedTarget(target.id)}
-              style={{
-                padding: 16,
-                border: selectedTarget === target.id ? "2px solid #3b82f6" : "1px solid #e2e8f0",
-                borderRadius: 8,
-                background: selectedTarget === target.id ? "#eff6ff" : "#fff",
-                cursor: "pointer",
-                textAlign: "left",
-              }}
-            >
-              <i className={`fa-solid ${target.icon}`} style={{ 
-                color: selectedTarget === target.id ? "#3b82f6" : "#64748b",
-                fontSize: 20,
-                marginBottom: 8,
-                display: "block",
-              }} />
-              <div style={{ fontWeight: 600, color: "#0f172a", marginBottom: 4 }}>{target.name}</div>
-              <div style={{ fontSize: 12, color: "#64748b" }}>{target.description}</div>
-            </button>
-          ))}
+        <div style={{ display: "flex", gap: 12, alignItems: "start" }}>
+          <i className="fa-solid fa-circle-info" style={{ color: "#3b82f6", fontSize: 20, marginTop: 2 }}></i>
+          <div>
+            <h3 style={{ margin: 0, fontSize: 16, fontWeight: 600, color: "#1e40af", marginBottom: 8 }}>
+              How it works
+            </h3>
+            <ul style={{ margin: 0, paddingLeft: 20, color: "#1e40af" }}>
+              <li>Upload a single CSV file containing all your data</li>
+              <li>The system will automatically parse and categorize the data</li>
+              <li>Properties, auctions, owners, and loans will be extracted</li>
+              <li>Duplicate entries will be automatically handled</li>
+              <li>You'll receive a detailed import report after processing</li>
+            </ul>
+          </div>
         </div>
       </div>
 
-      {/* File Upload */}
+      {/* Upload Section */}
       <div style={{
         background: "#fff",
-        borderRadius: 12,
-        padding: 24,
+        borderRadius: 16,
+        padding: 32,
+        boxShadow: "0 1px 3px rgba(0,0,0,0.08)",
         marginBottom: 24,
-        boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
       }}>
-        <h3 style={{ fontSize: 16, fontWeight: 600, color: "#0f172a", marginBottom: 16 }}>
-          2. Upload File
-        </h3>
-        
+        <h2 style={{ fontSize: 18, fontWeight: 600, color: "#0f172a", marginBottom: 20 }}>
+          Upload CSV File
+        </h2>
+
+        {/* Drop Zone */}
         <div
           onDragEnter={handleDrag}
           onDragLeave={handleDrag}
@@ -196,245 +182,243 @@ const DataImport = () => {
           onDrop={handleDrop}
           onClick={() => fileInputRef.current?.click()}
           style={{
-            border: `2px dashed ${dragActive ? "#3b82f6" : "#d1d5db"}`,
+            border: `2px dashed ${dragActive ? "#3b82f6" : "#cbd5e1"}`,
             borderRadius: 12,
-            padding: 40,
+            padding: 48,
             textAlign: "center",
-            background: dragActive ? "#eff6ff" : "#f8fafc",
             cursor: "pointer",
+            background: dragActive ? "#eff6ff" : "#f8fafc",
             transition: "all 0.2s",
           }}
         >
           <input
             ref={fileInputRef}
             type="file"
-            accept=".csv,.xlsx,.xls"
-            onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])}
+            accept=".csv,text/csv"
+            onChange={handleFileChange}
             style={{ display: "none" }}
           />
           
-          {file ? (
-            <>
-              <i className="fa-solid fa-file-csv" style={{ fontSize: 48, color: "#22c55e", marginBottom: 16 }} />
-              <div style={{ fontWeight: 600, color: "#0f172a", marginBottom: 8 }}>{file.name}</div>
-              <div style={{ color: "#64748b", fontSize: 14 }}>
-                {(file.size / 1024).toFixed(1)} KB
-              </div>
-              <button
-                onClick={(e) => { e.stopPropagation(); resetForm(); }}
-                style={{
-                  marginTop: 16,
-                  padding: "8px 16px",
-                  background: "#fee2e2",
-                  color: "#dc2626",
-                  border: "none",
-                  borderRadius: 6,
-                  cursor: "pointer",
-                  fontSize: 13,
-                }}
-              >
-                <i className="fa-solid fa-times me-2"></i>
-                Remove
-              </button>
-            </>
-          ) : (
-            <>
-              <i className="fa-solid fa-cloud-arrow-up" style={{ fontSize: 48, color: "#94a3b8", marginBottom: 16 }} />
-              <div style={{ fontWeight: 600, color: "#0f172a", marginBottom: 8 }}>
-                Drop your file here or click to browse
-              </div>
-              <div style={{ color: "#64748b", fontSize: 14 }}>
-                Supports CSV, XLS, XLSX files up to 10MB
-              </div>
-            </>
+          <i
+            className="fa-solid fa-cloud-arrow-up"
+            style={{ fontSize: 48, color: dragActive ? "#3b82f6" : "#94a3b8", marginBottom: 16 }}
+          ></i>
+          
+          <div style={{ fontSize: 16, fontWeight: 600, color: "#0f172a", marginBottom: 8 }}>
+            {file ? file.name : "Drop your CSV file here or click to browse"}
+          </div>
+          
+          <div style={{ fontSize: 14, color: "#64748b" }}>
+            {file 
+              ? `File size: ${(file.size / 1024 / 1024).toFixed(2)} MB`
+              : "Supports CSV files up to 50MB"
+            }
+          </div>
+
+          {file && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                resetForm();
+              }}
+              style={{
+                marginTop: 16,
+                padding: "8px 16px",
+                background: "#ef4444",
+                color: "#fff",
+                border: "none",
+                borderRadius: 6,
+                fontSize: 14,
+                fontWeight: 500,
+                cursor: "pointer",
+              }}
+            >
+              <i className="fa-solid fa-xmark" style={{ marginRight: 8 }}></i>
+              Remove File
+            </button>
           )}
         </div>
-      </div>
 
-      {/* Preview */}
-      {preview && preview.length > 0 && (
-        <div style={{
-          background: "#fff",
-          borderRadius: 12,
-          padding: 24,
-          marginBottom: 24,
-          boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
-        }}>
-          <h3 style={{ fontSize: 16, fontWeight: 600, color: "#0f172a", marginBottom: 16 }}>
-            3. Preview Data
-          </h3>
-          
-          <div style={{ overflowX: "auto" }}>
-            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
-              <thead>
-                <tr>
-                  {preview[0]?.map((header: string, i: number) => (
-                    <th key={i} style={{ 
-                      padding: "10px 12px", 
-                      textAlign: "left", 
-                      background: "#f1f5f9",
-                      borderBottom: "2px solid #e2e8f0",
-                      fontWeight: 600,
-                      color: "#374151",
-                      whiteSpace: "nowrap",
-                    }}>
-                      {header}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {preview.slice(1).map((row, rowIndex) => (
-                  <tr key={rowIndex}>
-                    {row.map((cell: string, cellIndex: number) => (
-                      <td key={cellIndex} style={{ 
-                        padding: "10px 12px", 
-                        borderBottom: "1px solid #e2e8f0",
-                        color: "#64748b",
-                        maxWidth: 200,
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap",
-                      }}>
-                        {cell || "-"}
-                      </td>
+        {/* Preview */}
+        {preview && (
+          <div style={{ marginTop: 24 }}>
+            <h3 style={{ fontSize: 16, fontWeight: 600, color: "#0f172a", marginBottom: 12 }}>
+              Preview (First 10 rows)
+            </h3>
+            <div style={{
+              border: "1px solid #e2e8f0",
+              borderRadius: 8,
+              overflow: "auto",
+              maxHeight: 400,
+            }}>
+              <table style={{
+                width: "100%",
+                borderCollapse: "collapse",
+                fontSize: 13,
+              }}>
+                <thead style={{ background: "#f8fafc", position: "sticky", top: 0 }}>
+                  <tr>
+                    {preview[0]?.map((header, idx) => (
+                      <th
+                        key={idx}
+                        style={{
+                          padding: "12px 16px",
+                          textAlign: "left",
+                          borderBottom: "2px solid #e2e8f0",
+                          fontWeight: 600,
+                          color: "#0f172a",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        {header || `Column ${idx + 1}`}
+                      </th>
                     ))}
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {preview.slice(1).map((row, rowIdx) => (
+                    <tr key={rowIdx}>
+                      {row.map((cell, cellIdx) => (
+                        <td
+                          key={cellIdx}
+                          style={{
+                            padding: "12px 16px",
+                            borderBottom: "1px solid #f1f5f9",
+                            color: "#64748b",
+                            whiteSpace: "nowrap",
+                          }}
+                        >
+                          {cell || "-"}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
-          
-          <div style={{ marginTop: 16, color: "#64748b", fontSize: 13 }}>
-            Showing first 5 rows of data
-          </div>
-        </div>
-      )}
+        )}
 
-      {/* Import Button */}
-      {file && (
-        <div style={{
-          background: "#fff",
-          borderRadius: 12,
-          padding: 24,
-          marginBottom: 24,
-          boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
-        }}>
+        {/* Import Button */}
+        {file && (
           <button
             onClick={handleImport}
             disabled={importing}
             style={{
-              padding: "14px 32px",
-              background: importing ? "#94a3b8" : "#3b82f6",
+              marginTop: 24,
+              width: "100%",
+              padding: "16px",
+              background: importing
+                ? "#94a3b8"
+                : "linear-gradient(135deg, #3b82f6, #2563eb)",
               color: "#fff",
               border: "none",
-              borderRadius: 8,
-              fontSize: 15,
+              borderRadius: 10,
+              fontSize: 16,
               fontWeight: 600,
               cursor: importing ? "not-allowed" : "pointer",
               display: "flex",
               alignItems: "center",
-              gap: 10,
+              justifyContent: "center",
+              gap: 12,
             }}
           >
             {importing ? (
               <>
                 <i className="fa-solid fa-spinner fa-spin"></i>
-                Importing...
+                Processing Import...
               </>
             ) : (
               <>
-                <i className="fa-solid fa-database"></i>
-                Import to {IMPORT_TARGETS.find(t => t.id === selectedTarget)?.name}
+                <i className="fa-solid fa-file-import"></i>
+                Import Data
               </>
             )}
           </button>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* Results */}
       {result && (
         <div style={{
-          background: result.success ? "#f0fdf4" : "#fef2f2",
-          borderRadius: 12,
-          padding: 24,
-          marginBottom: 24,
-          border: `1px solid ${result.success ? "#86efac" : "#fecaca"}`,
+          background: "#fff",
+          borderRadius: 16,
+          padding: 32,
+          boxShadow: "0 1px 3px rgba(0,0,0,0.08)",
         }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
-            <i className={`fa-solid ${result.success ? "fa-check-circle" : "fa-times-circle"}`}
-               style={{ fontSize: 24, color: result.success ? "#22c55e" : "#ef4444" }} />
-            <h3 style={{ fontSize: 18, fontWeight: 600, color: result.success ? "#166534" : "#991b1b", margin: 0 }}>
-              {result.success ? "Import Completed" : "Import Failed"}
-            </h3>
-          </div>
-          
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16, marginBottom: 16 }}>
-            <div style={{ background: "#fff", padding: 16, borderRadius: 8, textAlign: "center" }}>
-              <div style={{ fontSize: 24, fontWeight: 700, color: "#0f172a" }}>{result.totalRows}</div>
-              <div style={{ fontSize: 13, color: "#64748b" }}>Total Rows</div>
-            </div>
-            <div style={{ background: "#fff", padding: 16, borderRadius: 8, textAlign: "center" }}>
-              <div style={{ fontSize: 24, fontWeight: 700, color: "#22c55e" }}>{result.imported}</div>
-              <div style={{ fontSize: 13, color: "#64748b" }}>Imported</div>
-            </div>
-            <div style={{ background: "#fff", padding: 16, borderRadius: 8, textAlign: "center" }}>
-              <div style={{ fontSize: 24, fontWeight: 700, color: "#ef4444" }}>{result.failed}</div>
-              <div style={{ fontSize: 13, color: "#64748b" }}>Failed</div>
+          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 24 }}>
+            <i
+              className={`fa-solid ${result.success ? "fa-circle-check" : "fa-circle-xmark"}`}
+              style={{ fontSize: 32, color: result.success ? "#10b981" : "#ef4444" }}
+            ></i>
+            <div>
+              <h2 style={{ fontSize: 20, fontWeight: 600, color: "#0f172a", margin: 0 }}>
+                {result.success ? "Import Successful" : "Import Failed"}
+              </h2>
+              <p style={{ color: "#64748b", margin: 0 }}>{result.message}</p>
             </div>
           </div>
-          
-          {result.errors.length > 0 && (
-            <div style={{ background: "#fff", padding: 16, borderRadius: 8 }}>
-              <div style={{ fontWeight: 600, color: "#991b1b", marginBottom: 8 }}>Errors:</div>
-              <ul style={{ margin: 0, paddingLeft: 20, color: "#64748b", fontSize: 13 }}>
-                {result.errors.map((error, i) => (
-                  <li key={i}>{error}</li>
+
+          {/* Stats Grid */}
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
+            gap: 16,
+            marginBottom: 24,
+          }}>
+            {[
+              { label: "Total Rows", value: result.stats.totalRows, icon: "fa-table", color: "#3b82f6" },
+              { label: "Properties", value: result.stats.properties, icon: "fa-building", color: "#10b981" },
+              { label: "Owners", value: result.stats.owners, icon: "fa-user-tie", color: "#f59e0b" },
+              { label: "Auctions", value: result.stats.auctions, icon: "fa-gavel", color: "#8b5cf6" },
+              { label: "Loans", value: result.stats.loans, icon: "fa-money-bill", color: "#06b6d4" },
+              { label: "Errors", value: result.stats.errors, icon: "fa-exclamation-triangle", color: "#ef4444" },
+            ].map((stat) => (
+              <div
+                key={stat.label}
+                style={{
+                  background: "#f8fafc",
+                  borderRadius: 12,
+                  padding: 16,
+                  textAlign: "center",
+                }}
+              >
+                <i
+                  className={`fa-solid ${stat.icon}`}
+                  style={{ fontSize: 24, color: stat.color, marginBottom: 8 }}
+                ></i>
+                <div style={{ fontSize: 24, fontWeight: 700, color: "#0f172a" }}>
+                  {stat.value.toLocaleString()}
+                </div>
+                <div style={{ fontSize: 12, color: "#64748b", marginTop: 4 }}>
+                  {stat.label}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Errors */}
+          {result.errors && result.errors.length > 0 && (
+            <div style={{
+              background: "#fef2f2",
+              border: "1px solid #ef4444",
+              borderRadius: 12,
+              padding: 20,
+            }}>
+              <h3 style={{ fontSize: 14, fontWeight: 600, color: "#991b1b", marginBottom: 12 }}>
+                Errors Encountered:
+              </h3>
+              <ul style={{ margin: 0, paddingLeft: 20, color: "#991b1b" }}>
+                {result.errors.map((error, idx) => (
+                  <li key={idx} style={{ marginBottom: 4 }}>
+                    {error}
+                  </li>
                 ))}
               </ul>
             </div>
           )}
         </div>
       )}
-
-      {/* Template Download */}
-      <div style={{
-        background: "#fff",
-        borderRadius: 12,
-        padding: 24,
-        boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
-      }}>
-        <h3 style={{ fontSize: 16, fontWeight: 600, color: "#0f172a", marginBottom: 8 }}>
-          Need a template?
-        </h3>
-        <p style={{ color: "#64748b", fontSize: 14, marginBottom: 16 }}>
-          Download a CSV template with the correct column headers for each data type
-        </p>
-        
-        <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-          {IMPORT_TARGETS.map((target) => (
-            <button
-              key={target.id}
-              onClick={() => toast.info(`Downloading ${target.name} template...`)}
-              style={{
-                padding: "8px 16px",
-                background: "#f1f5f9",
-                color: "#374151",
-                border: "1px solid #e2e8f0",
-                borderRadius: 6,
-                cursor: "pointer",
-                fontSize: 13,
-                display: "flex",
-                alignItems: "center",
-                gap: 8,
-              }}
-            >
-              <i className="fa-solid fa-download"></i>
-              {target.name} Template
-            </button>
-          ))}
-        </div>
-      </div>
     </div>
   );
 };
