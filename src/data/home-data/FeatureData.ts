@@ -19,6 +19,11 @@ import feature5Icon_1 from "@/assets/images/icon/icon_23.svg";
 import feature5Icon_2 from "@/assets/images/icon/icon_24.svg";
 import feature5Icon_3 from "@/assets/images/icon/icon_25.svg";
 
+// Placeholder images for home_two_feature_2
+const featureImg_1 = featureIcon_1;
+const featureImg_2 = featureIcon_2;
+const featureImg_3 = featureIcon_3;
+
 import feature6Icon_1 from "@/assets/images/icon/icon_35.svg";
 import feature6Icon_2 from "@/assets/images/icon/icon_36.svg";
 import feature6Icon_3 from "@/assets/images/icon/icon_37.svg";
@@ -27,9 +32,10 @@ import feature7Icon_1 from "@/assets/images/icon/icon_40.svg";
 import feature7Icon_2 from "@/assets/images/icon/icon_41.svg";
 import feature7Icon_3 from "@/assets/images/icon/icon_42.svg";
 
-import featureImg_1 from "@/assets/images/media/img_19.jpg";
-import featureImg_2 from "@/assets/images/media/img_20.jpg";
-import featureImg_3 from "@/assets/images/media/img_21.jpg";
+// Media images removed - not needed for SaaS dashboard
+// import featureImg_1 from "@/assets/images/media/img_19.jpg";
+// import featureImg_2 from "@/assets/images/media/img_20.jpg";
+// import featureImg_3 from "@/assets/images/media/img_21.jpg";
 
 interface DataType {
    id: number;
@@ -52,7 +58,7 @@ const feature_data: DataType[] = [
       icon: featureIcon_1,
       title: "Buy a home",
       btn:"Find Home",
-      desc: "Explore HOZN 2 million+ homes and uncover your ideal living space.",
+      desc: "Explore 99Sellers 2 million+ homes and uncover your ideal living space.",
    },
    {
       id: 2,
@@ -60,7 +66,7 @@ const feature_data: DataType[] = [
       icon: featureIcon_2,
       title: "RENT A HOME",
       btn:"Rent Home",
-      desc: "Discover a rental you'll love on HOZN, thanks to 35+ filters and tailored keywords.",
+      desc: "Discover a rental you'll love on 99Sellers, thanks to 35+ filters and tailored keywords.",
    },
    {
       id: 3,
@@ -236,7 +242,7 @@ const feature_data: DataType[] = [
       icon: feature5Icon_1,
       title: "Buy a home",
       btn: "Find Home",
-      desc: "Explore HOZN 2 million+ homes and uncover your ideal living space.",
+      desc: "Explore 99Sellers 2 million+ homes and uncover your ideal living space.",
    },
    {
       id: 2,
@@ -244,7 +250,7 @@ const feature_data: DataType[] = [
       icon: feature5Icon_2,
       title: "Buy a home",
       btn: "Rent Home",
-      desc: "Discover a rental you'll love on HOZN, thanks to 35+ filters and tailored keywords.",
+      desc: "Discover a rental you'll love on 99Sellers, thanks to 35+ filters and tailored keywords.",
       data_delay_time: "0.1s",
    },
    {
@@ -290,7 +296,7 @@ const feature_data: DataType[] = [
       icon: feature6Icon_1,
       title: "Buy a home",
       btn: "Find Home",
-      desc: "Explore HOZN 2 million+ homes and uncover your ideal living space.",
+      desc: "Explore 99Sellers 2 million+ homes and uncover your ideal living space.",
    },
    {
       id: 2,
@@ -298,7 +304,7 @@ const feature_data: DataType[] = [
       icon: feature6Icon_2,
       title: "Rent a home",
       btn: "Rent Home",
-      desc: "Discover a rental you'll love on HOZN, thanks to 35+ filters and tailored keywords.",
+      desc: "Discover a rental you'll love on 99Sellers, thanks to 35+ filters and tailored keywords.",
       data_delay_time: "0.1s",
    },
    {

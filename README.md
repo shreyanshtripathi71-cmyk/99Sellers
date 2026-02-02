@@ -1,86 +1,169 @@
-# Hozn - Real Estate 🏡🚀
+# 99Sellers - Real Estate Lead Generation Platform 🏡# Hozn - Real Estate 🏡🚀
 
-![GitHub repo size](https://img.shields.io/github/repo-size/AHMAD-JX/Hozn-RealEstate-Fullstack?style=for-the-badge)
+
+
+A modern real estate lead generation platform built with **Next.js 14**, **React**, **TypeScript**, and an **Express.js** backend.![GitHub repo size](https://img.shields.io/github/repo-size/AHMAD-JX/Hozn-RealEstate-Fullstack?style=for-the-badge)
+
 ![GitHub stars](https://img.shields.io/github/stars/AHMAD-JX/Hozn-RealEstate-Fullstack?style=for-the-badge)
-![GitHub forks](https://img.shields.io/github/forks/AHMAD-JX/Hozn-RealEstate-Fullstack?style=for-the-badge)
-![GitHub license](https://img.shields.io/github/license/AHMAD-JX/Hozn-RealEstate-Fullstack?style=for-the-badge)
-![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
-![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)
-![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
-![Node.js](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)
-![Express.js](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)
-![Sequelize](https://img.shields.io/badge/Sequelize-52B0E7?style=for-the-badge&logo=sequelize&logoColor=white)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white)
-![JWT](https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
-![Sass](https://img.shields.io/badge/Sass-CC6699?style=for-the-badge&logo=sass&logoColor=white)
-![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white)
-![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)
 
+## Features![GitHub forks](https://img.shields.io/github/forks/AHMAD-JX/Hozn-RealEstate-Fullstack?style=for-the-badge)
+
+![GitHub license](https://img.shields.io/github/license/AHMAD-JX/Hozn-RealEstate-Fullstack?style=for-the-badge)
+
+- **User Dashboard**: Analytics, saved leads, saved searches, billing management![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+
+- **Admin Dashboard**: User management, property management, auction management, crawler status![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)
+
+- **Authentication**: JWT-based auth with admin/user role separation![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+
+- **Subscription System**: Free trial, multiple plan tiers![Node.js](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)
+
+- **Lead Discovery**: Search and filter distressed property leads![Express.js](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)
+
+![Sequelize](https://img.shields.io/badge/Sequelize-52B0E7?style=for-the-badge&logo=sequelize&logoColor=white)
+
+## Tech Stack![PostgreSQL](https://img.shields.io/badge/PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white)
+
+![JWT](https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white)
+
+- **Frontend**: Next.js 14, React, TypeScript, SCSS![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+
+- **Backend**: Express.js, Sequelize ORM, MySQL![Sass](https://img.shields.io/badge/Sass-CC6699?style=for-the-badge&logo=sass&logoColor=white)
+
+- **Authentication**: JWT tokens![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white)
+
+- **Styling**: SCSS Modules, Bootstrap![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)
+
+
+
+## Getting Started
 
 ## 🌟 Overview
-**Hozn - Real Estate** is a **Full-Stack** real estate website built with **React, Next.js, TypeScript**, and a **Node.js (Express) backend**. The platform allows users to browse, list, and manage properties seamlessly.
 
-## 🎯 Features
+### Prerequisites**Hozn - Real Estate** is a **Full-Stack** real estate website built with **React, Next.js, TypeScript**, and a **Node.js (Express) backend**. The platform allows users to browse, list, and manage properties seamlessly.
+
+- Node.js 18+
+
+- MySQL database## 🎯 Features
+
 - 🔥 **Modern UI/UX** with smooth animations
-- 🏠 **Property listing & management**
+
+### Frontend Setup- 🏠 **Property listing & management**
+
 - 🏠 **BUY & Sell Property listing **
-- 🔒 **User authentication** (Signup/Login)
-- 📊 **Admin Dashboard** for managing users & listings
-- 📡 **Backend API** built with Express & Sequelize
-- 🎨 **Fully Responsive** on all devices
+
+```bash- 🔒 **User authentication** (Signup/Login)
+
+cd 99Sellers- 📊 **Admin Dashboard** for managing users & listings
+
+npm install- 📡 **Backend API** built with Express & Sequelize
+
+npm run dev- 🎨 **Fully Responsive** on all devices
+
+```
 
   ### Backend:
-- **Authentication & Authorization** (JWT-based login/signup)
+
+Frontend runs at: http://localhost:3000- **Authentication & Authorization** (JWT-based login/signup)
+
 - **Profile Management** (Edit user details)
-- **Real Estate Listings** (Add, update, delete properties)
+
+### Backend Setup- **Real Estate Listings** (Add, update, delete properties)
+
 - **Buying & Selling API**
-- **Database Management with PostgreSQL & Sequelize**
-  
 
-## 📸 Screenshots
-### 🏠 Home Page
-![Home](https://github.com/AHMAD-JX/Hozn-RealEstate-Fullstack/blob/eedce2626f82448aa5611f945dbc5778ddcef4eb/public/assets/images/assets/1.png)
+```bash- **Database Management with PostgreSQL & Sequelize**
 
-### 🏡 Property Listing
+cd real-estate-backend  
+
+npm install
+
+cp .env.example .env  # Configure your database## 📸 Screenshots
+
+npm run dev### 🏠 Home Page
+
+```![Home](https://github.com/AHMAD-JX/Hozn-RealEstate-Fullstack/blob/eedce2626f82448aa5611f945dbc5778ddcef4eb/public/assets/images/assets/1.png)
+
+
+
+Backend runs at: http://localhost:3001### 🏡 Property Listing
+
 ![Properties](https://github.com/AHMAD-JX/Hozn-RealEstate-Fullstack/blob/eedce2626f82448aa5611f945dbc5778ddcef4eb/public/assets/images/assets/2.png)
 
+## Authentication Flow
+
 ### 🛠️ Dashboard
-![Dashboard](https://github.com/AHMAD-JX/Hozn-RealEstate-Fullstack/blob/eedce2626f82448aa5611f945dbc5778ddcef4eb/public/assets/images/assets/3.png)
+
+- **Regular Users**: Sign in → Redirected to `/search` (Main Dashboard)
+
+- **Admin Users**: Sign in with admin credentials → Redirected to `/admin`
 
 ## 🛠️ Tech Stack
 
+## Routes
+
 ### 🌐 Frontend
-- **React.js** (Framework: Next.js)
-- **TypeScript**
-- **Tailwind CSS & CSS** (for styling)
-- **SCSS**
-- **Framer Motion** (for animations)
-- **Three.js**
+
+### Public Routes- **React.js** (Framework: Next.js)
+
+- `/` - Homepage- **TypeScript**
+
+- `/signin` - Sign in / Sign up- **Tailwind CSS & CSS** (for styling)
+
+- `/search` - Main Dashboard (Property Search)- **SCSS**
+
+- `/faq` - FAQ page- **Framer Motion** (for animations)
+
+- `/contact` - Contact page- **Three.js**
+
 - **Axios** (for API calls)
 
-### 🖥️ Backend (real-estate-backend)
-- **Node.js** (Runtime)
-- **Express.js** (Framework)
-- **Sequelize** (ORM for PostgreSQL/MySQL)
-- **JWT (JSON Web Token)** (for authentication)
-- **bcrypt.js** (for password hashing)
-- **Multer** (for handling file uploads)
+### User Dashboard Routes
 
-## 📂 Project Structure
-```
-Hozn-RealEstate-Fullstack/Hozn-RealEstate
-├── Hozn-RealEstate/  # React + Next.js frontend
-│   ├── .next/
-│   ├── node_modules/
-│   ├── public/
-│   └── src/
-|       ├── app/
-│       ├── components/
+- `/search` - Main Dashboard with Lead Search### 🖥️ Backend (real-estate-backend)
+
+- `/dashboard/analytics` - Analytics- **Node.js** (Runtime)
+
+- `/dashboard/profile` - User profile- **Express.js** (Framework)
+
+- `/dashboard/billing` - Billing management- **Sequelize** (ORM for PostgreSQL/MySQL)
+
+- `/dashboard/saved-leads` - Saved leads- **JWT (JSON Web Token)** (for authentication)
+
+- `/dashboard/saved-search` - Saved searches- **bcrypt.js** (for password hashing)
+
+- `/dashboard/subscription` - Subscription management- **Multer** (for handling file uploads)
+
+
+
+### Admin Routes## 📂 Project Structure
+
+- `/admin` - Admin dashboard```
+
+- `/admin/users` - User managementHozn-RealEstate-Fullstack/Hozn-RealEstate
+
+- `/admin/properties` - Property management├── Hozn-RealEstate/  # React + Next.js frontend
+
+- `/admin/auctions` - Auction management│   ├── .next/
+
+- `/admin/owners` - Owner management│   ├── node_modules/
+
+- `/admin/loans` - Loan management│   ├── public/
+
+- `/admin/crawler` - Crawler status│   └── src/
+
+- `/admin/subscriptions` - Subscription management|       ├── app/
+
+- `/admin/settings` - System settings│       ├── components/
+
 │       ├── data/
-|       ├── hooks/
+
+## License|       ├── hooks/
+
 │       ├── layouts/
-│       ├── models/
+
+MIT License│       ├── models/
+
 │       ├── redux/
 │       ├── styles/
 │       ├── types/

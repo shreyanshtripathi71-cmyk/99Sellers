@@ -6,8 +6,8 @@
         margin: 0 auto;
     }
     .block-one {
-        background: url(../images/media/img_04.jpg) no-repeat center;
-        background-size: cover;
+        /* media removed: using gradient placeholder */
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         border-radius: 30px;
         padding: 60px 70px 55px;
         min-height: 400px;
@@ -273,8 +273,8 @@
         right: 0;
         top:0;
         z-index: -1;
-        background: url(../images/media/img_37.jpg) no-repeat right center;
-        background-size: cover;
+        /* media removed: using gradient placeholder */
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     }
     .shape_01 {
         bottom: 0;
@@ -340,9 +340,10 @@
             min-height: 450px;
             background-repeat: no-repeat;
             background-size: cover;
-            background-image: url(../images/media/img_42.jpg);
+            /* media removed: using gradient placeholder */
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             &.bg_2{
-                background-image: url(../images/media/img_55.jpg);
+                background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
             }
         }
         .card-style-three {

@@ -1,3 +1,8 @@
+/* public/assets/scss/style.scss */
+
+// =============================================
+// 1. CORE VARIABLES & MIXINS
+// =============================================
 @import "mixins";
 @import "variables";
 @import "base";
@@ -5,24 +10,20 @@
 @import "title";
 @import "button";
 @import "header";
-@import "banner";
-@import "layout";
-@import "element";
+@import "layout"; 
 @import "card";
-@import "listing";
-@import "details_page.scss";
-@import "agent";
-@import "pricing";
-@import "service.scss";
-@import "project.scss";
-@import "feedback";
-@import "blog";
-@import "contact.scss";
-@import "footer";
-@import "login";
-@import "dashboard";
 @import "animation";
-// @import "vendor";
 @import "nice-select";
 @import "slider";
 @import "responsive";
+
+// =============================================
+// 2. ACTIVE PAGES & COMPONENTS
+// =============================================
+@import "dashboard";    // Search Terminal & Dashboard
+@import "login";        // Login/Register Forms
+@import "contact";      // Contact Us Page
+@import "pricing";      // Subscription Page
+@import "footer";       // Footer
+@import "banner";       // Homepage banners (gradients)
+@import "feedback";     // Testimonials

@@ -7,7 +7,7 @@ const DashboardHeaderTwo = ({ isActive, setIsActive }: any) => {
    const pathname = usePathname();
 
    const menuItems = [
-      { title: "Dashboard", link: "/dashboard/dashboard-index", icon: "fa-light fa-grid-2" },
+      { title: "Dashboard", link: "/search", icon: "fa-light fa-grid-2" },
       { title: "Search Leads", link: "/search", icon: "fa-light fa-search" },
       { title: "Saved Leads", link: "/dashboard/favourites", icon: "fa-light fa-heart" },
       { title: "Saved Searches", link: "/dashboard/saved-search", icon: "fa-light fa-bookmark" },

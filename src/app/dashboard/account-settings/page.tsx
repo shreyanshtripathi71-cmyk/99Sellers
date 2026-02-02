@@ -1,15 +1,12 @@
-import DashboardAccountSetting from "@/components/dashboard/account-settings";
-import Wrapper from "@/layouts/Wrapper";
+import SettingsPage from "@/components/dashboard/SettingsPage";
 
 export const metadata = {
-   title: "Dashboard Account Setting HOZN - Real Estate React Next js",
+  title: "Settings - 99Sellers",
+  description: "Customize your dashboard experience",
 };
-const index = () => {
-   return (
-      <Wrapper>
-         <DashboardAccountSetting />
-      </Wrapper>
-   )
-}
 
-export default index
+const Page = () => {
+  return <SettingsPage />;
+};
+
+export default Page;

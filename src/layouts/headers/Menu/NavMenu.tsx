@@ -11,11 +11,11 @@ const NavMenu = () => {
     const pathname = usePathname();
     const [navTitle, setNavTitle] = useState("");
     
-    // NEW: User State
+    // User State - using 99sellers storage key
     const [user, setUser] = useState<any>(null);
 
     useEffect(() => {
-        const storedUser = localStorage.getItem('user');
+        const storedUser = localStorage.getItem('99sellers_user');
         if (storedUser) {
             try {
                 setUser(JSON.parse(storedUser));
@@ -45,15 +45,15 @@ const NavMenu = () => {
 
             {/* 1. Always Visible Dashboard Link (For Investors) */}
             <li className="nav-item dashboard-menu">
-                <Link className="nav-link" href="/dashboard/dashboard-index">
+                <Link className="nav-link" href="/search">
                     Dashboard
                 </Link>
             </li>
 
             {/* 2. CONDITIONAL: Admin Link */}
-            {user?.UserType === 'Admin' && (
+            {user?.userType === 'Admin' && (
                 <li className="nav-item">
-                    <Link className="nav-link text-danger fw-bold" href="/admin/dashboard">
+                    <Link className="nav-link text-danger fw-bold" href="/admin">
                         Admin Panel
                     </Link>
                 </li>

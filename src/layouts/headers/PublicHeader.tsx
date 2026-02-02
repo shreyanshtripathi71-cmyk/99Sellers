@@ -48,10 +48,10 @@ const PublicHeader = () => {
 
                {/* Action Buttons */}
                <div className="d-flex align-items-center gap-3">
-                  <Link href="/login" style={{ fontSize: '14px', fontWeight: '600', color: '#0F172A' }}>
+                  <Link href="/signin" style={{ fontSize: '14px', fontWeight: '600', color: '#0F172A' }}>
                      Log in
                   </Link>
-                  <Link href="/search" style={{ 
+                  <Link href="/signin" style={{ 
                      background: '#0F172A', 
                      color: 'white', 
                      padding: '10px 20px', 

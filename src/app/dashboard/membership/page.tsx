@@ -1,10 +1,12 @@
-import React from 'react';
-import MembershipArea from '@/components/dashboard/membership/MembershipArea';
+import { redirect } from "next/navigation";
 
-const MembershipPage = () => {
-   return (
-      <MembershipArea />
-   );
+export const metadata = {
+  title: "Subscription - 99Sellers",
+  description: "Manage your subscription and billing",
 };
 
-export default MembershipPage;
+const Page = () => {
+  redirect("/dashboard/subscription");
+};
+
+export default Page;

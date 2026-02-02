@@ -2,6 +2,7 @@
 import "../styles/index.scss";
 import { Provider } from "react-redux";
 import store from "@/redux/store";
+import Wrapper from "@/layouts/Wrapper";
 
 export default function RootLayout({
   children,
@@ -45,7 +46,9 @@ export default function RootLayout({
         <div className="main-page-wrapper">
           {/* This Provider is CRITICAL for your Lead Search Table to work */}
           <Provider store={store}>
-            {children}
+            <Wrapper>
+              {children}
+            </Wrapper>
           </Provider>
         </div>
       </body>

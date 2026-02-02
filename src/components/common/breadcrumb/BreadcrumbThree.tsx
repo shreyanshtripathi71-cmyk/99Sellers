@@ -7,7 +7,7 @@ const BreadcrumbThree = ({ title, link, link_title, sub_title, style }: any) => 
    const selectHandler = (e: any) => { };
 
    return (
-      <div className={`inner-banner-two inner-banner position-relative ${style ? "z-1 pt-170 xl-pt-150 md-pt-130 pb-100 xl-pb-80 md-pb-50" : "pt-160 lg-pt-130 pb-160 xl-pb-120 md-pb-80"}`} style={{ backgroundImage: `url(/assets/images/media/img_49.jpg)` }}>
+      <div className={`inner-banner-two inner-banner position-relative ${style ? "z-1 pt-170 xl-pt-150 md-pt-130 pb-100 xl-pb-80 md-pb-50" : "pt-160 lg-pt-130 pb-160 xl-pb-120 md-pb-80"}`} style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
          <div className="container">
             <div className="row">
                <div className="col-lg-6">

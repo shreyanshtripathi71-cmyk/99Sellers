@@ -1,6 +1,4 @@
-import Wrapper from "@/layouts/Wrapper";
-import ModernHome from "@/components/home/home-modern"; 
-// ^ Ensure this path points to the index.tsx we built in the previous turn
+import Homepage from "@/components/home/home-modern/Homepage";
 
 export const metadata = {
   title: "99Sellers | The Off-Market Deal Terminal",
@@ -8,11 +6,7 @@ export const metadata = {
 };
 
 const MainRoot = () => {
-  return (
-    <Wrapper>
-      <ModernHome />
-    </Wrapper>
-  );
+  return <Homepage />;
 };
 
 export default MainRoot;

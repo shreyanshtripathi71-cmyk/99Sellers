@@ -1,10 +1,12 @@
-import React from 'react';
-import ProfileArea from '@/components/dashboard/profile/ProfileArea';
+import ProfilePage from "@/components/dashboard/ProfilePage";
 
-const ProfilePage = () => {
-   return (
-      <ProfileArea />
-   );
+export const metadata = {
+  title: "Profile - 99Sellers",
+  description: "Manage your account information",
 };
 
-export default ProfilePage;
+const Page = () => {
+  return <ProfilePage />;
+};
+
+export default Page;

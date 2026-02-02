@@ -300,8 +300,8 @@
             height: 100%;
             left: 0;
             top:0;
-            background: url(../images/media/img_45.jpg) no-repeat center;
-            background-size: cover;
+            /* media removed: background image disabled */
+            background: none;
         }
         &:after {
             content: '';
@@ -318,8 +318,8 @@
 }
 // Hero Banner Six
 .hero-banner-six {
-    background: url(../images/media/img_47.jpg) no-repeat center top;
-    background-size: cover;
+    /* media removed: background image disabled */
+    background: none;
     &:before {
         content: '';
         position: absolute;
@@ -373,9 +373,8 @@
 }
 // Fancy Banner One
 .fancy-banner-one {
-    background: url(../images/media/img_10.jpg) no-repeat center;
-    background-size: cover;
-    background-attachment: fixed;
+    /* media removed: background image disabled */
+    background: none;
     &:before {
         content: '';
         position: absolute;
@@ -489,9 +488,8 @@
 }
 // Fancy Banner Two
 .fancy-banner-two {
-    background: url(../images/media/img_12.jpg) no-repeat center;
-    background-size: cover;
-    background-attachment: fixed;
+    /* media removed: background image disabled */
+    background: none;
     &:before {
         content: '';
         position: absolute;
@@ -567,9 +565,8 @@
 }
 // Fancy Banner Five
 .fancy-banner-five {
-    background: url(../images/media/img_25.jpg) no-repeat center;
-    background-size: cover;
-    background-attachment: fixed;
+    /* media removed: background image disabled */
+    background: none;
     &:before {
         content: '';
         position: absolute;
@@ -775,10 +772,9 @@
 // Fancy Banner Seven
 .fancy-banner-seven { 
     .bg-wrapper {
-        background: url(../images/media/img_31.jpg) no-repeat center;
-        background-size: cover;
-        background-attachment: fixed;
-        border-radius: 40px;
+    /* media removed: background image disabled */
+    background: none;
+    border-radius: 40px;
         overflow: hidden;
         padding-left: 12px;
         padding-right: 12px;
