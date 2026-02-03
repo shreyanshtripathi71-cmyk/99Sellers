@@ -12,55 +12,56 @@ const Footer = () => {
             99<span>Sellers</span>
           </Link>
           <p>
-            The all-in-one platform for real estate investors to discover
-            distressed properties and close more deals.
+            The #1 source for motivated seller leads. Helping real estate investors
+            find off-market deals since 2020.
           </p>
         </div>
 
         <div className={styles.footer_links}>
-          <div className={styles.footer_col}>
+          <div className={styles.footer_column}>
             <h4>Product</h4>
-            <Link href="#features">Features</Link>
-            <Link href="#pricing">Pricing</Link>
-            <Link href="#how-it-works">How It Works</Link>
-            <Link href="/search">Lead Search</Link>
+            <ul>
+              <li><Link href="#lead-types">Lead Types</Link></li>
+              <li><Link href="#how-it-works">How It Works</Link></li>
+              <li><Link href="#pricing">Pricing</Link></li>
+              <li><Link href="/search">Search Leads</Link></li>
+            </ul>
           </div>
-
-          <div className={styles.footer_col}>
+          <div className={styles.footer_column}>
             <h4>Company</h4>
-            <Link href="/about">About Us</Link>
-            <Link href="/blog">Blog</Link>
-            <Link href="/contact">Contact</Link>
-            <Link href="/careers">Careers</Link>
+            <ul>
+              <li><Link href="/about">About Us</Link></li>
+              <li><Link href="/contact">Contact</Link></li>
+              <li><Link href="/blog">Blog</Link></li>
+              <li><Link href="/affiliates">Affiliates</Link></li>
+            </ul>
           </div>
-
-          <div className={styles.footer_col}>
-            <h4>Legal</h4>
-            <Link href="/privacy">Privacy Policy</Link>
-            <Link href="/terms">Terms of Service</Link>
-            <Link href="/cookies">Cookie Policy</Link>
-          </div>
-
-          <div className={styles.footer_col}>
+          <div className={styles.footer_column}>
             <h4>Support</h4>
-            <Link href="/help">Help Center</Link>
-            <Link href="/docs">Documentation</Link>
-            <Link href="/api">API Reference</Link>
+            <ul>
+              <li><Link href="/faq">FAQ</Link></li>
+              <li><Link href="/help">Help Center</Link></li>
+              <li><Link href="/privacy">Privacy Policy</Link></li>
+              <li><Link href="/terms">Terms of Service</Link></li>
+            </ul>
           </div>
         </div>
       </div>
 
       <div className={styles.footer_bottom}>
-        <p>© 2026 99Sellers. All rights reserved.</p>
-        <div className={styles.social_links}>
+        <p>© 2024 99Sellers. All rights reserved.</p>
+        <div className={styles.footer_social}>
+          <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
+            <i className="fa-brands fa-facebook-f"></i>
+          </a>
           <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">
             <i className="fa-brands fa-x-twitter"></i>
           </a>
+          <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
+            <i className="fa-brands fa-instagram"></i>
+          </a>
           <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer">
             <i className="fa-brands fa-linkedin-in"></i>
-          </a>
-          <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
-            <i className="fa-brands fa-facebook-f"></i>
           </a>
         </div>
       </div>

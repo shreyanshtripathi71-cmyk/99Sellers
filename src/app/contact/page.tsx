@@ -38,7 +38,7 @@ export default function ContactPage() {
           Contact Us
         </h1>
         <p style={{ color: "#64748b", textAlign: "center", marginBottom: 48, fontSize: 18 }}>
-          Have questions? We'd love to hear from you.
+          Have questions? We&apos;d love to hear from you.
         </p>
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 48 }}>

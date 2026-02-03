@@ -73,6 +73,92 @@ const STORAGE_KEYS = {
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
+// ============ DEMO/TEST USERS (works without backend) ============
+const DEMO_USERS = {
+  "admin@example.com": {
+    password: "password",
+    user: {
+      id: "demo-admin-1",
+      email: "admin@example.com",
+      name: "Admin User",
+      firstName: "Admin",
+      lastName: "User",
+      userType: "Admin",
+      createdAt: "2025-01-01T00:00:00Z",
+    },
+    subscription: {
+      plan: "enterprise" as const,
+      status: "active" as const,
+      billingCycle: "yearly" as const,
+      features: {
+        searchLimit: -1, // unlimited
+        exportLimit: -1,
+        apiCallsPerDay: -1,
+        advancedSearch: true,
+        fullDataAccess: true,
+        exportEnabled: true,
+        leadGeneration: true,
+        realTimeAlerts: true,
+      },
+    },
+  },
+  "free@example.com": {
+    password: "password",
+    user: {
+      id: "demo-free-1",
+      email: "free@example.com",
+      name: "Free User",
+      firstName: "Free",
+      lastName: "User",
+      userType: "public",
+      createdAt: "2025-01-01T00:00:00Z",
+    },
+    subscription: {
+      plan: "free" as const,
+      status: "active" as const,
+      billingCycle: "monthly" as const,
+      features: {
+        searchLimit: 50,
+        exportLimit: 0,
+        advancedSearch: false,
+        fullDataAccess: false,
+        exportEnabled: false,
+        leadGeneration: false,
+        realTimeAlerts: false,
+      },
+    },
+  },
+  "paid@example.com": {
+    password: "password",
+    user: {
+      id: "demo-paid-1",
+      email: "paid@example.com",
+      name: "Premium User",
+      firstName: "Premium",
+      lastName: "User",
+      userType: "public",
+      createdAt: "2025-01-01T00:00:00Z",
+    },
+    subscription: {
+      plan: "premium" as const,
+      status: "active" as const,
+      billingCycle: "monthly" as const,
+      price: 99,
+      features: {
+        searchLimit: 5000,
+        exportLimit: 1000,
+        apiCallsPerDay: 10000,
+        advancedSearch: true,
+        fullDataAccess: true,
+        exportEnabled: true,
+        leadGeneration: true,
+        realTimeAlerts: true,
+      },
+    },
+  },
+};
+// ============ END DEMO USERS ============
+
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [state, setState] = useState<AuthState>({
     user: null,
@@ -153,6 +239,32 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   }, []);
 
   const login = async (email: string, password: string): Promise<{ success: boolean; message: string; userType?: string }> => {
+    // ============ CHECK DEMO USERS FIRST ============
+    const demoUser = DEMO_USERS[email.toLowerCase() as keyof typeof DEMO_USERS];
+    if (demoUser && demoUser.password === password) {
+      console.log("Demo user login:", email);
+      const user = demoUser.user as User;
+      const subscription = demoUser.subscription as Subscription;
+      
+      // Create a mock token for demo users
+      const mockToken = btoa(JSON.stringify({ id: user.id, role: user.userType, demo: true }));
+      
+      localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(user));
+      localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, `demo.${mockToken}.signature`);
+      localStorage.setItem(STORAGE_KEYS.SUBSCRIPTION, JSON.stringify(subscription));
+
+      setState({
+        user,
+        subscription,
+        isAuthenticated: true,
+        isLoading: false,
+        isAdmin: user.userType === "Admin",
+      });
+
+      return { success: true, message: "Demo login successful", userType: user.userType };
+    }
+    // ============ END DEMO USER CHECK ============
+
     try {
       console.log("Attempting login to:", API_BASE_URL + "/api/login");
       const response = await fetch(API_BASE_URL + "/api/login", {
@@ -207,11 +319,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       console.error("Login error:", error);
       console.error("Error name:", error?.name);
       console.error("Error message:", error?.message);
-      // Provide more specific error messages
-      if (error?.name === "TypeError" && error?.message?.includes("fetch")) {
-        return { success: false, message: "Server is not running. Please start the backend server." };
-      }
-      return { success: false, message: "Unable to connect to server. Please check your connection and try again." };
+      // If backend is not available, show helpful message about demo users
+      return { 
+        success: false, 
+        message: "Backend not available. Try demo accounts: admin@example.com, free@example.com, or paid@example.com (password: password)" 
+      };
     }
   };
 

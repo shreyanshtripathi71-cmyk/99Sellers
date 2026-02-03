@@ -461,13 +461,13 @@ const SubscriptionPage = () => {
                     <div style={{ borderTop: "1px solid #E5E7EB", paddingTop: 20 }}>
                       <div
                         style={{
-                          fontSize: 13,
+                          fontSize: 14,
                           fontWeight: 600,
                           color: "#1F2937",
                           marginBottom: 12,
                         }}
                       >
-                        What's included:
+                        What&apos;s included:
                       </div>
                       {Array.isArray(plan.features) && plan.features.map((feature: string, idx: number) => (
                         <div
@@ -572,7 +572,7 @@ const SubscriptionPage = () => {
                 <div className={styles.settingsItemInfo}>
                   <span className={styles.settingsItemLabel}>Cancel Subscription</span>
                   <span className={styles.settingsItemDesc}>
-                    You'll lose access to all premium features
+                    You&apos;ll lose access to all premium features
                   </span>
                 </div>
                 <button

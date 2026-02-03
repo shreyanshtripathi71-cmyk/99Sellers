@@ -1,37 +1,31 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
 import styles from "../styles/homepage.module.scss";
 
 const CTA = () => {
   return (
-    <section className={styles.cta}>
-      <motion.div
-        className={styles.cta_inner}
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-      >
+    <section className={styles.cta_simple}>
+      <div className={styles.cta_content}>
         <h2 className={styles.cta_title}>
-          Ready to find your next deal?
+          Stop Competing. <span>Start Closing.</span>
         </h2>
         <p className={styles.cta_subtitle}>
-          Join thousands of investors who use 99Sellers to find and close
-          distressed property deals. Start your free trial today — no credit
-          card required.
+          Join 12,000+ investors who are finding off-market deals before anyone else.
         </p>
-        <div className={styles.cta_actions}>
-          <Link href="/search" className={`${styles.btn_white} ${styles.btn_large}`}>
-            Start Free Trial
-            <i className="fa-solid fa-arrow-right" style={{ fontSize: 12 }}></i>
+        <div className={styles.cta_buttons}>
+          <Link href="/search" className={styles.cta_btn_primary}>
+            Get Started Free
           </Link>
-          <Link href="/contact" className={`${styles.btn_outline} ${styles.btn_large}`} style={{ borderColor: 'rgba(255,255,255,0.3)', color: 'white' }}>
-            Contact Sales
+          <Link href="#pricing" className={styles.cta_btn_secondary}>
+            View Pricing
           </Link>
         </div>
-      </motion.div>
+        <p className={styles.cta_note}>
+          <i className="fa-solid fa-shield-check"></i>
+          30-day money-back guarantee • No credit card required
+        </p>
+      </div>
     </section>
   );
 };

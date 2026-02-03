@@ -9,103 +9,57 @@ const plans = [
     name: "Free",
     price: "$0",
     period: "/forever",
-    description: "Perfect for getting started and exploring the platform.",
+    description: "Perfect for trying out 99Sellers with limited access.",
     features: [
-      "5 property searches per day",
-      "Basic property details",
-      "Limited equity data",
-      "Email support",
+      "50 leads per month",
+      "1 county access",
+      "Basic filters",
+      "Email support"
     ],
-    cta: "Get Started",
-    popular: false,
+    buttonText: "Get Started Free",
+    buttonClass: "btn_secondary",
+    popular: false
   },
   {
-    name: "Pro",
-    price: "$99",
+    name: "Premium",
+    price: "$50",
     period: "/month",
-    description: "For serious investors who want full access to all features.",
+    description: "Unlimited access to all leads and features. Best value for serious investors.",
     features: [
-      "Unlimited searches",
-      "Full property details & addresses",
-      "Complete equity analysis",
-      "Skip tracing (500 credits/mo)",
-      "Export to CSV",
-      "Priority support",
-      "Saved searches & alerts",
+      "Unlimited leads",
+      "All 50 states",
+      "All 6 lead types",
+      "Skip tracing included",
+      "CRM export (CSV)",
+      "Priority support"
     ],
-    cta: "Start Free Trial",
-    popular: true,
-  },
-  {
-    name: "Enterprise",
-    price: "$299",
-    period: "/month",
-    description: "For teams and high-volume investors who need more power.",
-    features: [
-      "Everything in Pro",
-      "Unlimited skip tracing",
-      "API access",
-      "Team collaboration",
-      "Dedicated account manager",
-      "Custom integrations",
-      "White-label options",
-    ],
-    cta: "Contact Sales",
-    popular: false,
-  },
+    buttonText: "Start Free Trial",
+    buttonClass: "btn_primary",
+    popular: true
+  }
 ];
-
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.5 },
-  },
-};
 
 const Pricing = () => {
   return (
     <section className={styles.pricing} id="pricing">
-      <motion.div
-        className={styles.section_header}
-        initial={{ opacity: 0, y: 30 }}
+      <motion.h2
+        className={styles.section_title}
+        initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
       >
-        <span className={styles.section_label}>Pricing</span>
-        <h2 className={styles.section_title}>
-          Simple, transparent pricing
-        </h2>
-        <p className={styles.section_subtitle}>
-          Start for free, upgrade when you're ready. No hidden fees, cancel
-          anytime.
-        </p>
-      </motion.div>
+        Simple, Transparent Pricing
+      </motion.h2>
 
-      <motion.div
-        className={styles.pricing_grid}
-        variants={containerVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-100px" }}
-      >
+      <div className={styles.pricing_grid}>
         {plans.map((plan, index) => (
           <motion.div
             key={index}
-            className={`${styles.pricing_card} ${plan.popular ? styles.popular : ""}`}
-            variants={itemVariants}
+            className={`${styles.pricing_card} ${plan.popular ? styles.popular : ''}`}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: index * 0.1 }}
           >
             <h3 className={styles.plan_name}>{plan.name}</h3>
             <div className={styles.plan_price}>
@@ -113,7 +67,7 @@ const Pricing = () => {
               <span className={styles.price_period}>{plan.period}</span>
             </div>
             <p className={styles.plan_desc}>{plan.description}</p>
-            
+
             <ul className={styles.plan_features}>
               {plan.features.map((feature, i) => (
                 <li key={i}>
@@ -123,17 +77,19 @@ const Pricing = () => {
               ))}
             </ul>
 
-            <Link
-              href={plan.name === "Enterprise" ? "/contact" : "/search"}
-              className={`${
-                plan.popular ? styles.btn_primary : styles.btn_outline
-              } ${styles.plan_btn}`}
-            >
-              {plan.cta}
+            <Link href="/search" className={`${styles[plan.buttonClass]} ${styles.plan_btn}`}>
+              {plan.buttonText}
             </Link>
+
+            {plan.popular && (
+              <div className={styles.guarantee_badge}>
+                <i className="fa-solid fa-shield-check"></i>
+                30-Day Money-Back Guarantee
+              </div>
+            )}
           </motion.div>
         ))}
-      </motion.div>
+      </div>
     </section>
   );
 };

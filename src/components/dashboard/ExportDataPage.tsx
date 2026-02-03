@@ -1,10 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
-import { useAuth } from "@/context/AuthContext";
-import Sidebar from "@/components/search/components/Sidebar";
-import Header from "@/components/search/components/Header";
+import DashboardShell from "@/components/search/DashboardShell";
 import styles from "@/components/search/styles/dashboard.module.scss";
 
 const EXPORT_FORMATS = [
@@ -73,11 +70,6 @@ const EXPORT_HISTORY = [
 const ExportDataPage = () => {
   const [selectedFormat, setSelectedFormat] = useState<string | null>(null);
   const [exportType, setExportType] = useState<"saved" | "search">("saved");
-  const { canAccessPremium, isTrialActive } = useAuth();
-  const router = useRouter();
-
-  // Determine user plan based on auth
-  const userPlan = canAccessPremium() || isTrialActive() ? "Pro" : "Free";
 
   const handleExport = () => {
     if (!selectedFormat) return;
@@ -86,15 +78,11 @@ const ExportDataPage = () => {
   };
 
   return (
-    <div className={styles.dashboard_root}>
-      {/* Sidebar */}
-      <Sidebar userPlan={userPlan} onUpgrade={() => router.push("/dashboard/subscription")} />
-
-      {/* Main Content */}
-      <main className={styles.main_content}>
-        <Header title="Export Data" subtitle="Download your leads" userPlan={userPlan} />
-
-        <div className={styles.content_area}>
+    <DashboardShell
+      title="Export Data"
+      subtitle="Download your leads and search results"
+    >
+      <div className={styles.pageContent}>
         {/* Export Options */}
         <div className={styles.card}>
           <div className={styles.cardHeader}>
@@ -237,9 +225,8 @@ const ExportDataPage = () => {
             </table>
           </div>
         </div>
-        </div>
-      </main>
-    </div>
+      </div>
+    </DashboardShell>
   );
 };
 

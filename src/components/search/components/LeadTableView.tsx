@@ -27,7 +27,6 @@ interface LeadTableProps {
   onToggleSave: (id: number) => void;
   getAddress: (lead: Lead) => string;
   userPlan: "Free" | "Pro";
-  onMaskedDataClick?: () => void;
 }
 
 const formatCurrency = (value: number) => {
@@ -43,7 +42,6 @@ const LeadTableView: React.FC<LeadTableProps> = ({
   onToggleSave,
   getAddress,
   userPlan,
-  onMaskedDataClick,
 }) => {
   if (leads.length === 0) {
     return (
@@ -88,27 +86,8 @@ const LeadTableView: React.FC<LeadTableProps> = ({
                       className={styles.address_image}
                     />
                     <div className={styles.address_text}>
-                      <span 
-                        className={styles.address_line}
-                        onClick={(e) => {
-                          if (userPlan === "Free" && onMaskedDataClick) {
-                            e.stopPropagation();
-                            e.preventDefault();
-                            onMaskedDataClick();
-                          }
-                        }}
-                        style={userPlan === "Free" ? { 
-                          cursor: "pointer", 
-                          color: "#2563EB",
-                          textDecoration: "underline",
-                          textDecorationStyle: "dotted"
-                        } : undefined}
-                        title={userPlan === "Free" ? "Click to unlock full address" : undefined}
-                      >
+                      <span className={styles.address_line}>
                         {getAddress(lead)}
-                        {userPlan === "Free" && (
-                          <i className="fa-solid fa-lock" style={{ marginLeft: 6, fontSize: 10, opacity: 0.7 }}></i>
-                        )}
                       </span>
                       <span className={styles.address_city}>
                         {lead.city}, {lead.state} {lead.zip}

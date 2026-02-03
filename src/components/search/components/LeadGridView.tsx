@@ -9,7 +9,6 @@ interface LeadGridProps {
   onToggleSave: (id: number) => void;
   getAddress: (lead: Lead) => string;
   userPlan: "Free" | "Pro";
-  onMaskedDataClick?: () => void;
 }
 
 const formatCurrency = (value: number) => {
@@ -25,7 +24,6 @@ const LeadGridView: React.FC<LeadGridProps> = ({
   onToggleSave,
   getAddress,
   userPlan,
-  onMaskedDataClick,
 }) => {
   if (leads.length === 0) {
     return (
@@ -80,28 +78,7 @@ const LeadGridView: React.FC<LeadGridProps> = ({
 
             {/* Content */}
             <div className={styles.card_content}>
-              <h3 
-                className={styles.card_title}
-                onClick={(e) => {
-                  if (userPlan === "Free" && onMaskedDataClick) {
-                    e.stopPropagation();
-                    e.preventDefault();
-                    onMaskedDataClick();
-                  }
-                }}
-                style={userPlan === "Free" ? { 
-                  cursor: "pointer", 
-                  color: "#2563EB",
-                  textDecoration: "underline",
-                  textDecorationStyle: "dotted"
-                } : undefined}
-                title={userPlan === "Free" ? "Click to unlock full address" : undefined}
-              >
-                {getAddress(lead)}
-                {userPlan === "Free" && (
-                  <i className="fa-solid fa-lock" style={{ marginLeft: 6, fontSize: 10, opacity: 0.7 }}></i>
-                )}
-              </h3>
+              <h3 className={styles.card_title}>{getAddress(lead)}</h3>
               <p className={styles.card_location}>
                 {lead.city}, {lead.state} {lead.zip}
               </p>

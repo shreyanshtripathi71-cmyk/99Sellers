@@ -156,7 +156,7 @@ const DataImport = () => {
               <li>The system will automatically parse and categorize the data</li>
               <li>Properties, auctions, owners, and loans will be extracted</li>
               <li>Duplicate entries will be automatically handled</li>
-              <li>You'll receive a detailed import report after processing</li>
+              <li>You&apos;ll receive a detailed import report after processing</li>
             </ul>
           </div>
         </div>

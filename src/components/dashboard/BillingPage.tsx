@@ -2,9 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import Sidebar from "@/components/search/components/Sidebar";
-import Header from "@/components/search/components/Header";
+import DashboardShell from "@/components/search/DashboardShell";
 import styles from "@/components/search/styles/dashboard.module.scss";
 import { useAuth } from "@/context/AuthContext";
 
@@ -29,12 +27,8 @@ interface PaymentMethod {
 }
 
 const BillingPage: React.FC = () => {
-  const { user, subscription, isTrialActive, getTrialDaysRemaining, canAccessPremium } = useAuth();
-  const router = useRouter();
+  const { user, subscription, isTrialActive, getTrialDaysRemaining } = useAuth();
   const [activeTab, setActiveTab] = useState<"overview" | "invoices" | "payment">("overview");
-
-  // Determine user plan based on auth
-  const userPlan = canAccessPremium() || isTrialActive() ? "Pro" : "Free";
 
   const invoices: Invoice[] = [
     { id: "INV-2024-001", date: "2024-01-15", amount: 99.00, status: "paid", description: "Premium Plan - Monthly", downloadUrl: "#" },
@@ -92,229 +86,219 @@ const BillingPage: React.FC = () => {
   };
 
   return (
-    <div className={styles.dashboard_root}>
-      {/* Sidebar */}
-      <Sidebar userPlan={userPlan} onUpgrade={() => router.push("/dashboard/subscription")} />
-
-      {/* Main Content */}
-      <main className={styles.main_content}>
-        <Header 
-          title="Billing" 
-          subtitle="Manage your subscription" 
-          userPlan={userPlan}
-          actions={
-            <Link href="/dashboard/subscription" className={styles.btn_primary}>
-              <i className="fa-solid fa-crown"></i>
-              Upgrade Plan
+    <DashboardShell 
+      title="Billing" 
+      subtitle="Manage your subscription and payment methods"
+      actions={
+        <Link href="/dashboard/subscription" className={styles.btn + " " + styles.btnPrimary}>
+          <i className="fa-solid fa-crown"></i>
+          Upgrade Plan
+        </Link>
+      }
+    >
+      <div className={styles.pageContent}>
+        {isTrialActive() && (
+          <div className={styles.trialBanner}>
+            <div className={styles.trialBannerContent}>
+              <i className={"fa-solid fa-clock " + styles.trialBannerIcon}></i>
+              <div className={styles.trialBannerText}>
+                <h4>Trial Period Active</h4>
+                <p>You have {getTrialDaysRemaining()} days left in your free trial</p>
+              </div>
+            </div>
+            <Link href="/dashboard/subscription" className={styles.btn + " " + styles.btnSecondary}>
+              Subscribe Now
             </Link>
-          }
-        />
-
-        <div className={styles.content_area}>
-          {isTrialActive() && (
-            <div className={styles.trialBanner} style={{ marginBottom: 24, padding: 16, background: "linear-gradient(135deg, #EEF2FF, #E0E7FF)", borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                <i className="fa-solid fa-clock" style={{ fontSize: 20, color: "#4F46E5" }}></i>
-                <div>
-                  <h4 style={{ margin: 0, fontSize: 14, fontWeight: 600, color: "#1F2937" }}>Trial Period Active</h4>
-                  <p style={{ margin: 0, fontSize: 13, color: "#6B7280" }}>You have {getTrialDaysRemaining()} days left in your free trial</p>
-                </div>
-              </div>
-              <Link href="/dashboard/subscription" className={styles.btn_secondary}>
-                Subscribe Now
-              </Link>
-            </div>
-          )}
-
-          <div style={{ display: "flex", gap: 8, marginBottom: 24 }}>
-            {tabs.map((tab) => (
-              <button 
-                key={tab.id} 
-                className={activeTab === tab.id ? styles.btn_primary : styles.btn_secondary}
-                onClick={() => setActiveTab(tab.id as typeof activeTab)}
-                style={{ display: "flex", alignItems: "center", gap: 8 }}
-              >
-                <i className={"fa-solid " + tab.icon}></i>
-                {tab.label}
-              </button>
-            ))}
           </div>
+        )}
 
-          {activeTab === "overview" && (
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 24 }}>
-              <div className={styles.card} style={{ padding: 24, background: "#fff", borderRadius: 12, border: "1px solid #E5E7EB" }}>
-                <h3 style={{ margin: "0 0 16px", fontSize: 14, fontWeight: 600, color: "#6B7280", textTransform: "uppercase" }}>Current Plan</h3>
-                <div style={{ marginBottom: 16 }}>
-                  <span style={{ fontSize: 32, fontWeight: 700, color: "#1F2937" }}>{planDetails.price}</span>
-                  <span style={{ fontSize: 14, color: "#6B7280", marginLeft: 4 }}>{planDetails.period}</span>
-                </div>
-                <span className={styles.badge} style={{ background: "#EEF2FF", color: "#4F46E5", padding: "4px 12px", borderRadius: 20, fontSize: 12, fontWeight: 600 }}>{planDetails.name}</span>
-                {planDetails.nextBilling && (
-                  <div style={{ marginTop: 16, paddingTop: 16, borderTop: "1px solid #E5E7EB", display: "flex", justifyContent: "space-between", fontSize: 14 }}>
-                    <span style={{ color: "#6B7280" }}>{isTrialActive() ? "Trial ends" : "Next billing"}</span>
-                    <span style={{ fontWeight: 600, color: "#1F2937" }}>{formatDate(planDetails.nextBilling)}</span>
-                  </div>
-                )}
+        <div className={styles.tabNav}>
+          {tabs.map((tab) => (
+            <button 
+              key={tab.id} 
+              className={styles.tabBtn + (activeTab === tab.id ? " " + styles.active : "")}
+              onClick={() => setActiveTab(tab.id as typeof activeTab)}
+            >
+              <i className={"fa-solid " + tab.icon}></i>
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
+        {activeTab === "overview" && (
+          <div className={styles.billingOverviewGrid}>
+            <div className={styles.billingStatCard}>
+              <div className={styles.billingStatHeader}>
+                <h3>Current Plan</h3>
               </div>
-
-              <div className={styles.card} style={{ padding: 24, background: "#fff", borderRadius: 12, border: "1px solid #E5E7EB" }}>
-                <h3 style={{ margin: "0 0 16px", fontSize: 14, fontWeight: 600, color: "#6B7280", textTransform: "uppercase" }}>Billing Summary</h3>
-                <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", fontSize: 14 }}>
-                    <span style={{ color: "#6B7280" }}>Total This Month</span>
-                    <span style={{ fontWeight: 600, color: "#1F2937" }}>{formatCurrency(subscription?.plan === "free" ? 0 : 99)}</span>
-                  </div>
-                  <div style={{ display: "flex", justifyContent: "space-between", fontSize: 14 }}>
-                    <span style={{ color: "#6B7280" }}>Year to Date</span>
-                    <span style={{ fontWeight: 600, color: "#1F2937" }}>{formatCurrency(subscription?.plan === "free" ? 0 : 297)}</span>
-                  </div>
-                  <div style={{ display: "flex", justifyContent: "space-between", fontSize: 14 }}>
-                    <span style={{ color: "#6B7280" }}>Outstanding</span>
-                    <span style={{ fontWeight: 600, color: "#EF4444" }}>{formatCurrency(0)}</span>
-                  </div>
-                </div>
+              <div className={styles.billingStatValue}>
+                <span className={styles.value}>{planDetails.price}</span>
+                <span className={styles.period}>{planDetails.period}</span>
               </div>
-
-              <div className={styles.card} style={{ padding: 24, background: "#fff", borderRadius: 12, border: "1px solid #E5E7EB" }}>
-                <h3 style={{ margin: "0 0 16px", fontSize: 14, fontWeight: 600, color: "#6B7280", textTransform: "uppercase" }}>Quick Actions</h3>
-                <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                  <Link href="/dashboard/subscription" className={styles.btn_primary} style={{ textAlign: "center" }}>
-                    <i className="fa-solid fa-arrow-up-right-from-square"></i>
-                    Change Plan
-                  </Link>
-                  <button onClick={() => setActiveTab("payment")} className={styles.btn_secondary}>
-                    <i className="fa-solid fa-credit-card"></i>
-                    Update Payment
-                  </button>
-                  <button onClick={() => setActiveTab("invoices")} className={styles.btn_secondary}>
-                    <i className="fa-solid fa-download"></i>
-                    Download Invoices
-                  </button>
+              <span className={styles.badge + " " + styles.badgePrimary}>{planDetails.name}</span>
+              {planDetails.nextBilling && (
+                <div className={styles.billingStatRow}>
+                  <span className={styles.label}>{isTrialActive() ? "Trial ends" : "Next billing"}</span>
+                  <span className={styles.amount}>{formatDate(planDetails.nextBilling)}</span>
                 </div>
+              )}
+            </div>
+
+            <div className={styles.billingStatCard}>
+              <div className={styles.billingStatHeader}>
+                <h3>Billing Summary</h3>
+              </div>
+              <div className={styles.billingStatRow}>
+                <span className={styles.label}>Total This Month</span>
+                <span className={styles.amount}>{formatCurrency(subscription?.plan === "free" ? 0 : 99)}</span>
+              </div>
+              <div className={styles.billingStatRow}>
+                <span className={styles.label}>Year to Date</span>
+                <span className={styles.amount}>{formatCurrency(subscription?.plan === "free" ? 0 : 297)}</span>
+              </div>
+              <div className={styles.billingStatRow}>
+                <span className={styles.label}>Outstanding</span>
+                <span className={styles.amount + " " + styles.warning}>{formatCurrency(0)}</span>
               </div>
             </div>
-          )}
 
-          {activeTab === "invoices" && (
-            <div style={{ background: "#fff", borderRadius: 12, border: "1px solid #E5E7EB", overflow: "hidden" }}>
-              <div style={{ padding: "16px 24px", borderBottom: "1px solid #E5E7EB" }}>
-                <h3 style={{ margin: 0, fontSize: 16, fontWeight: 600, color: "#1F2937" }}>Invoice History</h3>
+            <div className={styles.billingStatCard}>
+              <div className={styles.billingStatHeader}>
+                <h3>Quick Actions</h3>
               </div>
-              <div className={styles.table_container}>
-                <table className={styles.table}>
-                  <thead className={styles.table_header}>
-                    <tr>
-                      <th>Invoice</th>
-                      <th>Date</th>
-                      <th>Amount</th>
-                      <th>Status</th>
-                      <th>Actions</th>
+              <div className={styles.billingActionsCard}>
+                <Link href="/dashboard/subscription" className={styles.btn + " " + styles.btnPrimary}>
+                  <i className="fa-solid fa-arrow-up-right-from-square"></i>
+                  Change Plan
+                </Link>
+                <button onClick={() => setActiveTab("payment")} className={styles.btn + " " + styles.btnSecondary}>
+                  <i className="fa-solid fa-credit-card"></i>
+                  Update Payment
+                </button>
+                <button onClick={() => setActiveTab("invoices")} className={styles.btn + " " + styles.btnSecondary}>
+                  <i className="fa-solid fa-download"></i>
+                  Download Invoices
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === "invoices" && (
+          <div className={styles.card}>
+            <div className={styles.cardHeader}>
+              <h3 className={styles.cardTitle}>Invoice History</h3>
+            </div>
+            <div className={styles.cardBody} style={{ padding: 0 }}>
+              <table className={styles.dataTable}>
+                <thead>
+                  <tr>
+                    <th>Invoice</th>
+                    <th>Date</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {invoices.map((invoice) => (
+                    <tr key={invoice.id}>
+                      <td>
+                        <div>
+                          <div style={{ fontWeight: 500 }}>{invoice.id}</div>
+                          <div style={{ fontSize: 13, opacity: 0.7 }}>{invoice.description}</div>
+                        </div>
+                      </td>
+                      <td>{formatDate(invoice.date)}</td>
+                      <td style={{ fontWeight: 600 }}>{formatCurrency(invoice.amount)}</td>
+                      <td>
+                        <span className={getStatusBadgeClass(invoice.status)}>
+                          {invoice.status.charAt(0).toUpperCase() + invoice.status.slice(1)}
+                        </span>
+                      </td>
+                      <td>
+                        {invoice.downloadUrl && (
+                          <button className={styles.btn + " " + styles.btnGhost}>
+                            <i className="fa-solid fa-download"></i>
+                            Download
+                          </button>
+                        )}
+                      </td>
                     </tr>
-                  </thead>
-                  <tbody>
-                    {invoices.map((invoice) => (
-                      <tr key={invoice.id} className={styles.table_row}>
-                        <td>
-                          <div>
-                            <div style={{ fontWeight: 500 }}>{invoice.id}</div>
-                            <div style={{ fontSize: 13, opacity: 0.7 }}>{invoice.description}</div>
-                          </div>
-                        </td>
-                        <td>{formatDate(invoice.date)}</td>
-                        <td style={{ fontWeight: 600 }}>{formatCurrency(invoice.amount)}</td>
-                        <td>
-                          <span className={getStatusBadgeClass(invoice.status)}>
-                            {invoice.status.charAt(0).toUpperCase() + invoice.status.slice(1)}
-                          </span>
-                        </td>
-                        <td>
-                          {invoice.downloadUrl && (
-                            <button className={styles.btn_secondary} style={{ padding: "6px 12px", fontSize: 13 }}>
-                              <i className="fa-solid fa-download"></i>
-                              Download
-                            </button>
-                          )}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                  ))}
+                </tbody>
+              </table>
             </div>
-          )}
+          </div>
+        )}
 
-          {activeTab === "payment" && (
-            <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-              <div style={{ background: "#fff", borderRadius: 12, border: "1px solid #E5E7EB" }}>
-                <div style={{ padding: "16px 24px", borderBottom: "1px solid #E5E7EB", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <h3 style={{ margin: 0, fontSize: 16, fontWeight: 600, color: "#1F2937" }}>Payment Methods</h3>
-                  <button className={styles.btn_primary}>
-                    <i className="fa-solid fa-plus"></i>
-                    Add New
-                  </button>
-                </div>
-                <div style={{ padding: 24, display: "flex", flexDirection: "column", gap: 12 }}>
+        {activeTab === "payment" && (
+          <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+            <div className={styles.card}>
+              <div className={styles.cardHeader}>
+                <h3 className={styles.cardTitle}>Payment Methods</h3>
+                <button className={styles.btn + " " + styles.btnPrimary}>
+                  <i className="fa-solid fa-plus"></i>
+                  Add New
+                </button>
+              </div>
+              <div className={styles.cardBody}>
+                <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                   {paymentMethods.map((method) => (
                     <div 
                       key={method.id} 
-                      style={{ 
-                        padding: 16, 
-                        border: method.isDefault ? "2px solid #2563EB" : "1px solid #E5E7EB", 
-                        borderRadius: 12,
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        background: method.isDefault ? "#F8FAFF" : "#fff"
-                      }}
+                      className={styles.paymentMethodCard + (method.isDefault ? " " + styles.isDefault : "")}
                     >
-                      <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-                        <div style={{ width: 48, height: 48, borderRadius: 8, background: "#F3F4F6", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                          <i className={"fa-solid " + getPaymentIcon(method.type)} style={{ fontSize: 20, color: "#6B7280" }}></i>
+                      <div className={styles.paymentMethodInfo}>
+                        <div className={styles.paymentMethodIcon}>
+                          <i className={"fa-solid " + getPaymentIcon(method.type)}></i>
                         </div>
-                        <div>
-                          <div style={{ fontWeight: 600, color: "#1F2937" }}>
+                        <div className={styles.paymentMethodDetails}>
+                          <div className={styles.name}>
                             {method.type === "card" 
                               ? method.brand + " ending in " + method.last4 
                               : "PayPal - " + method.email}
                           </div>
-                          <div style={{ fontSize: 13, color: "#6B7280" }}>
+                          <div className={styles.meta}>
                             {method.type === "card" && "Expires " + method.expiryMonth + "/" + method.expiryYear}
-                            {method.isDefault && <span style={{ color: "#2563EB", fontWeight: 500 }}> • Default</span>}
+                            {method.isDefault && <span className={styles.defaultBadge}> • Default</span>}
                           </div>
                         </div>
                       </div>
-                      <div style={{ display: "flex", gap: 8 }}>
+                      <div className={styles.paymentMethodActions}>
                         {!method.isDefault && (
-                          <button className={styles.btn_secondary} style={{ padding: "6px 12px", fontSize: 13 }}>Set Default</button>
+                          <button className={styles.btn + " " + styles.btnSecondary}>Set Default</button>
                         )}
-                        <button style={{ padding: "6px 12px", fontSize: 13, background: "#FEE2E2", color: "#DC2626", border: "none", borderRadius: 8, cursor: "pointer" }}>Remove</button>
+                        <button className={styles.btn + " " + styles.btnDanger}>Remove</button>
                       </div>
                     </div>
                   ))}
                 </div>
               </div>
+            </div>
 
-              <div style={{ background: "#fff", borderRadius: 12, border: "1px solid #E5E7EB" }}>
-                <div style={{ padding: "16px 24px", borderBottom: "1px solid #E5E7EB", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <h3 style={{ margin: 0, fontSize: 16, fontWeight: 600, color: "#1F2937" }}>Billing Address</h3>
-                  <button className={styles.btn_secondary}>
-                    <i className="fa-solid fa-pen"></i>
-                    Edit
-                  </button>
-                </div>
-                <div style={{ padding: 24 }}>
-                  <p style={{ margin: "0 0 4px", fontWeight: 600, color: "#1F2937" }}>{user?.name || "Your Name"}</p>
-                  <p style={{ margin: "0 0 4px", color: "#6B7280" }}>123 Main Street</p>
-                  <p style={{ margin: "0 0 4px", color: "#6B7280" }}>Suite 100</p>
-                  <p style={{ margin: "0 0 4px", color: "#6B7280" }}>San Francisco, CA 94102</p>
-                  <p style={{ margin: 0, color: "#6B7280" }}>United States</p>
+            <div className={styles.card}>
+              <div className={styles.cardHeader}>
+                <h3 className={styles.cardTitle}>Billing Address</h3>
+                <button className={styles.btn + " " + styles.btnSecondary}>
+                  <i className="fa-solid fa-pen"></i>
+                  Edit
+                </button>
+              </div>
+              <div className={styles.cardBody}>
+                <div className={styles.billingAddressContent}>
+                  <p className={styles.name}>{user?.name || "Your Name"}</p>
+                  <p className={styles.address}>123 Main Street</p>
+                  <p className={styles.address}>Suite 100</p>
+                  <p className={styles.address}>San Francisco, CA 94102</p>
+                  <p className={styles.address}>United States</p>
                 </div>
               </div>
             </div>
-          )}
-        </div>
-      </main>
-    </div>
+          </div>
+        )}
+      </div>
+    </DashboardShell>
   );
 };
 

@@ -8,7 +8,6 @@ import FilterPanel, { type Filters } from "./components/FilterPanel";
 import LeadTableView, { type Lead } from "./components/LeadTableView";
 import LeadGridView from "./components/LeadGridView";
 import SaveSearchModal from "@/modals/SaveSearchModal";
-import UpgradePromptModal from "@/modals/UpgradePromptModal";
 import styles from "./styles/dashboard.module.scss";
 
 // Mock data
@@ -130,7 +129,6 @@ const LeadDiscovery = () => {
   const [viewMode, setViewMode] = useState<"list" | "grid">("list");
   const [showFilters, setShowFilters] = useState(false);
   const [showSaveModal, setShowSaveModal] = useState(false);
-  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [leads, setLeads] = useState<Lead[]>(MOCK_LEADS);
   const [filters, setFilters] = useState<Filters>(initialFilters);
@@ -185,13 +183,6 @@ const LeadDiscovery = () => {
     setLeads(leads.map((l) => (l.id === id ? { ...l, saved: !l.saved } : l)));
   };
 
-  // Handler to show upgrade modal when free users click masked data
-  const handleMaskedDataClick = () => {
-    if (userPlan === "Free") {
-      setShowUpgradeModal(true);
-    }
-  };
-
   // Mask sensitive data for free users
   const getAddress = (lead: Lead) => {
     if (userPlan === "Pro") return lead.address;
@@ -228,13 +219,6 @@ const LeadDiscovery = () => {
             setShowSaveModal(false);
           }}
           filters={filters}
-        />
-      )}
-
-      {/* Upgrade Prompt Modal for Free Users */}
-      {showUpgradeModal && (
-        <UpgradePromptModal
-          onClose={() => setShowUpgradeModal(false)}
         />
       )}
 
@@ -317,7 +301,6 @@ const LeadDiscovery = () => {
                 onToggleSave={handleToggleSave}
                 getAddress={getAddress}
                 userPlan={userPlan}
-                onMaskedDataClick={handleMaskedDataClick}
               />
             ) : (
               <LeadGridView
@@ -325,7 +308,6 @@ const LeadDiscovery = () => {
                 onToggleSave={handleToggleSave}
                 getAddress={getAddress}
                 userPlan={userPlan}
-                onMaskedDataClick={handleMaskedDataClick}
               />
             )}
           </div>
