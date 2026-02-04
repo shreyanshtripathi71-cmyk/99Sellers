@@ -45,10 +45,10 @@ const sampleLeads = [
 
 const SampleLeadTable = () => {
     return (
-        <section className={styles.sample_leads}>
-            <div className={styles.sample_leads_wrapper}>
+        <section className={styles.section_clean_alt}>
+            <div className={styles.section_inner}>
                 <motion.h2
-                    className={styles.section_title}
+                    className={styles.section_title_clean}
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
@@ -66,7 +66,7 @@ const SampleLeadTable = () => {
                     <div className={styles.sample_table_header}>
                         <h3>
                             <i className="fa-solid fa-table-list"></i>
-                            Sample Lead Layout
+                            Sample Lead Data
                         </h3>
                         <div className={styles.live_badge}>
                             <span className={styles.pulse}></span>

@@ -2,7 +2,6 @@
 import React from "react";
 import { motion } from "framer-motion";
 import styles from "../styles/homepage.module.scss";
-
 const leadTypes = [
   { icon: "fa-solid fa-house-crack", title: "Foreclosures", count: "24,500+" },
   { icon: "fa-solid fa-scale-balanced", title: "Divorce", count: "18,200+" },
@@ -11,14 +10,12 @@ const leadTypes = [
   { icon: "fa-solid fa-triangle-exclamation", title: "Code Violations", count: "9,600+" },
   { icon: "fa-solid fa-door-open", title: "Evictions", count: "15,300+" }
 ];
-
 const LeadTypes = () => {
   return (
     <section className={styles.lead_types} id="lead-types">
       <h2 className={styles.section_title}>
         Access Every Type of Motivated Seller
       </h2>
-
       <div className={styles.lead_chips}>
         {leadTypes.map((type, index) => (
           <motion.div
@@ -38,5 +35,4 @@ const LeadTypes = () => {
     </section>
   );
 };
-
 export default LeadTypes;

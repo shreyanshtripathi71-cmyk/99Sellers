@@ -18,17 +18,6 @@ const Hero = () => {
       <div className={styles.hero_overlay}></div>
 
       <div className={styles.hero_inner}>
-        {/* Animated Label Badge */}
-        <motion.div
-          className={styles.hero_label}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <i className="fa-solid fa-bolt"></i>
-          Trusted by 12,000+ Real Estate Investors
-        </motion.div>
-
         {/* Title with animated gradient */}
         <motion.h1
           className={styles.hero_title}
@@ -68,27 +57,6 @@ const Hero = () => {
             <i className="fa-solid fa-play-circle"></i>
             See How It Works
           </Link>
-        </motion.div>
-
-        {/* Stats Row */}
-        <motion.div
-          className={styles.hero_stats}
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-        >
-          <div className={styles.hero_stat}>
-            <div className={styles.stat_value}>12.5M+</div>
-            <div className={styles.stat_label}>Motivated Seller Leads</div>
-          </div>
-          <div className={styles.hero_stat}>
-            <div className={styles.stat_value}>98%</div>
-            <div className={styles.stat_label}>Contact Accuracy</div>
-          </div>
-          <div className={styles.hero_stat}>
-            <div className={styles.stat_value}>60%</div>
-            <div className={styles.stat_label}>Include Owner Email</div>
-          </div>
         </motion.div>
       </div>
     </section>

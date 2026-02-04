@@ -55,11 +55,10 @@ const WhyChooseUs = () => {
 
             {/* Right Side - Benefits */}
             <div className={styles.split_right}>
-                <span className={styles.split_eyebrow}>Why Investors Choose Us</span>
                 <h2 className={styles.split_title}>
                     The Unfair Advantage
                     <br />
-                    <span className={styles.gradient_text}>You've Been Looking For</span>
+                    <span className={styles.gradient_text}>You&apos;ve Been Looking For</span>
                 </h2>
 
                 <div className={styles.benefits_list}>
