@@ -22,7 +22,7 @@ const LogoMarquee = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          Trusted by <strong>12,000+</strong> investors and top real estate teams
+          Trusted by <strong>12,000+</strong> real estate professionals nationwide
         </motion.p>
 
         <div className={styles.marquee_wrapper}>

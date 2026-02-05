@@ -55,7 +55,7 @@ const Hero = () => {
           </Link>
           <Link href="#how-it-works" className={`${styles.btn_outline} ${styles.btn_large}`}>
             <i className="fa-solid fa-play-circle"></i>
-            See How It Works
+            How It Works
           </Link>
         </motion.div>
       </div>

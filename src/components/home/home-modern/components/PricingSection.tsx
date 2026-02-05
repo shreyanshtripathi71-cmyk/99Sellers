@@ -21,7 +21,8 @@ const plans = [
       { text: "Priority support", included: false }
     ],
     buttonText: "Get Started Free",
-    popular: false
+    popular: false,
+    valueStack: null
   },
   {
     id: "premium",
@@ -39,7 +40,14 @@ const plans = [
       { text: "Daily data updates", included: true }
     ],
     buttonText: "Start 7-Day Free Trial",
-    popular: true
+    popular: true,
+    valueStack: [
+      { feature: "Skip tracing", value: "$200/mo" },
+      { feature: "All 50 states", value: "$150/mo" },
+      { feature: "6 lead types", value: "$100/mo" },
+      { feature: "Daily updates", value: "$50/mo" }
+    ],
+    totalValue: "$500"
   },
   {
     id: "enterprise",
@@ -57,7 +65,8 @@ const plans = [
       { text: "Custom data requests", included: true }
     ],
     buttonText: "Contact Sales",
-    popular: false
+    popular: false,
+    valueStack: null
   }
 ];
 
@@ -84,10 +93,11 @@ const PricingSection = () => {
           viewport={{ once: true }}
         >
           <h2 className={styles.pricing_title}>
-            Simple, Transparent <span>Pricing</span>
+            Invest <span>$97/Month</span>, Make <span>$10,000+</span>
           </h2>
           <p className={styles.pricing_subtitle}>
-            Choose the plan that fits your business. No hidden fees. Cancel anytime.
+            The average 99Sellers user closes 5+ additional deals per month.
+            That&apos;s $50,000+ in profit from a $97 investment.
           </p>
 
           <div className={styles.pricing_toggle}>
@@ -131,6 +141,29 @@ const PricingSection = () => {
                 <span className={styles.price_period}>/{plan.period}</span>
               </div>
 
+              {/* Value Stack for Premium */}
+              {plan.valueStack && (
+                <div className={styles.value_stack}>
+                  <div className={styles.value_stack_header}>
+                    <span>What you&apos;re getting:</span>
+                  </div>
+                  {plan.valueStack.map((item, i) => (
+                    <div key={i} className={styles.value_stack_item}>
+                      <span className={styles.value_feature}>{item.feature}</span>
+                      <span className={styles.value_worth}>worth {item.value}</span>
+                    </div>
+                  ))}
+                  <div className={styles.value_stack_total}>
+                    <span>Total Value:</span>
+                    <span className={styles.total_value}>{plan.totalValue}/month</span>
+                  </div>
+                  <div className={styles.you_pay}>
+                    <span>You Pay:</span>
+                    <span className={styles.you_pay_amount}>${getPrice(plan.price)}/month</span>
+                  </div>
+                </div>
+              )}
+
               <ul className={styles.plan_features_list}>
                 {plan.features.map((feature, i) => (
                   <li key={i} className={feature.included ? styles.included : styles.not_included}>
@@ -156,6 +189,27 @@ const PricingSection = () => {
             </motion.div>
           ))}
         </div>
+
+        <motion.div
+          className={styles.pricing_comparison}
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+        >
+          <div className={styles.comparison_box}>
+            <div className={styles.comparison_left}>
+              <span className={styles.comparison_label}>What you&apos;d pay elsewhere:</span>
+              <span className={styles.comparison_price}>$500+/month</span>
+              <span className={styles.comparison_details}>PropStream + BatchLeads + Skip Tracing</span>
+            </div>
+            <div className={styles.comparison_vs}>VS</div>
+            <div className={styles.comparison_right}>
+              <span className={styles.comparison_label}>99Sellers Premium:</span>
+              <span className={styles.comparison_price_highlight}>${getPrice("97")}/month</span>
+              <span className={styles.comparison_details}>Everything in one platform</span>
+            </div>
+          </div>
+        </motion.div>
 
         <motion.div
           className={styles.pricing_faq_preview}

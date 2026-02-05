@@ -48,7 +48,7 @@ const DashboardShowcase = () => {
           transition={{ duration: 0.6 }}
         >
           <h2 className={styles.ds_title}>
-            See How It <span>Works</span>
+            How It <span>Works</span>
           </h2>
           <p className={styles.ds_subtitle}>
             Find motivated seller leads in just a few clicks

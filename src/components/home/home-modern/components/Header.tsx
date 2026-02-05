@@ -23,11 +23,10 @@ const Header = () => {
         </Link>
 
         <nav className={styles.nav}>
-          <Link href="#lead-types">Lead Types</Link>
-          <Link href="#how-it-works">How It Works</Link>
-          <Link href="#pricing">Pricing</Link>
-          <Link href="#testimonials">Testimonials</Link>
-          <Link href="/blog">Blog</Link>
+          <Link href="/">Home</Link>
+          <Link href="/pricing">Pricing</Link>
+          <Link href="/about_us_01">About Us</Link>
+          <Link href="/contact">Contact Us</Link>
         </nav>
 
         <div className={styles.header_actions}>
@@ -44,7 +43,7 @@ const Header = () => {
         </div>
 
         {/* Mobile Menu Toggle */}
-        <button 
+        <button
           className={styles.mobile_menu_toggle}
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           aria-label="Toggle menu"
@@ -57,11 +56,10 @@ const Header = () => {
       {mobileMenuOpen && (
         <div className={styles.mobile_menu}>
           <nav className={styles.mobile_nav}>
-            <Link href="#lead-types" onClick={() => setMobileMenuOpen(false)}>Lead Types</Link>
-            <Link href="#how-it-works" onClick={() => setMobileMenuOpen(false)}>How It Works</Link>
-            <Link href="#pricing" onClick={() => setMobileMenuOpen(false)}>Pricing</Link>
-            <Link href="#testimonials" onClick={() => setMobileMenuOpen(false)}>Testimonials</Link>
-            <Link href="/blog" onClick={() => setMobileMenuOpen(false)}>Blog</Link>
+            <Link href="/" onClick={() => setMobileMenuOpen(false)}>Home</Link>
+            <Link href="/pricing" onClick={() => setMobileMenuOpen(false)}>Pricing</Link>
+            <Link href="/about_us_01" onClick={() => setMobileMenuOpen(false)}>About Us</Link>
+            <Link href="/contact" onClick={() => setMobileMenuOpen(false)}>Contact Us</Link>
           </nav>
           <div className={styles.mobile_actions}>
             <a href="tel:+18005551234" className={styles.mobile_phone}>

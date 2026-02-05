@@ -1,44 +1,33 @@
 "use client";
-import React, { useState } from "react";
-import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
+import React from "react";
+import { motion } from "framer-motion";
 import styles from "../styles/homepage.module.scss";
 
+// Client's testimonials with real photos
 const testimonials = [
   {
     id: 1,
-    name: "Marcus Johnson",
+    name: "Marcus Williams",
     role: "Real Estate Investor",
-    location: "Phoenix, AZ",
-    image: "/images/home/testimonial-marcus.png",
-    quote: "99Sellers completely transformed my business. I went from 2-3 deals a month to closing 8-10. The lead quality is incredible.",
-    stats: { deals: "8-10", timeframe: "per month", roi: "340%" }
+    location: "Dallas, TX",
+    experience: "8+ years in real estate",
+    image: "/images/home/testimonials/testimonial-1.png",
+    quote: "As the Real Estate agent, my life has been a roller coaster ride. Going up slow but decline fast. But when I found out about 99Sellers, the ride's been a one fast flight. Of course there were some turbulence, but with my hard work and customer support of 99Sellers, I overcame every obstacle. Now I am happy with what I am achieving. I don't think I could have been able to get ahead this fast without 99Sellers."
   },
   {
     id: 2,
-    name: "Sarah Chen",
-    role: "Wholesaler",
-    location: "Houston, TX",
-    image: "/images/home/testimonial-sarah.png",
-    quote: "The skip tracing accuracy is unmatched. I'm reaching motivated sellers on the first call. This is a game changer.",
-    stats: { deals: "12", timeframe: "first month", roi: "520%" }
-  },
-  {
-    id: 3,
-    name: "David Williams",
-    role: "Broker",
-    location: "Atlanta, GA",
-    image: "/images/home/testimonial-david.png",
-    quote: "My team relies on 99Sellers for all our off-market deals. The data is fresh, accurate, and helps us move faster than competitors.",
-    stats: { deals: "$2.1M", timeframe: "in deals", roi: "890%" }
+    name: "Jennifer Thompson",
+    role: "Real Estate Agent",
+    location: "Phoenix, AZ",
+    experience: "5+ years in real estate",
+    image: "/images/home/testimonials/testimonial-2.png",
+    quote: "Let me tell you this. I have been doing everything wrong. Finding an appropriate seller is not a piece of cake. I used to spend time looking at ads, searching newspaper, cold calling, roaming around city to see that one little board called \"FOR SALE\". I tried to do everything on my own and that sucked. When I first made account on the 99Sellers, it was like 99 problems of mine was solved. In an instant!! 1% is my pure hustle, cause my 99 problems are gone now!!"
   }
 ];
 
 const TestimonialsSection = () => {
-  const [activeIndex, setActiveIndex] = useState(0);
-
   return (
-    <section className={styles.testimonials_section}>
+    <section className={styles.testimonials_section} id="testimonials">
       <div className={styles.testimonials_container}>
         <motion.div
           className={styles.testimonials_header}
@@ -47,77 +36,55 @@ const TestimonialsSection = () => {
           viewport={{ once: true }}
         >
           <h2 className={styles.testimonials_title}>
-            Real Results from <span>Real Investors</span>
+            DON'T JUST TAKE OUR <span>WORD FOR IT</span>
           </h2>
-          <p className={styles.testimonials_subtitle}>
-            See how thousands of investors are scaling their business with 99Sellers
-          </p>
         </motion.div>
 
-        <div className={styles.testimonials_content}>
-          <div className={styles.testimonials_cards}>
-            {testimonials.map((testimonial, index) => (
-              <motion.div
-                key={testimonial.id}
-                className={`${styles.testimonial_card} ${index === activeIndex ? styles.active : ""}`}
-                initial={{ opacity: 0, x: 50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                onClick={() => setActiveIndex(index)}
-              >
-                <div className={styles.testimonial_quote}>
-                  <i className="fa-solid fa-quote-left"></i>
-                  <p>{testimonial.quote}</p>
-                </div>
+        <div className={styles.testimonials_grid}>
+          {testimonials.map((testimonial, index) => (
+            <motion.div
+              key={testimonial.id}
+              className={styles.testimonial_card_clean}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.15 }}
+            >
+              <div className={styles.testimonial_quote_icon}>
+                <i className="fa-solid fa-quote-left"></i>
+              </div>
 
-                <div className={styles.testimonial_author}>
-                  <div className={styles.author_image}>
-                    <img src={testimonial.image} alt={testimonial.name} />
-                  </div>
-                  <div className={styles.author_info}>
-                    <h4>{testimonial.name}</h4>
-                    <p>{testimonial.role}</p>
-                    <span>{testimonial.location}</span>
-                  </div>
-                </div>
+              <p className={styles.testimonial_text}>
+                {testimonial.quote}
+              </p>
 
-                <div className={styles.testimonial_stats}>
-                  <div className={styles.tstat}>
-                    <span className={styles.tstat_value}>{testimonial.stats.deals}</span>
-                    <span className={styles.tstat_label}>{testimonial.stats.timeframe}</span>
-                  </div>
-                  <div className={styles.tstat}>
-                    <span className={styles.tstat_value}>{testimonial.stats.roi}</span>
-                    <span className={styles.tstat_label}>ROI</span>
-                  </div>
+              <div className={styles.testimonial_author_clean}>
+                <div className={styles.author_avatar_image}>
+                  <img
+                    src={testimonial.image}
+                    alt={testimonial.name}
+                    onError={(e) => {
+                      // Fallback to icon if image fails to load
+                      const target = e.target as HTMLImageElement;
+                      target.style.display = 'none';
+                      const parent = target.parentElement;
+                      if (parent) {
+                        parent.innerHTML = '<i class="fa-solid fa-user"></i>';
+                        parent.classList.add(styles.author_avatar);
+                        parent.classList.remove(styles.author_avatar_image);
+                      }
+                    }}
+                  />
                 </div>
-              </motion.div>
-            ))}
-          </div>
-
-          <div className={styles.testimonials_dots}>
-            {testimonials.map((_, index) => (
-              <button
-                key={index}
-                className={`${styles.tdot} ${index === activeIndex ? styles.active : ""}`}
-                onClick={() => setActiveIndex(index)}
-              />
-            ))}
-          </div>
+                <div className={styles.author_details}>
+                  <h4>{testimonial.name}</h4>
+                  <p>{testimonial.role}</p>
+                  <span>{testimonial.location} • {testimonial.experience}</span>
+                </div>
+              </div>
+            </motion.div>
+          ))}
         </div>
-
-        <motion.div
-          className={styles.testimonials_cta}
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-        >
-          <Link href="/search" className={styles.btn_testimonial_cta}>
-            Join 12,000+ Successful Investors
-            <i className="fa-solid fa-arrow-right"></i>
-          </Link>
-        </motion.div>
       </div>
     </section>
   );
