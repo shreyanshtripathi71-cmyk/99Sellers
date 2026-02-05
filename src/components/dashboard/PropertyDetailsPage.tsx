@@ -1279,7 +1279,7 @@ const PropertyDetailsPage: React.FC<PropertyDetailsPageProps> = ({ propertyId })
                 Choose Export Format
               </h3>
               <p style={{ margin: "8px 0 0", fontSize: 14, color: "#6B7280" }}>
-                Select how you'd like to download this property data
+                Select how you&apos;d like to download this property data
               </p>
             </div>
 

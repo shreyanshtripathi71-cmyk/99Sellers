@@ -204,7 +204,7 @@ function getDefaultContent(key) {
             address: '123 Main St, Los Angeles, CA 90001'
         },
         footer_content: {
-            copyright: '© 2024 99Sellers. All rights reserved.',
+            copyright: '© 2026 99Sellers. All rights reserved.',
             social_links: []
         }
     };

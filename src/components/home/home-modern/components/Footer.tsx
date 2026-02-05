@@ -13,7 +13,7 @@ const Footer = () => {
           </Link>
           <p>
             The #1 source for motivated seller leads. Helping real estate investors
-            find off-market deals since 2020.
+            find off-market deals since 2025.
           </p>
         </div>
 
