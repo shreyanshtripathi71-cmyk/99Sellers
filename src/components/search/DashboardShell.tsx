@@ -1,5 +1,7 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 import Sidebar from "./components/Sidebar";
 import Header from "./components/Header";
 import styles from "./styles/dashboard.module.scss";
@@ -17,13 +19,44 @@ const DashboardShell: React.FC<DashboardShellProps> = ({
   subtitle,
   actions,
 }) => {
-  const [userPlan, setUserPlan] = useState<"Free" | "Pro">("Pro");
+  const { user, subscription, canAccessPremium, isTrialActive, logout } = useAuth();
+  const router = useRouter();
+
+  // Derive plan from actual subscription state
+  const userPlan = canAccessPremium() || isTrialActive() ? "Pro" : "Free";
+
+  const handleUpgrade = () => {
+    router.push("/dashboard/subscription");
+  };
+
+  const handleLogout = () => {
+    logout();
+    router.push("/signin");
+  };
+
+  // Get user display info
+  const userName = user?.name || user?.firstName || "User";
+  const userEmail = user?.email || "";
+  const userInitials = userName.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2) || "U";
 
   return (
     <div className={styles.dashboard_root}>
-      <Sidebar userPlan={userPlan} onUpgrade={() => setUserPlan("Pro")} />
+      <Sidebar
+        userPlan={userPlan}
+        onUpgrade={handleUpgrade}
+        subscription={subscription}
+      />
       <main className={styles.main_content}>
-        <Header title={title} subtitle={subtitle} userPlan={userPlan} actions={actions} />
+        <Header
+          title={title}
+          subtitle={subtitle}
+          userPlan={userPlan}
+          actions={actions}
+          userName={userName}
+          userEmail={userEmail}
+          userInitials={userInitials}
+          onLogout={handleLogout}
+        />
         <div className={styles.content_area}>{children}</div>
       </main>
     </div>

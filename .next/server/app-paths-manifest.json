@@ -1,6 +1,12 @@
 {
   "/page": "app/page.js",
-  "/about_us_01/page": "app/about_us_01/page.js",
-  "/contact/page": "app/contact/page.js",
-  "/pricing/page": "app/pricing/page.js"
+  "/signin/page": "app/signin/page.js",
+  "/search/page": "app/search/page.js",
+  "/dashboard/saved-leads/page": "app/dashboard/saved-leads/page.js",
+  "/dashboard/saved-searches/page": "app/dashboard/saved-searches/page.js",
+  "/dashboard/export/page": "app/dashboard/export/page.js",
+  "/dashboard/profile/page": "app/dashboard/profile/page.js",
+  "/dashboard/billing/page": "app/dashboard/billing/page.js",
+  "/dashboard/subscription/page": "app/dashboard/subscription/page.js",
+  "/dashboard/account-settings/page": "app/dashboard/account-settings/page.js"
 }

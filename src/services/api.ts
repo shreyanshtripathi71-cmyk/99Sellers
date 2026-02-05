@@ -26,7 +26,7 @@ const removeToken = (): void => {
 // Base fetch wrapper with auth
 const fetchWithAuth = async (endpoint: string, options: RequestInit = {}): Promise<Response> => {
   const token = getToken();
-  
+
   const headers: HeadersInit = {
     'Content-Type': 'application/json',
     ...(options.headers || {}),
@@ -64,13 +64,13 @@ export const authAPI = {
       method: 'POST',
       body: JSON.stringify({ email, password }),
     });
-    
+
     const result = await handleResponse<{ token: string; userType: string }>(response);
-    
+
     if (result.success && result.data?.token) {
       setToken(result.data.token);
     }
-    
+
     return result;
   },
 
@@ -89,7 +89,7 @@ export const authAPI = {
       method: 'POST',
       body: JSON.stringify(data),
     });
-    
+
     return handleResponse<{ message: string }>(response);
   },
 
@@ -164,10 +164,10 @@ export const propertiesAPI = {
     const params = new URLSearchParams();
     if (filters?.type) params.append('type', filters.type);
     if (filters?.city) params.append('city', filters.city);
-    
+
     const query = params.toString() ? `?${params.toString()}` : '';
     const response = await fetchWithAuth(`/api/properties${query}`);
-    
+
     return handleResponse<Property[]>(response);
   },
 
@@ -211,7 +211,7 @@ export const savedLeadsAPI = {
     const response = await fetchWithAuth('/api/user/saved-leads');
     return handleResponse<any[]>(response);
   },
-  
+
   save: async (type: 'property' | 'auction' | 'owner' | 'loan', itemId: number) => {
     const response = await fetchWithAuth('/api/user/saved-leads', {
       method: 'POST',
@@ -219,20 +219,20 @@ export const savedLeadsAPI = {
     });
     return handleResponse<{ message: string }>(response);
   },
-  
+
   remove: async (id: number) => {
     const response = await fetchWithAuth(`/api/user/saved-leads/${id}`, {
       method: 'DELETE',
     });
     return handleResponse<{ message: string }>(response);
   },
-  
+
   export: async (format: 'csv' | 'excel') => {
     const token = getToken();
     const response = await fetch(`${API_BASE_URL}/api/user/saved-leads/export?format=${format}`, {
       headers: token ? { 'Authorization': `Bearer ${token}` } : {},
     });
-    
+
     if (response.ok) {
       const blob = await response.blob();
       return { success: true, data: blob };
@@ -368,12 +368,12 @@ export const subscriptionAPI = {
     });
     return handleResponse<{ message: string }>(response);
   },
-  
+
   getBillingHistory: async () => {
     const response = await fetchWithAuth('/api/subscription/billing-history');
     return handleResponse<any[]>(response);
   },
-  
+
   getInvoice: async (invoiceId: string) => {
     const response = await fetchWithAuth(`/api/subscription/invoices/${invoiceId}`);
     return handleResponse<any>(response);
@@ -388,34 +388,34 @@ export const notificationsAPI = {
     const response = await fetchWithAuth('/api/user/notifications');
     return handleResponse<any[]>(response);
   },
-  
+
   markAsRead: async (id: number) => {
     const response = await fetchWithAuth(`/api/user/notifications/${id}/read`, {
       method: 'PUT',
     });
     return handleResponse<{ message: string }>(response);
   },
-  
+
   markAllAsRead: async () => {
     const response = await fetchWithAuth('/api/user/notifications/read-all', {
       method: 'PUT',
     });
     return handleResponse<{ message: string }>(response);
   },
-  
+
   delete: async (id: number) => {
     const response = await fetchWithAuth(`/api/user/notifications/${id}`, {
       method: 'DELETE',
     });
     return handleResponse<{ message: string }>(response);
   },
-  
+
   getPreferences: async () => {
     const response = await fetchWithAuth('/api/user/notification-preferences');
     return handleResponse<any>(response);
   },
-  
-    updatePreferences: async (preferences: any) => {
+
+  updatePreferences: async (preferences: any) => {
     const response = await fetchWithAuth('/api/user/notification-preferences', {
       method: 'PUT',
       body: JSON.stringify(preferences),
@@ -432,17 +432,17 @@ export const dashboardAPI = {
     const response = await fetchWithAuth('/api/user/dashboard/stats');
     return handleResponse<any>(response);
   },
-  
+
   getRecentActivity: async (limit = 10) => {
     const response = await fetchWithAuth(`/api/user/dashboard/activity?limit=${limit}`);
     return handleResponse<any[]>(response);
   },
-  
+
   getSearchHistory: async (limit = 20) => {
     const response = await fetchWithAuth(`/api/user/search-history?limit=${limit}`);
     return handleResponse<any[]>(response);
   },
-  
+
   clearSearchHistory: async () => {
     const response = await fetchWithAuth('/api/user/search-history', {
       method: 'DELETE',
@@ -774,6 +774,40 @@ export const adminAPI = {
     },
     delete: async (id: number) => {
       const response = await fetchWithAuth(`/api/admin/poppins/${id}`, {
+        method: 'DELETE',
+      });
+      return handleResponse<{ message: string }>(response);
+    },
+  },
+
+  // Content Management
+  content: {
+    getAll: async () => {
+      const response = await fetchWithAuth('/api/admin/content');
+      return handleResponse<any[]>(response);
+    },
+    get: async (key: string) => {
+      const response = await fetchWithAuth(`/api/admin/content/${key}`);
+      return handleResponse<{ key: string; value: any; contentType?: string; isDefault?: boolean }>(response);
+    },
+    update: async (key: string, value: any, contentType?: string) => {
+      const response = await fetchWithAuth(`/api/admin/content/${key}`, {
+        method: 'PUT',
+        body: JSON.stringify({ value, contentType }),
+      });
+      return handleResponse<{ message: string }>(response);
+    },
+    uploadImage: async (formData: FormData) => {
+      const token = getToken();
+      const response = await fetch(`${API_BASE_URL}/api/admin/content/upload`, {
+        method: 'POST',
+        headers: token ? { 'Authorization': `Bearer ${token}` } : {},
+        body: formData,
+      });
+      return handleResponse<{ success: boolean; url: string; filename: string }>(response);
+    },
+    deleteImage: async (filename: string) => {
+      const response = await fetchWithAuth(`/api/admin/content/image/${filename}`, {
         method: 'DELETE',
       });
       return handleResponse<{ message: string }>(response);

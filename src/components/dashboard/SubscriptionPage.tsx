@@ -79,7 +79,7 @@ const SubscriptionPage = () => {
 
   const transformFeaturesToArray = (features: Record<string, any>, description: string): string[] => {
     const featureList: string[] = [];
-    
+
     if (features.searchLimit) {
       featureList.push(
         features.searchLimit === -1
@@ -87,7 +87,7 @@ const SubscriptionPage = () => {
           : `Up to ${features.searchLimit.toLocaleString()} property searches`
       );
     }
-    
+
     if (features.exportLimit !== undefined && features.exportLimit !== 0) {
       featureList.push(
         features.exportLimit === -1
@@ -95,11 +95,11 @@ const SubscriptionPage = () => {
           : `Export up to ${features.exportLimit.toLocaleString()} properties`
       );
     }
-    
+
     if (features.fullDataAccess) {
       featureList.push("Full access to property details");
     }
-    
+
     if (features.apiCallsPerDay) {
       featureList.push(
         features.apiCallsPerDay === -1
@@ -107,24 +107,24 @@ const SubscriptionPage = () => {
           : `${features.apiCallsPerDay.toLocaleString()} API calls per day`
       );
     }
-    
+
     if (features.advancedSearch) {
       featureList.push("Advanced search & filtering");
     }
-    
+
     if (features.exportEnabled) {
       featureList.push("CSV/Excel export capabilities");
     }
-    
+
     if (features.apiAccess) {
       featureList.push("Full API access");
     }
-    
+
     if (featureList.length === 0) {
       featureList.push("Basic property search");
       featureList.push("Limited data access");
     }
-    
+
     return featureList;
   };
 
@@ -133,7 +133,7 @@ const SubscriptionPage = () => {
       setProcessingPlanId(planId);
       const numericPlanId = typeof planId === 'string' ? 0 : planId;
       const result = await subscriptionAPI.create(numericPlanId, selectedBilling);
-      
+
       if (result.success) {
         alert("Subscription created successfully!");
         await loadSubscriptionData();
@@ -196,7 +196,7 @@ const SubscriptionPage = () => {
         {currentSubscription && (
           <div
             style={{
-              background: "linear-gradient(135deg, #2563EB, #7C3AED)",
+              background: "linear-gradient(135deg, #2563EB, #1D4ED8)",
               borderRadius: 16,
               padding: 32,
               marginBottom: 24,
@@ -310,7 +310,7 @@ const SubscriptionPage = () => {
                 style={{
                   marginLeft: 6,
                   padding: "2px 6px",
-                  background: "#10B981",
+                  background: "#2563EB",
                   color: "#fff",
                   borderRadius: 4,
                   fontSize: 11,
@@ -411,8 +411,8 @@ const SubscriptionPage = () => {
                           style={{
                             marginTop: 8,
                             padding: "6px 12px",
-                            background: "#FEF3C7",
-                            color: "#92400E",
+                            background: "#EFF6FF",
+                            color: "#2563EB",
                             borderRadius: 6,
                             fontSize: 12,
                             fontWeight: 600,
@@ -435,8 +435,8 @@ const SubscriptionPage = () => {
                         background: isCurrentPlan
                           ? "#E5E7EB"
                           : isPopular
-                          ? "linear-gradient(135deg, #3B82F6, #2563EB)"
-                          : "#1F2937",
+                            ? "linear-gradient(135deg, #3B82F6, #2563EB)"
+                            : "#1F2937",
                         color: isCurrentPlan ? "#6B7280" : "#fff",
                         fontSize: 15,
                         fontWeight: 600,
@@ -483,7 +483,7 @@ const SubscriptionPage = () => {
                         >
                           <i
                             className="fa-solid fa-circle-check"
-                            style={{ color: "#10B981", marginTop: 2 }}
+                            style={{ color: "#2563EB", marginTop: 2 }}
                           ></i>
                           <span>{feature}</span>
                         </div>
@@ -536,7 +536,7 @@ const SubscriptionPage = () => {
                   <input
                     type="checkbox"
                     checked={currentSubscription.autoRenew}
-                    onChange={() => {}}
+                    onChange={() => { }}
                     style={{ opacity: 0, width: 0, height: 0 }}
                   />
                   <span
@@ -601,7 +601,7 @@ const SubscriptionPage = () => {
         <div className={styles.settingsSection}>
           <div className={styles.settingsSectionHeader}>
             <h3 className={styles.settingsSectionTitle}>
-              <i className="fa-solid fa-circle-question me-2" style={{ color: "#F59E0B" }}></i>
+              <i className="fa-solid fa-circle-question me-2" style={{ color: "#2563EB" }}></i>
               Frequently Asked Questions
             </h3>
           </div>

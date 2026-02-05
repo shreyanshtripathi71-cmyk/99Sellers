@@ -8,10 +8,30 @@ interface HeaderProps {
   subtitle?: string;
   userPlan: "Free" | "Pro";
   actions?: React.ReactNode;
+  userName?: string;
+  userEmail?: string;
+  userInitials?: string;
+  onLogout?: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ title, subtitle, userPlan, actions }) => {
+const Header: React.FC<HeaderProps> = ({
+  title,
+  subtitle,
+  userPlan,
+  actions,
+  userName = "User",
+  userEmail = "",
+  userInitials = "U",
+  onLogout,
+}) => {
   const [showUserMenu, setShowUserMenu] = useState(false);
+
+  const handleLogout = () => {
+    setShowUserMenu(false);
+    if (onLogout) {
+      onLogout();
+    }
+  };
 
   return (
     <header className={styles.top_header}>
@@ -43,7 +63,7 @@ const Header: React.FC<HeaderProps> = ({ title, subtitle, userPlan, actions }) =
             className={styles.user_avatar}
             onClick={() => setShowUserMenu(!showUserMenu)}
           >
-            JD
+            {userInitials}
           </button>
 
           {showUserMenu && (
@@ -63,8 +83,8 @@ const Header: React.FC<HeaderProps> = ({ title, subtitle, userPlan, actions }) =
 
               <div className={styles.user_dropdown}>
                 <div className={styles.user_info}>
-                  <p className={styles.user_name}>John Doe</p>
-                  <p className={styles.user_email}>john@example.com</p>
+                  <p className={styles.user_name}>{userName}</p>
+                  <p className={styles.user_email}>{userEmail}</p>
                   {userPlan === "Pro" && (
                     <span className={styles.pro_badge} style={{ marginTop: 8 }}>
                       PRO
@@ -72,18 +92,29 @@ const Header: React.FC<HeaderProps> = ({ title, subtitle, userPlan, actions }) =
                   )}
                 </div>
 
-                <Link href="/dashboard/profile" className={styles.user_menu_item}>
+                <Link
+                  href="/dashboard/profile"
+                  className={styles.user_menu_item}
+                  onClick={() => setShowUserMenu(false)}
+                >
                   <i className="fa-regular fa-user"></i>
                   Profile
                 </Link>
-                <Link href="/dashboard/membership" className={styles.user_menu_item}>
+                <Link
+                  href="/dashboard/subscription"
+                  className={styles.user_menu_item}
+                  onClick={() => setShowUserMenu(false)}
+                >
                   <i className="fa-regular fa-credit-card"></i>
                   Billing
                 </Link>
 
                 <div className={styles.user_menu_divider} />
 
-                <button className={`${styles.user_menu_item} ${styles.danger}`}>
+                <button
+                  className={`${styles.user_menu_item} ${styles.danger}`}
+                  onClick={handleLogout}
+                >
                   <i className="fa-solid fa-right-from-bracket"></i>
                   Sign Out
                 </button>

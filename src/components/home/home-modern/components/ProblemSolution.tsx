@@ -18,7 +18,7 @@ const ProblemSolution = () => {
                         For a closer, selling a distressed home might be an easy task
                     </p>
                     <p className={styles.problem_line_emphasis}>
-                        But finding an appropriate seller? That's where it's challenging.
+                        But finding an appropriate seller? That&apos;s where it&apos;s challenging.
                     </p>
                     <p className={styles.problem_question}>
                         So why make it so hard on yourself??

@@ -36,10 +36,11 @@ export default function ContactPage() {
         textAlign: "center"
       }}>
         <div style={{ maxWidth: 700, margin: "0 auto" }}>
-          <h1 style={{ fontSize: 42, fontWeight: 700, color: "#2563eb", marginBottom: 16, textTransform: "uppercase" }}>
-            Get In Touch
+          <h1 style={{ fontSize: 42, fontWeight: 700, marginBottom: 16 }}>
+            <span style={{ color: "#ffffff" }}>Get In </span>
+            <span style={{ color: "#2563eb" }}>Touch</span>
           </h1>
-          <p style={{ fontSize: 18, color: "#ffffff", lineHeight: 1.8 }}>
+          <p style={{ fontSize: 18, color: "#94a3b8", lineHeight: 1.8 }}>
             Have questions about our platform? Need help choosing the right plan? Our team is here to help you succeed.
           </p>
         </div>

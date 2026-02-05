@@ -1,23 +1,12 @@
-import DashboardHeaderOne from "@/layouts/headers/dashboard/DashboardHeaderOne";
+"use client";
+
 import SubscriptionPage from "@/components/dashboard/SubscriptionPage";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 
-export const metadata = {
-  title: "Subscription - 99Sellers",
-  description: "Choose your subscription plan",
-};
-
-const Page = () => {
+export default function Page() {
   return (
     <ProtectedRoute>
-      <DashboardHeaderOne />
-      <div className="dashboard-body">
-        <div className="position-relative">
-          <SubscriptionPage />
-        </div>
-      </div>
+      <SubscriptionPage />
     </ProtectedRoute>
   );
-};
-
-export default Page;
+}

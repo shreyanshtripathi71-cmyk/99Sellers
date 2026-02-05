@@ -36,7 +36,7 @@ const TestimonialsSection = () => {
           viewport={{ once: true }}
         >
           <h2 className={styles.testimonials_title}>
-            DON'T JUST TAKE OUR <span>WORD FOR IT</span>
+            DON&apos;T JUST TAKE OUR <span>WORD FOR IT</span>
           </h2>
         </motion.div>
 

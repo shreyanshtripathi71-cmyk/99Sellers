@@ -183,7 +183,7 @@ const SignUpForm = () => {
                         </button>
 
                         <p className={styles.signup_login_link}>
-                            Already have an account? <Link href="/login">Log In</Link>
+                            Already have an account? <Link href="/signin">Log In</Link>
                         </p>
                     </form>
                 </motion.div>

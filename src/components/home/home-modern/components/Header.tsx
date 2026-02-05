@@ -34,7 +34,7 @@ const Header = () => {
             <i className="fa-solid fa-phone"></i>
             (800) 555-1234
           </a>
-          <Link href="/login" className={styles.btn_secondary}>
+          <Link href="/signin" className={styles.btn_secondary}>
             Sign In
           </Link>
           <Link href="/search" className={styles.btn_primary}>
@@ -66,7 +66,7 @@ const Header = () => {
               <i className="fa-solid fa-phone"></i>
               (800) 555-1234
             </a>
-            <Link href="/login" className={styles.btn_secondary}>Sign In</Link>
+            <Link href="/signin" className={styles.btn_secondary}>Sign In</Link>
             <Link href="/search" className={styles.btn_primary}>Get Started Free</Link>
           </div>
         </div>

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import Sidebar from "./components/Sidebar";
@@ -8,6 +8,7 @@ import FilterPanel, { type Filters } from "./components/FilterPanel";
 import LeadTableView, { type Lead } from "./components/LeadTableView";
 import LeadGridView from "./components/LeadGridView";
 import SaveSearchModal from "@/modals/SaveSearchModal";
+import { toggleSavedLead, isLeadSaved } from "@/services/savedLeadsService";
 import styles from "./styles/dashboard.module.scss";
 
 // Mock data
@@ -107,6 +108,7 @@ const MOCK_LEADS: Lead[] = [
 const initialFilters: Filters = {
   state: "All",
   county: "All",
+  zipCode: "",
   motive: "All",
   minEquity: "0",
   maxDebt: "",
@@ -121,10 +123,10 @@ const LeadDiscovery = () => {
   // Auth context for premium access
   const { canAccessPremium, isTrialActive } = useAuth();
   const router = useRouter();
-  
+
   // Determine user plan based on auth
   const userPlan = canAccessPremium() || isTrialActive() ? "Pro" : "Free";
-  
+
   // State
   const [viewMode, setViewMode] = useState<"list" | "grid">("list");
   const [showFilters, setShowFilters] = useState(false);
@@ -132,6 +134,16 @@ const LeadDiscovery = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [leads, setLeads] = useState<Lead[]>(MOCK_LEADS);
   const [filters, setFilters] = useState<Filters>(initialFilters);
+
+  // Initialize saved status from localStorage on mount
+  useEffect(() => {
+    setLeads(prevLeads =>
+      prevLeads.map(lead => ({
+        ...lead,
+        saved: isLeadSaved(lead.id)
+      }))
+    );
+  }, []);
 
   // Filtered leads
   const filteredLeads = useMemo(() => {
@@ -144,6 +156,7 @@ const LeadDiscovery = () => {
 
       // Filters
       const matchesState = filters.state === "All" || lead.state === filters.state;
+      const matchesZip = !filters.zipCode || lead.zip.startsWith(filters.zipCode);
       const matchesMotive = filters.motive === "All" || lead.type === filters.motive;
       const matchesBeds = filters.minBeds === "Any" || lead.beds >= parseInt(filters.minBeds);
       const matchesBaths = filters.minBaths === "Any" || lead.baths >= parseFloat(filters.minBaths);
@@ -158,6 +171,7 @@ const LeadDiscovery = () => {
       return (
         matchesSearch &&
         matchesState &&
+        matchesZip &&
         matchesMotive &&
         matchesBeds &&
         matchesBaths &&
@@ -180,7 +194,11 @@ const LeadDiscovery = () => {
   };
 
   const handleToggleSave = (id: number) => {
-    setLeads(leads.map((l) => (l.id === id ? { ...l, saved: !l.saved } : l)));
+    const lead = leads.find(l => l.id === id);
+    if (lead) {
+      const result = toggleSavedLead(lead);
+      setLeads(leads.map((l) => (l.id === id ? { ...l, saved: result.saved } : l)));
+    }
   };
 
   // Mask sensitive data for free users

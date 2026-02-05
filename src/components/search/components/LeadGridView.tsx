@@ -19,12 +19,22 @@ const formatCurrency = (value: number) => {
   }).format(value);
 };
 
+// Mask owner data for free users
+const maskOwnerName = (name: string | undefined, isPro: boolean): string => {
+  if (!name) return "---";
+  if (isPro) return name;
+  const parts = name.split(" ");
+  return parts.map(part => part[0] + "****").join(" ");
+};
+
 const LeadGridView: React.FC<LeadGridProps> = ({
   leads,
   onToggleSave,
   getAddress,
   userPlan,
 }) => {
+  const isPro = userPlan === "Pro";
+
   if (leads.length === 0) {
     return (
       <div className={styles.empty_state}>
@@ -39,75 +49,159 @@ const LeadGridView: React.FC<LeadGridProps> = ({
   }
 
   return (
-    <div className={styles.grid_container}>
-      {leads.map((lead) => {
-        const equity = lead.appraised - lead.debt;
-        const equityPercent = Math.round((equity / lead.appraised) * 100);
+    <>
+      <div className={styles.grid_container}>
+        {leads.map((lead) => {
+          const equity = lead.appraised - lead.debt;
+          const equityPercent = Math.round((equity / lead.appraised) * 100);
 
-        return (
-          <Link href={`/property/${lead.id}`} key={lead.id} className={styles.grid_card}>
-            {/* Image */}
-            <div className={styles.card_image}>
-              <img src={lead.image} alt={getAddress(lead)} />
-              
-              <span
-                className={`${styles.card_badge} ${styles.badge} ${
-                  lead.type === "Foreclosure"
-                    ? styles.badge_danger
-                    : lead.type === "Probate"
-                    ? styles.badge_primary
-                    : lead.type === "Tax Default"
-                    ? styles.badge_warning
-                    : styles.badge_neutral
-                }`}
-              >
-                {lead.type}
-              </span>
+          return (
+            <Link href={`/property/${lead.id}`} key={lead.id} className={styles.grid_card}>
+              {/* Image */}
+              <div className={styles.card_image}>
+                <img src={lead.image} alt={getAddress(lead)} />
 
-              <button
-                className={`${styles.card_save} ${lead.saved ? styles.saved : ""}`}
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  onToggleSave(lead.id);
-                }}
-              >
-                <i className={lead.saved ? "fa-solid fa-heart" : "fa-regular fa-heart"}></i>
-              </button>
-            </div>
+                <span className={`${styles.card_badge} ${styles.badge} ${styles.badge_primary}`}>
+                  {lead.type}
+                </span>
 
-            {/* Content */}
-            <div className={styles.card_content}>
-              <h3 className={styles.card_title}>{getAddress(lead)}</h3>
-              <p className={styles.card_location}>
-                {lead.city}, {lead.state} {lead.zip}
-              </p>
+                <button
+                  className={`${styles.card_save} ${lead.saved ? styles.saved : ""}`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    onToggleSave(lead.id);
+                  }}
+                >
+                  <i className={lead.saved ? "fa-solid fa-heart" : "fa-regular fa-heart"}></i>
+                </button>
 
-              <div className={styles.card_stats}>
-                <div className={styles.stat}>
-                  <span className={styles.stat_label}>Value</span>
-                  <span className={styles.stat_value}>
-                    {formatCurrency(lead.appraised)}
+                {/* Lock overlay for free users */}
+                {!isPro && (
+                  <div style={{
+                    position: "absolute",
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    background: "linear-gradient(to top, rgba(0,0,0,0.7), transparent)",
+                    padding: "24px 12px 8px",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 6
+                  }}>
+                    <i className="fa-solid fa-lock" style={{ color: "#fff", fontSize: 10 }}></i>
+                    <span style={{ color: "#fff", fontSize: 10, fontWeight: 500 }}>
+                      Upgrade for full details
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              {/* Content */}
+              <div className={styles.card_content}>
+                <h3 className={styles.card_title}>
+                  {getAddress(lead)}
+                  {!isPro && (
+                    <i
+                      className="fa-solid fa-lock"
+                      style={{
+                        marginLeft: 6,
+                        fontSize: 10,
+                        color: "#9CA3AF"
+                      }}
+                    ></i>
+                  )}
+                </h3>
+                <p className={styles.card_location}>
+                  {lead.city}, {lead.state} {lead.zip}
+                </p>
+
+                {/* Owner info */}
+                <div style={{
+                  marginTop: 8,
+                  padding: "8px 0",
+                  borderTop: "1px solid #E5E7EB",
+                  borderBottom: "1px solid #E5E7EB"
+                }}>
+                  <span style={{ fontSize: 11, color: "#6B7280", display: "block", marginBottom: 2 }}>
+                    Owner
+                  </span>
+                  <span style={{ fontSize: 13, fontWeight: 500, color: "#111827" }}>
+                    {maskOwnerName(lead.ownerName || "John Smith", isPro)}
+                    {!isPro && (
+                      <i
+                        className="fa-solid fa-lock"
+                        style={{
+                          marginLeft: 4,
+                          fontSize: 9,
+                          color: "#9CA3AF"
+                        }}
+                      ></i>
+                    )}
                   </span>
                 </div>
-                <div className={styles.stat}>
-                  <span className={styles.stat_label}>Equity</span>
-                  <span className={styles.stat_value} style={{ color: "#10B981" }}>
-                    {formatCurrency(equity)}
-                  </span>
-                </div>
-                <div className={styles.stat}>
-                  <span className={styles.stat_label}>Details</span>
-                  <span className={styles.stat_value}>
-                    {lead.beds}bd/{lead.baths}ba
-                  </span>
+
+                <div className={styles.card_stats}>
+                  <div className={styles.stat}>
+                    <span className={styles.stat_label}>Value</span>
+                    <span className={styles.stat_value}>
+                      {formatCurrency(lead.appraised)}
+                    </span>
+                  </div>
+                  <div className={styles.stat}>
+                    <span className={styles.stat_label}>Equity</span>
+                    <span className={styles.stat_value} style={{ color: "#10B981" }}>
+                      {formatCurrency(equity)}
+                    </span>
+                  </div>
+                  <div className={styles.stat}>
+                    <span className={styles.stat_label}>Details</span>
+                    <span className={styles.stat_value}>
+                      {lead.beds}bd/{lead.baths}ba
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
+            </Link>
+          );
+        })}
+      </div>
+
+      {/* Upgrade prompt for free users */}
+      {!isPro && (
+        <div style={{
+          background: "linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%)",
+          borderRadius: 8,
+          padding: "12px 16px",
+          marginTop: 16,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          border: "1px solid #BFDBFE"
+        }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <i className="fa-solid fa-lock" style={{ color: "#2563EB" }}></i>
+            <span style={{ fontSize: 13, color: "#1E40AF", fontWeight: 500 }}>
+              Some data is hidden. Upgrade to Pro to see full addresses, owner contacts, and more.
+            </span>
+          </div>
+          <Link
+            href="/dashboard/subscription"
+            style={{
+              background: "linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%)",
+              color: "#fff",
+              padding: "8px 16px",
+              borderRadius: 6,
+              fontSize: 12,
+              fontWeight: 600,
+              textDecoration: "none"
+            }}
+          >
+            Upgrade Now
           </Link>
-        );
-      })}
-    </div>
+        </div>
+      )}
+    </>
   );
 };
 

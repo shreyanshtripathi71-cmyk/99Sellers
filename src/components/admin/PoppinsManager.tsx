@@ -6,70 +6,193 @@ import { toast } from "react-toastify";
 interface Poppin {
   id: string;
   name: string;
-  type: "banner" | "modal" | "toast" | "slide-in";
+  type: "banner" | "modal" | "toast" | "slide-in" | "fullscreen" | "floating-bar" | "email-capture" | "social-proof" | "countdown" | "sidebar";
   title: string;
   message: string;
   buttonText?: string;
   buttonLink?: string;
+  secondaryButtonText?: string;
+  secondaryButtonLink?: string;
+  imageUrl?: string;
   backgroundColor: string;
   textColor: string;
-  position: "top" | "bottom" | "center" | "bottom-right" | "bottom-left";
+  accentColor?: string;
+  position: "top" | "bottom" | "center" | "bottom-right" | "bottom-left" | "left" | "right";
   trigger: "page-load" | "scroll" | "exit-intent" | "time-delay" | "click";
-  triggerValue?: number; // seconds for time-delay, pixels for scroll
-  pages: string[]; // which pages to show on
+  triggerValue?: number;
+  pages: string[];
   startDate?: string;
   endDate?: string;
+  countdownEnd?: string;
   isActive: boolean;
   priority: number;
   showOnMobile: boolean;
   showOnDesktop: boolean;
   dismissable: boolean;
   showOnce: boolean;
+  emailPlaceholder?: string;
+  successMessage?: string;
   createdAt: string;
 }
 
 const DEFAULT_POPPINS: Poppin[] = [
   {
     id: "1",
-    name: "Welcome Banner",
-    type: "banner",
+    name: "Welcome Offer Modal",
+    type: "modal",
     title: "🎉 Welcome to 99Sellers!",
-    message: "Get 20% off your first month with code WELCOME20",
-    buttonText: "Claim Offer",
+    message: "Start your 7-day FREE trial and get 20% off your first month. Access unlimited motivated seller leads!",
+    buttonText: "Start Free Trial",
     buttonLink: "/dashboard/subscription",
-    backgroundColor: "#3b82f6",
-    textColor: "#ffffff",
-    position: "top",
-    trigger: "page-load",
-    pages: ["/", "/search"],
+    backgroundColor: "#ffffff",
+    textColor: "#0f172a",
+    accentColor: "#1d4ed8",
+    position: "center",
+    trigger: "time-delay",
+    triggerValue: 5,
+    pages: ["/"],
     isActive: true,
     priority: 1,
     showOnMobile: true,
     showOnDesktop: true,
     dismissable: true,
-    showOnce: false,
-    createdAt: "2026-01-15",
+    showOnce: true,
+    createdAt: "2026-02-05",
   },
   {
     id: "2",
-    name: "Exit Intent Modal",
-    type: "modal",
-    title: "Wait! Don't Miss Out",
-    message: "Subscribe to our newsletter and get exclusive deals on distressed properties.",
-    buttonText: "Subscribe Now",
-    buttonLink: "#subscribe",
-    backgroundColor: "#ffffff",
-    textColor: "#0f172a",
+    name: "Exit Intent Saver",
+    type: "fullscreen",
+    title: "Wait! Don't Leave Empty-Handed",
+    message: "Get instant access to 10,000+ motivated seller leads with full contact info. Start your FREE trial today!",
+    buttonText: "Start 7-Day Free Trial",
+    buttonLink: "/dashboard/subscription",
+    secondaryButtonText: "No thanks, I'll pass",
+    backgroundColor: "#3b82f6",
+    textColor: "#ffffff",
+    accentColor: "#1d4ed8",
     position: "center",
     trigger: "exit-intent",
-    pages: ["/search", "/dashboard/subscription"],
-    isActive: false,
+    pages: ["/search", "/pricing"],
+    isActive: true,
     priority: 2,
     showOnMobile: false,
     showOnDesktop: true,
     dismissable: true,
     showOnce: true,
-    createdAt: "2026-01-20",
+    createdAt: "2026-02-05",
+  },
+  {
+    id: "3",
+    name: "Newsletter Scroll Popup",
+    type: "email-capture",
+    title: "Get Exclusive Deals!",
+    message: "Subscribe to receive weekly updates on the hottest distressed properties and motivated seller leads.",
+    buttonText: "Subscribe Now",
+    emailPlaceholder: "Enter your email address",
+    successMessage: "Welcome! Check your inbox for exclusive deals.",
+    backgroundColor: "#3b82f6",
+    textColor: "#ffffff",
+    accentColor: "#1d4ed8",
+    position: "center",
+    trigger: "scroll",
+    triggerValue: 50,
+    pages: ["*"],
+    isActive: false,
+    priority: 3,
+    showOnMobile: true,
+    showOnDesktop: true,
+    dismissable: true,
+    showOnce: true,
+    createdAt: "2026-02-05",
+  },
+  {
+    id: "4",
+    name: "Free Trial Banner",
+    type: "floating-bar",
+    title: "🔥 Limited Time Offer",
+    message: "Get 7 days FREE + 20% off your first month",
+    buttonText: "Claim Now",
+    buttonLink: "/dashboard/subscription",
+    backgroundColor: "#059669",
+    textColor: "#ffffff",
+    accentColor: "#047857",
+    position: "top",
+    trigger: "page-load",
+    pages: ["/search", "/dashboard"],
+    isActive: true,
+    priority: 4,
+    showOnMobile: true,
+    showOnDesktop: true,
+    dismissable: true,
+    showOnce: false,
+    createdAt: "2026-02-05",
+  },
+  {
+    id: "5",
+    name: "Feature Discovery Toast",
+    type: "toast",
+    title: "💡 Did you know?",
+    message: "You can export leads to CSV with one click. Upgrade to Pro for unlimited exports!",
+    buttonText: "Learn More",
+    buttonLink: "/dashboard/subscription",
+    backgroundColor: "#1e293b",
+    textColor: "#ffffff",
+    position: "bottom-right",
+    trigger: "time-delay",
+    triggerValue: 15,
+    pages: ["/search"],
+    isActive: false,
+    priority: 5,
+    showOnMobile: false,
+    showOnDesktop: true,
+    dismissable: true,
+    showOnce: true,
+    createdAt: "2026-02-05",
+  },
+  {
+    id: "6",
+    name: "Social Proof Notification",
+    type: "social-proof",
+    title: "",
+    message: "",
+    backgroundColor: "#3b82f6",
+    textColor: "#ffffff",
+    accentColor: "#1d4ed8",
+    position: "bottom-left",
+    trigger: "time-delay",
+    triggerValue: 8,
+    pages: ["/", "/pricing"],
+    isActive: true,
+    priority: 6,
+    showOnMobile: false,
+    showOnDesktop: true,
+    dismissable: true,
+    showOnce: false,
+    createdAt: "2026-02-05",
+  },
+  {
+    id: "7",
+    name: "Premium Upgrade Sidebar",
+    type: "sidebar",
+    title: "Unlock Full Access",
+    message: "Get unlimited searches, full contact info, and CSV exports.",
+    buttonText: "Upgrade to Pro",
+    buttonLink: "/dashboard/subscription",
+    backgroundColor: "#3b82f6",
+    textColor: "#ffffff",
+    accentColor: "#1d4ed8",
+    position: "right",
+    trigger: "scroll",
+    triggerValue: 75,
+    pages: ["/pricing"],
+    isActive: false,
+    priority: 7,
+    showOnMobile: false,
+    showOnDesktop: true,
+    dismissable: true,
+    showOnce: true,
+    createdAt: "2026-02-05",
   },
 ];
 
@@ -86,6 +209,12 @@ const TYPE_OPTIONS = [
   { value: "modal", label: "Modal", icon: "fa-window-maximize", description: "Center popup" },
   { value: "toast", label: "Toast", icon: "fa-message", description: "Corner notification" },
   { value: "slide-in", label: "Slide-in", icon: "fa-arrow-right-to-arc", description: "Sliding panel" },
+  { value: "fullscreen", label: "Fullscreen", icon: "fa-expand", description: "Full overlay" },
+  { value: "floating-bar", label: "Floating Bar", icon: "fa-bars", description: "Sticky bar" },
+  { value: "email-capture", label: "Email Capture", icon: "fa-envelope", description: "Lead form" },
+  { value: "social-proof", label: "Social Proof", icon: "fa-users", description: "Activity feed" },
+  { value: "countdown", label: "Countdown", icon: "fa-clock", description: "Timer popup" },
+  { value: "sidebar", label: "Sidebar", icon: "fa-sidebar", description: "Side panel" },
 ];
 
 const PoppinsManager = () => {
@@ -108,7 +237,7 @@ const PoppinsManager = () => {
   };
 
   const toggleActive = (id: string) => {
-    const updated = poppins.map(p => 
+    const updated = poppins.map(p =>
       p.id === id ? { ...p, isActive: !p.isActive } : p
     );
     savePoppins(updated);
@@ -144,8 +273,12 @@ const PoppinsManager = () => {
     message: "",
     buttonText: "",
     buttonLink: "",
+    secondaryButtonText: "",
+    secondaryButtonLink: "",
+    imageUrl: "",
     backgroundColor: "#3b82f6",
     textColor: "#ffffff",
+    accentColor: "#1d4ed8",
     position: "top",
     trigger: "page-load",
     pages: ["/"],
@@ -155,6 +288,8 @@ const PoppinsManager = () => {
     showOnDesktop: true,
     dismissable: true,
     showOnce: false,
+    emailPlaceholder: "Enter your email",
+    successMessage: "Thanks for subscribing!",
     createdAt: new Date().toISOString().split("T")[0],
   });
 
@@ -235,7 +370,7 @@ const PoppinsManager = () => {
         <div style={{ padding: "16px 24px", borderBottom: "1px solid #e2e8f0" }}>
           <h3 style={{ fontSize: 16, fontWeight: 600, color: "#0f172a", margin: 0 }}>All Poppins</h3>
         </div>
-        
+
         {poppins.length === 0 ? (
           <div style={{ padding: 48, textAlign: "center" }}>
             <i className="fa-solid fa-message" style={{ fontSize: 48, color: "#cbd5e1", marginBottom: 16 }}></i>
@@ -366,8 +501,8 @@ const PoppinsManager = () => {
             maxHeight: "90vh",
             overflow: "auto",
           }}>
-            <div style={{ 
-              padding: "20px 24px", 
+            <div style={{
+              padding: "20px 24px",
               borderBottom: "1px solid #e2e8f0",
               display: "flex",
               justifyContent: "space-between",
@@ -386,7 +521,7 @@ const PoppinsManager = () => {
                 <i className="fa-solid fa-times"></i>
               </button>
             </div>
-            
+
             <div style={{ padding: 24 }}>
               {/* Basic Info */}
               <div style={{ marginBottom: 24 }}>
@@ -427,8 +562,8 @@ const PoppinsManager = () => {
                         textAlign: "center",
                       }}
                     >
-                      <i className={`fa-solid ${type.icon}`} style={{ 
-                        fontSize: 20, 
+                      <i className={`fa-solid ${type.icon}`} style={{
+                        fontSize: 20,
                         color: editingPoppin.type === type.value ? "#3b82f6" : "#64748b",
                         display: "block",
                         marginBottom: 6,
@@ -497,6 +632,159 @@ const PoppinsManager = () => {
                     resize: "vertical",
                   }}
                 />
+              </div>
+
+              {/* Image Upload with Drag & Drop */}
+              <div style={{ marginBottom: 24 }}>
+                <label style={{ display: "block", fontSize: 14, fontWeight: 500, color: "#374151", marginBottom: 8 }}>
+                  <i className="fa-solid fa-image" style={{ marginRight: 6, color: "#6366F1" }}></i>
+                  Popup Image
+                </label>
+
+                {/* Drag & Drop Zone */}
+                <div
+                  onDragOver={(e) => {
+                    e.preventDefault();
+                    e.currentTarget.style.borderColor = "#6366F1";
+                    e.currentTarget.style.background = "#f0f0ff";
+                  }}
+                  onDragLeave={(e) => {
+                    e.preventDefault();
+                    e.currentTarget.style.borderColor = "#d1d5db";
+                    e.currentTarget.style.background = editingPoppin.imageUrl ? "transparent" : "#fafafa";
+                  }}
+                  onDrop={(e) => {
+                    e.preventDefault();
+                    e.currentTarget.style.borderColor = "#d1d5db";
+                    e.currentTarget.style.background = "transparent";
+
+                    const file = e.dataTransfer.files[0];
+                    if (file && file.type.startsWith("image/")) {
+                      const reader = new FileReader();
+                      reader.onload = (event) => {
+                        if (event.target?.result) {
+                          setEditingPoppin({ ...editingPoppin, imageUrl: event.target.result as string });
+                          toast.success("Image uploaded successfully!");
+                        }
+                      };
+                      reader.readAsDataURL(file);
+                    } else {
+                      toast.error("Please drop a valid image file");
+                    }
+                  }}
+                  onClick={() => {
+                    const input = document.createElement("input");
+                    input.type = "file";
+                    input.accept = "image/*";
+                    input.onchange = (e) => {
+                      const file = (e.target as HTMLInputElement).files?.[0];
+                      if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (event) => {
+                          if (event.target?.result) {
+                            setEditingPoppin({ ...editingPoppin, imageUrl: event.target.result as string });
+                            toast.success("Image uploaded successfully!");
+                          }
+                        };
+                        reader.readAsDataURL(file);
+                      }
+                    };
+                    input.click();
+                  }}
+                  style={{
+                    border: "2px dashed #d1d5db",
+                    borderRadius: 12,
+                    padding: editingPoppin.imageUrl ? 0 : 32,
+                    textAlign: "center",
+                    cursor: "pointer",
+                    background: editingPoppin.imageUrl ? "transparent" : "#fafafa",
+                    transition: "all 0.2s ease",
+                    position: "relative",
+                    overflow: "hidden",
+                    minHeight: editingPoppin.imageUrl ? 150 : "auto",
+                  }}
+                >
+                  {editingPoppin.imageUrl ? (
+                    <div style={{ position: "relative" }}>
+                      <img
+                        src={editingPoppin.imageUrl}
+                        alt="Popup preview"
+                        style={{
+                          width: "100%",
+                          height: 180,
+                          objectFit: "cover",
+                          borderRadius: 10,
+                        }}
+                      />
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setEditingPoppin({ ...editingPoppin, imageUrl: "" });
+                        }}
+                        style={{
+                          position: "absolute",
+                          top: 8,
+                          right: 8,
+                          background: "rgba(0,0,0,0.6)",
+                          color: "#fff",
+                          border: "none",
+                          borderRadius: "50%",
+                          width: 28,
+                          height: 28,
+                          cursor: "pointer",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <i className="fa-solid fa-times"></i>
+                      </button>
+                      <div style={{
+                        position: "absolute",
+                        bottom: 8,
+                        left: 8,
+                        right: 8,
+                        background: "rgba(0,0,0,0.6)",
+                        color: "#fff",
+                        padding: "8px 12px",
+                        borderRadius: 6,
+                        fontSize: 12,
+                      }}>
+                        <i className="fa-solid fa-arrows-rotate" style={{ marginRight: 6 }}></i>
+                        Click or drag to replace image
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      <i className="fa-solid fa-cloud-arrow-up" style={{ fontSize: 32, color: "#9ca3af", marginBottom: 12, display: "block" }}></i>
+                      <p style={{ margin: 0, fontSize: 14, color: "#6b7280", fontWeight: 500 }}>
+                        Drag & drop an image here
+                      </p>
+                      <p style={{ margin: "8px 0 0", fontSize: 12, color: "#9ca3af" }}>
+                        or click to browse files
+                      </p>
+                    </>
+                  )}
+                </div>
+
+                {/* URL Input Alternative */}
+                <div style={{ marginTop: 12 }}>
+                  <p style={{ fontSize: 12, color: "#64748b", marginBottom: 6 }}>Or paste image URL:</p>
+                  <input
+                    type="text"
+                    value={editingPoppin.imageUrl?.startsWith("data:") ? "" : (editingPoppin.imageUrl || "")}
+                    onChange={(e) => setEditingPoppin({ ...editingPoppin, imageUrl: e.target.value })}
+                    placeholder="https://example.com/image.jpg"
+                    style={{
+                      width: "100%",
+                      padding: "10px 14px",
+                      border: "1px solid #d1d5db",
+                      borderRadius: 8,
+                      fontSize: 14,
+                    }}
+                  />
+                </div>
               </div>
 
               {/* Colors */}

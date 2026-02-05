@@ -1,67 +1,13 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import DashboardShell from "@/components/search/DashboardShell";
+import { useAuth } from "@/context/AuthContext";
 import styles from "@/components/search/styles/dashboard.module.scss";
-
-interface SavedLead {
-  id: number;
-  image: string;
-  type: string;
-  address: string;
-  city: string;
-  state: string;
-  zip: string;
-  beds: number;
-  baths: number;
-  appraised: number;
-  debt: number;
-  savedOn: string;
-}
-
-const MOCK_SAVED_LEADS: SavedLead[] = [
-  {
-    id: 1,
-    image: "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=400",
-    type: "Foreclosure",
-    address: "1024 Elm St",
-    city: "Austin",
-    state: "TX",
-    zip: "78701",
-    beds: 3,
-    baths: 2,
-    appraised: 450000,
-    debt: 120000,
-    savedOn: "2026-01-28",
-  },
-  {
-    id: 2,
-    image: "https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=400",
-    type: "Divorce",
-    address: "550 Maple Ave",
-    city: "Dallas",
-    state: "TX",
-    zip: "75201",
-    beds: 4,
-    baths: 3,
-    appraised: 320000,
-    debt: 280000,
-    savedOn: "2026-01-30",
-  },
-  {
-    id: 3,
-    image: "https://images.unsplash.com/photo-1600596542815-2a4d9f6fac90?w=400",
-    type: "Tax Default",
-    address: "880 Oak Ln",
-    city: "Houston",
-    state: "TX",
-    zip: "77002",
-    beds: 2,
-    baths: 1,
-    appraised: 610000,
-    debt: 50000,
-    savedOn: "2026-02-01",
-  },
-];
+import {
+  getSavedLeads,
+  removeSavedLead,
+  SavedLead
+} from "@/services/savedLeadsService";
 
 const formatCurrency = (value: number) => {
   return new Intl.NumberFormat("en-US", {
@@ -72,8 +18,30 @@ const formatCurrency = (value: number) => {
 };
 
 const SavedLeadsPage = () => {
-  const [leads, setLeads] = useState<SavedLead[]>(MOCK_SAVED_LEADS);
+  const { canAccessPremium, isTrialActive } = useAuth();
+  const isPro = canAccessPremium() || isTrialActive();
+
+  const [leads, setLeads] = useState<SavedLead[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Load saved leads on mount
+  useEffect(() => {
+    setLeads(getSavedLeads());
+    setIsLoading(false);
+  }, []);
+
+  // Listen for real-time updates from other components
+  useEffect(() => {
+    const handleUpdate = (e: CustomEvent<SavedLead[]>) => {
+      setLeads(e.detail);
+    };
+
+    window.addEventListener("savedLeadsUpdated", handleUpdate as EventListener);
+    return () => {
+      window.removeEventListener("savedLeadsUpdated", handleUpdate as EventListener);
+    };
+  }, []);
 
   const filteredLeads = leads.filter(
     (lead) =>
@@ -82,11 +50,19 @@ const SavedLeadsPage = () => {
   );
 
   const handleRemove = (id: number) => {
-    setLeads(leads.filter((l) => l.id !== id));
+    removeSavedLead(id);
+    // State updates automatically via event listener
+  };
+
+  // Masking helpers for free users
+  const maskAddress = (address: string) => {
+    if (isPro) return address;
+    const parts = address.split(" ");
+    return parts[0].replace(/\d/g, "*") + " " + parts.slice(1).join(" ");
   };
 
   return (
-    <DashboardShell title="Saved Leads">
+    <DashboardShell title="Saved Leads" subtitle="Your saved properties for quick access">
       {/* Search Bar */}
       <div className={styles.search_container}>
         <div className={styles.search_bar}>
@@ -99,10 +75,10 @@ const SavedLeadsPage = () => {
           />
         </div>
         <div className={styles.search_actions}>
-          <button className={styles.btn_secondary}>
+          <a href="/dashboard/export" className={styles.btn_secondary}>
             <i className="fa-solid fa-download"></i>
             Export All
-          </button>
+          </a>
         </div>
       </div>
 
@@ -114,7 +90,12 @@ const SavedLeadsPage = () => {
       </div>
 
       {/* Table */}
-      {filteredLeads.length > 0 ? (
+      {isLoading ? (
+        <div style={{ textAlign: "center", padding: "60px 20px", color: "#6B7280" }}>
+          <i className="fa-solid fa-spinner fa-spin" style={{ fontSize: 24, marginBottom: 12 }}></i>
+          <p>Loading saved leads...</p>
+        </div>
+      ) : filteredLeads.length > 0 ? (
         <div className={styles.table_container}>
           <table className={styles.table}>
             <thead className={styles.table_header}>
@@ -134,12 +115,21 @@ const SavedLeadsPage = () => {
                 const equityPercent = Math.round((equity / lead.appraised) * 100);
 
                 return (
-                  <tr key={lead.id} className={styles.table_row}>
+                  <tr key={lead.id} className={styles.table_row} onClick={() => window.location.href = `/property/${lead.id}`} style={{ cursor: "pointer" }}>
                     <td>
                       <div className={styles.table_address}>
                         <img src={lead.image} alt="" className={styles.address_image} />
                         <div className={styles.address_text}>
-                          <span className={styles.address_line}>{lead.address}</span>
+                          <span className={styles.address_line}>
+                            {maskAddress(lead.address)}
+                            {!isPro && (
+                              <i
+                                className="fa-solid fa-lock"
+                                style={{ marginLeft: 6, fontSize: 9, color: "#9CA3AF" }}
+                                title="Upgrade to see full address"
+                              ></i>
+                            )}
+                          </span>
                           <span className={styles.address_city}>
                             {lead.city}, {lead.state} {lead.zip}
                           </span>
@@ -147,23 +137,13 @@ const SavedLeadsPage = () => {
                       </div>
                     </td>
                     <td>
-                      <span
-                        className={`${styles.badge} ${
-                          lead.type === "Foreclosure"
-                            ? styles.badge_danger
-                            : lead.type === "Probate"
-                            ? styles.badge_primary
-                            : lead.type === "Tax Default"
-                            ? styles.badge_warning
-                            : styles.badge_neutral
-                        }`}
-                      >
+                      <span className={`${styles.badge} ${styles.badge_primary}`}>
                         {lead.type}
                       </span>
                     </td>
                     <td>
                       <span style={{ color: "#4B5563", fontSize: 13 }}>
-                        {lead.beds} bd • {lead.baths} ba
+                        {lead.beds} bd • {lead.baths} ba • {lead.sqft?.toLocaleString()} sqft
                       </span>
                     </td>
                     <td>
@@ -178,11 +158,11 @@ const SavedLeadsPage = () => {
                     <td>
                       <span style={{ fontSize: 13, color: "#6B7280" }}>{lead.savedOn}</span>
                     </td>
-                    <td>
+                    <td onClick={(e) => e.stopPropagation()}>
                       <div className={styles.table_actions}>
-                        <button className={styles.btn_icon} title="View details">
+                        <a href={`/property/${lead.id}`} className={styles.btn_icon} title="View details">
                           <i className="fa-solid fa-arrow-up-right-from-square"></i>
-                        </button>
+                        </a>
                         <button
                           className={styles.btn_icon}
                           title="Remove"

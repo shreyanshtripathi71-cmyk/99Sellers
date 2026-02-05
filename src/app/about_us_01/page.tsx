@@ -19,13 +19,12 @@ export default function AboutPage() {
           <h1 style={{
             fontSize: 48,
             fontWeight: 700,
-            color: "#2563eb",
             marginBottom: 20,
-            textTransform: "uppercase"
           }}>
-            About Us
+            <span style={{ color: "#ffffff" }}>About </span>
+            <span style={{ color: "#2563eb" }}>Us</span>
           </h1>
-          <p style={{ fontSize: 22, color: "#ffffff", lineHeight: 1.7 }}>
+          <p style={{ fontSize: 22, color: "#94a3b8", lineHeight: 1.7 }}>
             Empowering Real Estate Professionals to Find Motivated Sellers
           </p>
         </div>
@@ -56,7 +55,7 @@ export default function AboutPage() {
           marginBottom: 48
         }}>
           <h2 style={{ fontSize: 24, fontWeight: 700, color: "#0f172a", marginBottom: 20 }}>
-            What Makes a Property "Distressed"?
+            What Makes a Property &quot;Distressed&quot;?
           </h2>
           <p style={{ fontSize: 17, color: "#334155", lineHeight: 1.8, marginBottom: 24 }}>
             Distressed properties come from owners who need to sell quickly due to challenging circumstances:
@@ -92,10 +91,10 @@ export default function AboutPage() {
           textAlign: "center"
         }}>
           <h2 style={{ fontSize: 28, fontWeight: 700, marginBottom: 16 }}>
-            That's Why We Built 99Sellers
+            That&apos;s Why We Built 99Sellers
           </h2>
           <p style={{ fontSize: 18, lineHeight: 1.8, maxWidth: 600, margin: "0 auto" }}>
-            We created a platform that delivers verified seller leads directly to you—no more driving neighborhoods, cold-calling from outdated lists, or paying for expensive data that doesn't convert.
+            We created a platform that delivers verified seller leads directly to you—no more driving neighborhoods, cold-calling from outdated lists, or paying for expensive data that doesn&apos;t convert.
           </p>
         </div>
 

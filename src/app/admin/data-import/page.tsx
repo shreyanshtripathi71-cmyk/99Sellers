@@ -1,11 +1,9 @@
-import DataImport from "@/components/admin/DataImport";
+import AdminDataImportPage from "@/components/admin/AdminDataImportPage";
 
 export const metadata = {
   title: "Data Import - Admin | 99Sellers",
 };
 
-const DataImportPage = () => {
-  return <DataImport />;
-};
-
-export default DataImportPage;
+export default function Page() {
+  return <AdminDataImportPage />;
+}

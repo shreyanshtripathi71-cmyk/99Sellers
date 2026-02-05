@@ -30,6 +30,7 @@ const LeadTerminal = () => {
    const [filters, setFilters] = useState<Filters>({
       state: "All",
       county: "All",
+      zipCode: "",
       motive: "All",
       minEquity: "0",
       maxDebt: "",
@@ -43,28 +44,29 @@ const LeadTerminal = () => {
    // Filter logic
    const filteredLeads = useMemo(() => {
       return leads.filter(lead => {
-         const matchesSearch = 
+         const matchesSearch =
             lead.address.toLowerCase().includes(searchQuery.toLowerCase()) ||
             lead.city.toLowerCase().includes(searchQuery.toLowerCase()) ||
             lead.zip.includes(searchQuery);
-         
+
          const matchesState = filters.state === "All" || lead.state === filters.state;
+         const matchesZip = !filters.zipCode || lead.zip.startsWith(filters.zipCode);
          const matchesMotive = filters.motive === "All" || lead.type === filters.motive;
          const matchesBeds = filters.minBeds === "Any" || lead.beds >= parseInt(filters.minBeds);
          const matchesBaths = filters.minBaths === "Any" || lead.baths >= parseInt(filters.minBaths);
          const matchesSqft = !filters.minSqft || lead.sqft >= parseInt(filters.minSqft);
          const matchesYear = !filters.minYear || lead.year >= parseInt(filters.minYear);
          const matchesDebt = !filters.maxDebt || lead.debt <= parseInt(filters.maxDebt);
-         
+
          const profit = lead.appraised - lead.debt;
          const equityPercent = (profit / lead.appraised) * 100;
          const matchesEquity = equityPercent >= parseInt(filters.minEquity);
-         
+
          const matchesDate = !filters.auctionDateStart || lead.auctionDate >= filters.auctionDateStart;
 
-         return matchesSearch && matchesState && matchesMotive && matchesBeds && 
-                matchesBaths && matchesSqft && matchesYear && matchesDebt && 
-                matchesEquity && matchesDate;
+         return matchesSearch && matchesState && matchesZip && matchesMotive && matchesBeds &&
+            matchesBaths && matchesSqft && matchesYear && matchesDebt &&
+            matchesEquity && matchesDate;
       });
    }, [leads, searchQuery, filters]);
 
@@ -86,6 +88,7 @@ const LeadTerminal = () => {
       setFilters({
          state: "All",
          county: "All",
+         zipCode: "",
          motive: "All",
          minEquity: "0",
          maxDebt: "",
@@ -116,8 +119,8 @@ const LeadTerminal = () => {
             {/* Header */}
             <header className={styles.top_header}>
                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <h3 style={{ 
-                     fontSize: '18px', 
+                  <h3 style={{
+                     fontSize: '18px',
                      fontWeight: '700',
                      color: '#111827',
                      margin: 0

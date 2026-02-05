@@ -51,13 +51,13 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
         { href: "/admin/users", icon: "fa-users", label: "Users" },
         { href: "/admin/subscriptions", icon: "fa-credit-card", label: "Subscriptions" },
         { href: "/admin/poppins", icon: "fa-bullhorn", label: "Marketing Pop-ins" },
+        { href: "/admin/content", icon: "fa-palette", label: "Site Content" },
       ],
     },
     {
       label: "Data",
       items: [
         { href: "/admin/properties", icon: "fa-building", label: "Properties" },
-        { href: "/admin/auctions", icon: "fa-gavel", label: "Auctions" },
         { href: "/admin/data-import", icon: "fa-file-import", label: "Data Import" },
       ],
     },

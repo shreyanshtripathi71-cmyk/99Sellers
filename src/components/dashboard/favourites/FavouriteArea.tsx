@@ -24,14 +24,14 @@ const FavouriteArea = () => {
 
    return (
       <div className="d-flex w-100 min-vh-100 bg-light overflow-hidden">
-         
+
          <div className="flex-shrink-0">
             <DashboardHeaderTwo />
          </div>
 
          <div className="flex-grow-1 d-flex flex-column" style={{ overflowX: "hidden" }}>
             <div className="h-100 p-4 p-xl-5 overflow-auto">
-               
+
                <div className="d-flex align-items-center justify-content-between mb-30 lg-mb-20">
                   <div>
                      <h3 className="fw-bold text-dark m0">Saved Leads</h3>
@@ -56,11 +56,16 @@ const FavouriteArea = () => {
                         </thead>
                         <tbody className="border-top-0">
                            {currentItems.map((item: any) => (
-                              <tr key={item.id}>
+                              <tr
+                                 key={item.id}
+                                 onClick={() => window.location.href = `/property/${item.id}`}
+                                 style={{ cursor: "pointer" }}
+                                 className="hover-row"
+                              >
                                  <td className="ps-3">
                                     <div className="d-flex align-items-center">
-                                       <div className="icon-box rounded-3 bg-light d-flex align-items-center justify-content-center me-3 text-dark" 
-                                            style={{width: 40, height: 40, fontSize: '18px'}}>
+                                       <div className="icon-box rounded-3 bg-light d-flex align-items-center justify-content-center me-3 text-dark"
+                                          style={{ width: 40, height: 40, fontSize: '18px' }}>
                                           <i className="fa-light fa-house"></i>
                                        </div>
                                        <div>
@@ -70,10 +75,16 @@ const FavouriteArea = () => {
                                     </div>
                                  </td>
                                  <td>
-                                    <span className={`badge px-2 py-1 rounded-pill fw-600 border fs-12 ${
-                                       item.status === 'Foreclosure' ? 'bg-danger-subtle text-danger border-danger-subtle' : 
-                                       'bg-warning-subtle text-dark border-warning-subtle'
-                                    }`}>
+                                    <span style={{
+                                       display: "inline-block",
+                                       padding: "4px 10px",
+                                       borderRadius: 6,
+                                       fontSize: 12,
+                                       fontWeight: 600,
+                                       background: "#EFF6FF",
+                                       color: "#2563EB",
+                                       border: "1px solid #BFDBFE",
+                                    }}>
                                        {item.status}
                                     </span>
                                  </td>
@@ -81,9 +92,17 @@ const FavouriteArea = () => {
                                     <div className="text-success fw-bold fs-14">${item.price.toLocaleString()}</div>
                                  </td>
                                  <td className="text-dark fs-14">{item.auction_date}</td>
-                                 <td className="text-end pe-3">
-                                    <button className="btn-four rounded-circle p-0 d-inline-flex align-items-center justify-content-center transition-3s me-2" 
-                                          title="Remove" style={{width: 30, height: 30}}>
+                                 <td className="text-end pe-3" onClick={(e) => e.stopPropagation()}>
+                                    <Link
+                                       href={`/property/${item.id}`}
+                                       className="btn-four rounded-circle p-0 d-inline-flex align-items-center justify-content-center transition-3s me-2"
+                                       title="View Details"
+                                       style={{ width: 30, height: 30 }}
+                                    >
+                                       <i className="fa-light fa-eye text-primary"></i>
+                                    </Link>
+                                    <button className="btn-four rounded-circle p-0 d-inline-flex align-items-center justify-content-center transition-3s me-2"
+                                       title="Remove" style={{ width: 30, height: 30 }}>
                                        <i className="fa-light fa-trash text-danger"></i>
                                     </button>
                                  </td>

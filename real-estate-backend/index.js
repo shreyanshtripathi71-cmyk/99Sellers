@@ -1,12 +1,13 @@
 const express = require('express');
 
 const cors = require('cors');
+const path = require('path');
 
 const app = express();
 
 
 
-const db= require('./models');
+const db = require('./models');
 
 
 
@@ -18,11 +19,14 @@ app.use(express.json()); // Parse JSON bodies
 
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
 
+// Serve uploaded files statically
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 
 // Apply data masking to public routes
 
 const { attachUserSubscription, applyDataMasking } = require('./middleware/dataMasking');
+
 
 
 
@@ -56,9 +60,9 @@ app.use('/webhooks', webhookController); // Stripe webhooks
 
 app.use((err, req, res, next) => {
 
-    console.error(err.stack);
+  console.error(err.stack);
 
-    res.status(500).json({ error: 'Something went wrong!' });
+  res.status(500).json({ error: 'Something went wrong!' });
 
 });
 
@@ -66,13 +70,13 @@ app.use((err, req, res, next) => {
 
 db.sequelize.sync().then(() => {
 
-    app.listen(3001, () => {
+  app.listen(3001, () => {
 
-  console.log(`Server is running on port 3001`);
+    console.log(`Server is running on port 3001`);
 
-    });
+  });
 
 });
 
-  
+
 

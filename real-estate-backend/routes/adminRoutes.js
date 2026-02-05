@@ -13,6 +13,7 @@ const subscriptionAdmin = require('../controllers/admin/subscriptionManagementCo
 const dataExportAdmin = require('../controllers/admin/dataExportController');
 const dataImportAdmin = require('../controllers/admin/dataImportController');
 const settingsAdmin = require('../controllers/admin/settingsController');
+const contentAdmin = require('../controllers/admin/contentController');
 const { isAdmin } = require('../middleware/auth');
 
 // Apply security middleware (Checking user_login table UserType)
@@ -21,15 +22,15 @@ router.use(isAdmin);
 // --- Property Admin Endpoints ---
 router.post('/properties', upload.single('file'), propertyAdmin.postProperty);
 router.delete('/properties/:id', propertyAdmin.deleteProperty);
-router.put('/properties/:id', propertyAdmin.updateProperty); 
-router.get('/properties', propertyAdmin.getAllProperties); 
-router.get('/properties/stats', propertyAdmin.getPropertyStats); 
+router.put('/properties/:id', propertyAdmin.updateProperty);
+router.get('/properties', propertyAdmin.getAllProperties);
+router.get('/properties/stats', propertyAdmin.getPropertyStats);
 
 // --- Auction Admin Endpoints ---
 router.post('/auctions', upload.single('file'), auctionAdmin.postAuction);
 router.delete('/auctions/:id', auctionAdmin.deleteAuction);
-router.put('/auctions/:id', auctionAdmin.updateAuction); 
-router.get('/auctions', auctionAdmin.getAllAuctions); 
+router.put('/auctions/:id', auctionAdmin.updateAuction);
+router.get('/auctions', auctionAdmin.getAllAuctions);
 router.get('/auctions/upcoming', auctionAdmin.getUpcomingAuctions);
 
 // --- Owner Admin Endpoints ---
@@ -86,5 +87,12 @@ router.get('/settings/download-access', settingsAdmin.checkDownloadAccess);
 router.get('/poppins', settingsAdmin.getAllPoppins);
 router.post('/poppins', settingsAdmin.savePoppin);
 router.delete('/poppins/:id', settingsAdmin.deletePoppin);
+
+// --- Content Management Admin Endpoints ---
+router.get('/content', contentAdmin.getAllContent);
+router.get('/content/:key', contentAdmin.getContent);
+router.put('/content/:key', contentAdmin.updateContent);
+router.post('/content/upload', upload.single('image'), contentAdmin.uploadImage);
+router.delete('/content/image/:filename', contentAdmin.deleteImage);
 
 module.exports = router;

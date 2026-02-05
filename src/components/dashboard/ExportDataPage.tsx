@@ -1,8 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import DashboardShell from "@/components/search/DashboardShell";
 import styles from "@/components/search/styles/dashboard.module.scss";
+import { useAuth } from "@/context/AuthContext";
+import { savedLeadsAPI } from "@/services/api";
 
 const EXPORT_FORMATS = [
   {
@@ -24,57 +27,223 @@ const EXPORT_FORMATS = [
     name: "JSON",
     description: "For developers and API integrations",
     icon: "fa-solid fa-code",
-    color: "#8B5CF6",
+    color: "#2563EB",
   },
 ];
 
-const EXPORT_HISTORY = [
+// Sample leads data for export (in production, this would come from API)
+const SAMPLE_EXPORT_DATA = [
   {
-    id: 1,
-    name: "Texas Foreclosures Export",
-    format: "CSV",
-    records: 234,
-    date: "2025-03-27",
-    size: "1.2 MB",
-    status: "completed",
+    address: "1024 Elm St, Austin, TX 78701",
+    ownerName: "John Smith",
+    ownerPhone: "(555) 123-4567",
+    ownerEmail: "john.smith@email.com",
+    propertyType: "Foreclosure",
+    beds: 3,
+    baths: 2,
+    sqft: 2400,
+    appraisedValue: 450000,
+    debt: 120000,
+    equity: 330000,
+    auctionDate: "2026-02-14",
   },
   {
-    id: 2,
-    name: "California High Equity",
-    format: "Excel",
-    records: 156,
-    date: "2025-03-26",
-    size: "892 KB",
-    status: "completed",
+    address: "550 Maple Ave, Dallas, TX 75201",
+    ownerName: "Jane Doe",
+    ownerPhone: "(555) 234-5678",
+    ownerEmail: "jane.doe@email.com",
+    propertyType: "Divorce",
+    beds: 4,
+    baths: 3,
+    sqft: 1800,
+    appraisedValue: 320000,
+    debt: 280000,
+    equity: 40000,
+    auctionDate: "Pending",
   },
   {
-    id: 3,
-    name: "Saved Leads Backup",
-    format: "JSON",
-    records: 89,
-    date: "2025-03-25",
-    size: "456 KB",
-    status: "completed",
-  },
-  {
-    id: 4,
-    name: "Monthly Report - March",
-    format: "Excel",
-    records: 1248,
-    date: "2025-03-20",
-    size: "3.4 MB",
-    status: "completed",
+    address: "880 Oak Ln, Houston, TX 77002",
+    ownerName: "Robert Johnson",
+    ownerPhone: "(555) 345-6789",
+    ownerEmail: "robert.j@email.com",
+    propertyType: "Tax Default",
+    beds: 2,
+    baths: 1,
+    sqft: 3200,
+    appraisedValue: 610000,
+    debt: 50000,
+    equity: 560000,
+    auctionDate: "2026-03-01",
   },
 ];
+
+interface ExportHistory {
+  id: number;
+  name: string;
+  format: string;
+  records: number;
+  date: string;
+  size: string;
+  status: string;
+}
 
 const ExportDataPage = () => {
+  const { user, subscription, canAccessPremium, isTrialActive } = useAuth();
+  const router = useRouter();
+
   const [selectedFormat, setSelectedFormat] = useState<string | null>(null);
   const [exportType, setExportType] = useState<"saved" | "search">("saved");
+  const [isExporting, setIsExporting] = useState(false);
+  const [showTermsModal, setShowTermsModal] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
+  const [exportHistory, setExportHistory] = useState<ExportHistory[]>([]);
 
-  const handleExport = () => {
-    if (!selectedFormat) return;
-    // In real app, trigger export
-    console.log("Exporting as:", selectedFormat);
+  const isPremium = canAccessPremium() || isTrialActive();
+  const exportLimit = subscription?.features?.exportLimit || 0;
+  const exportsUsed = exportHistory.length;
+  const exportsRemaining = exportLimit === -1 ? "Unlimited" : Math.max(0, exportLimit - exportsUsed);
+
+  // Load export history from localStorage
+  useEffect(() => {
+    const stored = localStorage.getItem("99sellers_export_history");
+    if (stored) {
+      try {
+        setExportHistory(JSON.parse(stored));
+      } catch (e) {
+        console.error("Failed to load export history");
+      }
+    }
+
+    // Check if terms were accepted
+    const terms = localStorage.getItem("99sellers_export_terms_accepted");
+    if (terms === "true") {
+      setTermsAccepted(true);
+    }
+  }, []);
+
+  const generateCSV = (data: typeof SAMPLE_EXPORT_DATA, userEmail: string): string => {
+    const timestamp = new Date().toISOString();
+
+    // Watermark header
+    let csv = `# 99Sellers Export - User: ${userEmail} - Generated: ${timestamp}\n`;
+    csv += `# This data is licensed for personal use only. Redistribution is prohibited.\n`;
+    csv += `# License ID: ${btoa(userEmail + timestamp).slice(0, 16)}\n\n`;
+
+    // CSV Header
+    csv += "Address,Owner Name,Phone,Email,Property Type,Beds,Baths,SqFt,Appraised Value,Debt,Equity,Auction Date\n";
+
+    // Data rows
+    data.forEach(row => {
+      csv += `"${row.address}","${row.ownerName}","${row.ownerPhone}","${row.ownerEmail}","${row.propertyType}",${row.beds},${row.baths},${row.sqft},${row.appraisedValue},${row.debt},${row.equity},"${row.auctionDate}"\n`;
+    });
+
+    // Footer watermark
+    csv += `\n# End of export - ${data.length} records - User: ${userEmail}`;
+
+    return csv;
+  };
+
+  const generateJSON = (data: typeof SAMPLE_EXPORT_DATA, userEmail: string): string => {
+    const timestamp = new Date().toISOString();
+
+    const exportData = {
+      metadata: {
+        exportedBy: userEmail,
+        exportedAt: timestamp,
+        licenseId: btoa(userEmail + timestamp).slice(0, 16),
+        recordCount: data.length,
+        terms: "This data is licensed for personal use only. Redistribution is prohibited.",
+      },
+      leads: data,
+    };
+
+    return JSON.stringify(exportData, null, 2);
+  };
+
+  const downloadFile = (content: string, filename: string, mimeType: string) => {
+    const blob = new Blob([content], { type: mimeType });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
+  const logExport = (format: string, recordCount: number) => {
+    const newExport: ExportHistory = {
+      id: Date.now(),
+      name: `${exportType === "saved" ? "Saved Leads" : "Search Results"} Export`,
+      format: format.toUpperCase(),
+      records: recordCount,
+      date: new Date().toISOString().split("T")[0],
+      size: `${Math.round(recordCount * 0.5)} KB`,
+      status: "completed",
+    };
+
+    const updated = [newExport, ...exportHistory].slice(0, 10); // Keep last 10
+    setExportHistory(updated);
+    localStorage.setItem("99sellers_export_history", JSON.stringify(updated));
+  };
+
+  const handleExport = async () => {
+    if (!selectedFormat || !isPremium) return;
+
+    // Check export limit
+    if (exportLimit !== -1 && exportsUsed >= exportLimit) {
+      alert("You have reached your export limit. Please upgrade your plan for more exports.");
+      return;
+    }
+
+    // Show terms modal on first export
+    if (!termsAccepted) {
+      setShowTermsModal(true);
+      return;
+    }
+
+    setIsExporting(true);
+
+    try {
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      const userEmail = user?.email || "unknown@user.com";
+      const data = SAMPLE_EXPORT_DATA;
+      const timestamp = Date.now();
+
+      if (selectedFormat === "csv") {
+        const csv = generateCSV(data, userEmail);
+        // Add UTF-8 BOM for Excel compatibility
+        const csvWithBom = "\uFEFF" + csv;
+        downloadFile(csvWithBom, `99sellers-leads-${timestamp}.csv`, "text/csv;charset=utf-8");
+      } else if (selectedFormat === "json") {
+        const json = generateJSON(data, userEmail);
+        downloadFile(json, `99sellers-leads-${timestamp}.json`, "application/json;charset=utf-8");
+      } else if (selectedFormat === "excel") {
+        // Generate proper CSV with BOM that Excel can read correctly
+        const csv = generateCSV(data, userEmail);
+        const csvWithBom = "\uFEFF" + csv;
+        downloadFile(csvWithBom, `99sellers-leads-${timestamp}.xlsx.csv`, "text/csv;charset=utf-8");
+      }
+
+      logExport(selectedFormat, data.length);
+
+    } catch (error) {
+      console.error("Export failed:", error);
+      alert("Export failed. Please try again.");
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
+  const handleAcceptTerms = () => {
+    setTermsAccepted(true);
+    localStorage.setItem("99sellers_export_terms_accepted", "true");
+    setShowTermsModal(false);
+    // Trigger the export after accepting terms
+    handleExport();
   };
 
   return (
@@ -83,8 +252,108 @@ const ExportDataPage = () => {
       subtitle="Download your leads and search results"
     >
       <div className={styles.pageContent}>
+        {/* Premium Gate */}
+        {!isPremium && (
+          <div style={{
+            background: "linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 50%, #EFF6FF 100%)",
+            borderRadius: 16,
+            padding: 32,
+            marginBottom: 24,
+            textAlign: "center",
+            border: "1px solid #BFDBFE",
+            boxShadow: "0 4px 20px rgba(37, 99, 235, 0.1)"
+          }}>
+            <div style={{
+              width: 64,
+              height: 64,
+              background: "linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%)",
+              borderRadius: "50%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              margin: "0 auto 16px",
+              boxShadow: "0 8px 24px rgba(37, 99, 235, 0.3)"
+            }}>
+              <i className="fa-solid fa-download" style={{ fontSize: 28, color: "#fff" }}></i>
+            </div>
+            <h3 style={{ margin: "0 0 8px", color: "#1E3A5F", fontSize: 22, fontWeight: 700 }}>Unlock Export Features</h3>
+            <p style={{ color: "#1D4ED8", marginBottom: 20, fontSize: 14, maxWidth: 400, margin: "0 auto 20px", lineHeight: 1.6 }}>
+              Export leads with full addresses, owner contact information, financial details, and distress data — all in CSV, Excel, or JSON format.
+            </p>
+            <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+              <button
+                onClick={() => router.push("/dashboard/subscription")}
+                style={{
+                  background: "linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%)",
+                  color: "#fff",
+                  border: "none",
+                  padding: "14px 28px",
+                  borderRadius: 10,
+                  fontSize: 14,
+                  fontWeight: 600,
+                  cursor: "pointer",
+                  boxShadow: "0 4px 14px rgba(37, 99, 235, 0.4)",
+                  transition: "transform 0.2s, box-shadow 0.2s"
+                }}
+              >
+                <i className="fa-solid fa-bolt me-2"></i>
+                Upgrade to Pro
+              </button>
+              <button
+                onClick={() => router.push("/dashboard/subscription")}
+                style={{
+                  background: "#fff",
+                  color: "#2563EB",
+                  border: "2px solid #2563EB",
+                  padding: "12px 24px",
+                  borderRadius: 10,
+                  fontSize: 14,
+                  fontWeight: 600,
+                  cursor: "pointer"
+                }}
+              >
+                Start Free Trial
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Export Usage */}
+        {isPremium && (
+          <div style={{
+            background: "#F0F9FF",
+            borderRadius: 12,
+            padding: 16,
+            marginBottom: 24,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            border: "1px solid #BAE6FD"
+          }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              <i className="fa-solid fa-chart-pie" style={{ fontSize: 20, color: "#0284C7" }}></i>
+              <div>
+                <div style={{ fontWeight: 600, color: "#0C4A6E", fontSize: 14 }}>Export Usage</div>
+                <div style={{ fontSize: 12, color: "#0369A1" }}>
+                  {exportsUsed} exports used • {exportsRemaining} remaining this month
+                </div>
+              </div>
+            </div>
+            <span style={{
+              background: "#fff",
+              padding: "6px 12px",
+              borderRadius: 6,
+              fontSize: 12,
+              fontWeight: 600,
+              color: "#0284C7"
+            }}>
+              {subscription?.plan?.toUpperCase() || "PRO"}
+            </span>
+          </div>
+        )}
+
         {/* Export Options */}
-        <div className={styles.card}>
+        <div className={styles.card} style={{ opacity: isPremium ? 1 : 0.6, pointerEvents: isPremium ? "auto" : "none" }}>
           <div className={styles.cardHeader}>
             <h3 className={styles.cardTitle}>Create New Export</h3>
           </div>
@@ -101,7 +370,7 @@ const ExportDataPage = () => {
                 >
                   <i className="fa-solid fa-bookmark me-2"></i>
                   Saved Leads
-                  <span className={styles.badge} style={{ marginLeft: 8 }}>89</span>
+                  <span className={styles.badge} style={{ marginLeft: 8 }}>3</span>
                 </button>
                 <button
                   className={`${styles.btn} ${exportType === "search" ? styles.btnPrimary : styles.btnSecondary}`}
@@ -109,7 +378,7 @@ const ExportDataPage = () => {
                 >
                   <i className="fa-solid fa-magnifying-glass me-2"></i>
                   Last Search Results
-                  <span className={styles.badge} style={{ marginLeft: 8 }}>234</span>
+                  <span className={styles.badge} style={{ marginLeft: 8 }}>3</span>
                 </button>
               </div>
             </div>
@@ -149,83 +418,258 @@ const ExportDataPage = () => {
               <button
                 className={`${styles.btn} ${styles.btnPrimary} ${styles.btnLg}`}
                 onClick={handleExport}
-                disabled={!selectedFormat}
+                disabled={!selectedFormat || isExporting}
                 style={{ opacity: selectedFormat ? 1 : 0.5 }}
               >
-                <i className="fa-solid fa-download me-2"></i>
-                Export {exportType === "saved" ? "89" : "234"} Leads
+                {isExporting ? (
+                  <>
+                    <i className="fa-solid fa-spinner fa-spin me-2"></i>
+                    Exporting...
+                  </>
+                ) : (
+                  <>
+                    <i className="fa-solid fa-download me-2"></i>
+                    Export {SAMPLE_EXPORT_DATA.length} Leads
+                  </>
+                )}
               </button>
             </div>
           </div>
         </div>
 
         {/* Export History */}
-        <div className={styles.card}>
-          <div className={styles.cardHeader}>
-            <h3 className={styles.cardTitle}>Export History</h3>
-            <span className={styles.badge}>{EXPORT_HISTORY.length} exports</span>
-          </div>
-          <div className={styles.cardBody} style={{ padding: 0 }}>
-            <table className={styles.table}>
-              <thead>
-                <tr>
-                  <th>Export Name</th>
-                  <th>Format</th>
-                  <th>Records</th>
-                  <th>Size</th>
-                  <th>Date</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {EXPORT_HISTORY.map((item) => (
-                  <tr key={item.id}>
-                    <td>
-                      <span style={{ fontWeight: 500, color: "#111827" }}>{item.name}</span>
-                    </td>
-                    <td>
-                      <span
-                        className={styles.badge}
+        {exportHistory.length > 0 && (
+          <div className={styles.card} style={{ overflow: "hidden" }}>
+            <div className={styles.cardHeader} style={{
+              background: "linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 100%)",
+              borderBottom: "1px solid #E2E8F0",
+              padding: "16px 24px"
+            }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <div style={{
+                  width: 36,
+                  height: 36,
+                  background: "linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%)",
+                  borderRadius: 8,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center"
+                }}>
+                  <i className="fa-solid fa-clock-rotate-left" style={{ color: "#fff", fontSize: 14 }}></i>
+                </div>
+                <div>
+                  <h3 className={styles.cardTitle} style={{ marginBottom: 2 }}>Export History</h3>
+                  <span style={{ fontSize: 12, color: "#64748B" }}>Your recent data exports</span>
+                </div>
+              </div>
+              <span style={{
+                background: "linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%)",
+                color: "#fff",
+                padding: "4px 12px",
+                borderRadius: 20,
+                fontSize: 12,
+                fontWeight: 600
+              }}>{exportHistory.length} exports</span>
+            </div>
+            <div className={styles.cardBody} style={{ padding: 0 }}>
+              <div style={{ overflowX: "auto" }}>
+                <table className={styles.table} style={{ minWidth: 700 }}>
+                  <thead>
+                    <tr style={{ background: "#F8FAFC" }}>
+                      <th style={{ padding: "14px 20px", fontSize: 12, fontWeight: 600, color: "#475569", textTransform: "uppercase", letterSpacing: "0.5px" }}>Export Name</th>
+                      <th style={{ padding: "14px 16px", fontSize: 12, fontWeight: 600, color: "#475569", textTransform: "uppercase", letterSpacing: "0.5px" }}>Format</th>
+                      <th style={{ padding: "14px 16px", fontSize: 12, fontWeight: 600, color: "#475569", textTransform: "uppercase", letterSpacing: "0.5px" }}>Records</th>
+                      <th style={{ padding: "14px 16px", fontSize: 12, fontWeight: 600, color: "#475569", textTransform: "uppercase", letterSpacing: "0.5px" }}>Size</th>
+                      <th style={{ padding: "14px 16px", fontSize: 12, fontWeight: 600, color: "#475569", textTransform: "uppercase", letterSpacing: "0.5px" }}>Date</th>
+                      <th style={{ padding: "14px 20px", fontSize: 12, fontWeight: 600, color: "#475569", textTransform: "uppercase", letterSpacing: "0.5px" }}>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {exportHistory.map((item, index) => (
+                      <tr
+                        key={item.id}
                         style={{
-                          background:
-                            item.format === "CSV"
-                              ? "rgba(16, 185, 129, 0.1)"
-                              : item.format === "Excel"
-                              ? "rgba(5, 150, 105, 0.1)"
-                              : "rgba(139, 92, 246, 0.1)",
-                          color:
-                            item.format === "CSV"
-                              ? "#10B981"
-                              : item.format === "Excel"
-                              ? "#059669"
-                              : "#8B5CF6",
+                          borderBottom: "1px solid #F1F5F9",
+                          background: index % 2 === 0 ? "#fff" : "#FAFBFC",
+                          transition: "background 0.15s"
                         }}
                       >
-                        {item.format}
-                      </span>
-                    </td>
-                    <td>{item.records.toLocaleString()}</td>
-                    <td className={styles.textMuted}>{item.size}</td>
-                    <td className={styles.textMuted}>
-                      {new Date(item.date).toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                      })}
-                    </td>
-                    <td>
-                      <button className={`${styles.btn} ${styles.btnSecondary} ${styles.btnSm}`}>
-                        <i className="fa-solid fa-download me-1"></i>
-                        Download
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                        <td style={{ padding: "16px 20px" }}>
+                          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                            <div style={{
+                              width: 32,
+                              height: 32,
+                              background: item.format === "CSV" ? "#ECFDF5" : item.format === "EXCEL" ? "#F0FDF4" : "#F5F3FF",
+                              borderRadius: 6,
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center"
+                            }}>
+                              <i className={`fa-solid ${item.format === "CSV" ? "fa-file-csv" : item.format === "EXCEL" ? "fa-file-excel" : "fa-code"}`}
+                                style={{ color: item.format === "CSV" ? "#10B981" : item.format === "EXCEL" ? "#059669" : "#2563EB", fontSize: 14 }}></i>
+                            </div>
+                            <span style={{ fontWeight: 500, color: "#1E293B", fontSize: 14 }}>{item.name}</span>
+                          </div>
+                        </td>
+                        <td style={{ padding: "16px" }}>
+                          <span
+                            style={{
+                              display: "inline-flex",
+                              alignItems: "center",
+                              gap: 4,
+                              padding: "4px 10px",
+                              borderRadius: 6,
+                              fontSize: 12,
+                              fontWeight: 600,
+                              background:
+                                item.format === "CSV"
+                                  ? "#ECFDF5"
+                                  : item.format === "EXCEL"
+                                    ? "#F0FDF4"
+                                    : "#F5F3FF",
+                              color:
+                                item.format === "CSV"
+                                  ? "#059669"
+                                  : item.format === "EXCEL"
+                                    ? "#047857"
+                                    : "#7C3AED",
+                            }}
+                          >
+                            {item.format}
+                          </span>
+                        </td>
+                        <td style={{ padding: "16px", fontWeight: 500, color: "#1E293B" }}>
+                          {item.records.toLocaleString()}
+                        </td>
+                        <td style={{ padding: "16px", color: "#64748B", fontSize: 13 }}>{item.size}</td>
+                        <td style={{ padding: "16px", color: "#64748B", fontSize: 13 }}>
+                          {new Date(item.date).toLocaleDateString("en-US", {
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric",
+                          })}
+                        </td>
+                        <td style={{ padding: "16px 20px" }}>
+                          <span style={{
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: 6,
+                            padding: "4px 12px",
+                            borderRadius: 20,
+                            fontSize: 12,
+                            fontWeight: 500,
+                            background: "#ECFDF5",
+                            color: "#059669"
+                          }}>
+                            <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#10B981" }}></span>
+                            {item.status}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
-        </div>
+        )}
       </div>
+
+      {/* Terms of Use Modal */}
+      {showTermsModal && (
+        <>
+          <div
+            style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              background: "rgba(0,0,0,0.5)",
+              zIndex: 999
+            }}
+            onClick={() => setShowTermsModal(false)}
+          />
+          <div style={{
+            position: "fixed",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            background: "#fff",
+            borderRadius: 16,
+            padding: 32,
+            maxWidth: 480,
+            width: "90%",
+            zIndex: 1000,
+            boxShadow: "0 25px 50px -12px rgba(0,0,0,0.25)"
+          }}>
+            <div style={{ textAlign: "center", marginBottom: 24 }}>
+              <i className="fa-solid fa-file-contract" style={{ fontSize: 48, color: "#3B82F6", marginBottom: 16 }}></i>
+              <h3 style={{ margin: 0, fontSize: 20, fontWeight: 700, color: "#111827" }}>
+                Export Terms of Use
+              </h3>
+            </div>
+
+            <div style={{
+              background: "#F3F4F6",
+              borderRadius: 8,
+              padding: 16,
+              marginBottom: 24,
+              maxHeight: 200,
+              overflow: "auto",
+              fontSize: 13,
+              color: "#4B5563",
+              lineHeight: 1.6
+            }}>
+              <p style={{ margin: "0 0 12px" }}>
+                <strong>By exporting data from 99Sellers, you agree to the following terms:</strong>
+              </p>
+              <ul style={{ margin: 0, paddingLeft: 20 }}>
+                <li>The exported data is for your personal or business use only.</li>
+                <li>You may not resell, redistribute, or share this data with third parties.</li>
+                <li>All exports are watermarked with your account information for audit purposes.</li>
+                <li>Violation of these terms may result in account suspension.</li>
+                <li>99Sellers reserves the right to track and monitor data usage.</li>
+              </ul>
+            </div>
+
+            <div style={{ display: "flex", gap: 12 }}>
+              <button
+                onClick={() => setShowTermsModal(false)}
+                style={{
+                  flex: 1,
+                  padding: "12px 24px",
+                  borderRadius: 8,
+                  border: "1px solid #E5E7EB",
+                  background: "#fff",
+                  color: "#4B5563",
+                  fontSize: 14,
+                  fontWeight: 600,
+                  cursor: "pointer"
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleAcceptTerms}
+                style={{
+                  flex: 1,
+                  padding: "12px 24px",
+                  borderRadius: 8,
+                  border: "none",
+                  background: "linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)",
+                  color: "#fff",
+                  fontSize: 14,
+                  fontWeight: 600,
+                  cursor: "pointer"
+                }}
+              >
+                Accept & Export
+              </button>
+            </div>
+          </div>
+        </>
+      )}
     </DashboardShell>
   );
 };

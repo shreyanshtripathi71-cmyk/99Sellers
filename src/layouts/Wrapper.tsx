@@ -3,9 +3,9 @@
 import { useEffect } from "react";
 import { ToastContainer } from "react-toastify";
 import { animationCreate } from "@/utils/utils";
-import ScrollToTop from "@/components/common/ScrollToTop";
 import { AuthProvider } from "@/context/AuthContext";
 import MarketingPopup from "@/components/ui/MarketingPopup";
+import FloatingFeedbackButton from "@/components/ui/FloatingFeedbackButton";
 
 if (typeof window !== "undefined") {
     require("bootstrap/dist/js/bootstrap");
@@ -25,11 +25,12 @@ const Wrapper = ({ children }: any) => {
     return (
         <AuthProvider>
             {children}
-            <ScrollToTop />
             <ToastContainer position="top-center" />
             <MarketingPopup />
+            <FloatingFeedbackButton />
         </AuthProvider>
     );
 }
 
 export default Wrapper
+

@@ -20,6 +20,10 @@ export interface Lead {
   auctionDate: string;
   publishedOn: string;
   saved: boolean;
+  // Owner information
+  ownerName?: string;
+  ownerPhone?: string;
+  ownerEmail?: string;
 }
 
 interface LeadTableProps {
@@ -37,12 +41,36 @@ const formatCurrency = (value: number) => {
   }).format(value);
 };
 
+// Mask owner data for free users
+const maskOwnerName = (name: string | undefined, isPro: boolean): string => {
+  if (!name) return "---";
+  if (isPro) return name;
+  const parts = name.split(" ");
+  return parts.map(part => part[0] + "****").join(" ");
+};
+
+const maskPhone = (phone: string | undefined, isPro: boolean): string => {
+  if (!phone) return "---";
+  if (isPro) return phone;
+  return "(***) ***-" + phone.slice(-4);
+};
+
+const maskEmail = (email: string | undefined, isPro: boolean): string => {
+  if (!email) return "---";
+  if (isPro) return email;
+  const atIndex = email.indexOf("@");
+  if (atIndex <= 0) return "****@****.com";
+  return email[0] + "****" + email.substring(atIndex);
+};
+
 const LeadTableView: React.FC<LeadTableProps> = ({
   leads,
   onToggleSave,
   getAddress,
   userPlan,
 }) => {
+  const isPro = userPlan === "Pro";
+
   if (leads.length === 0) {
     return (
       <div className={styles.empty_state}>
@@ -63,8 +91,8 @@ const LeadTableView: React.FC<LeadTableProps> = ({
           <tr>
             <th>Property</th>
             <th>Type</th>
+            <th>Owner Info</th>
             <th>Details</th>
-            <th>Value</th>
             <th>Equity</th>
             <th>Auction</th>
             <th></th>
@@ -88,6 +116,18 @@ const LeadTableView: React.FC<LeadTableProps> = ({
                     <div className={styles.address_text}>
                       <span className={styles.address_line}>
                         {getAddress(lead)}
+                        {!isPro && (
+                          <i
+                            className="fa-solid fa-lock"
+                            style={{
+                              marginLeft: 6,
+                              fontSize: 10,
+                              color: "#9CA3AF",
+                              verticalAlign: "middle"
+                            }}
+                            title="Upgrade to Pro to see full address"
+                          ></i>
+                        )}
                       </span>
                       <span className={styles.address_city}>
                         {lead.city}, {lead.state} {lead.zip}
@@ -98,32 +138,37 @@ const LeadTableView: React.FC<LeadTableProps> = ({
 
                 {/* Type */}
                 <td>
-                  <span
-                    className={`${styles.badge} ${
-                      lead.type === "Foreclosure"
-                        ? styles.badge_danger
-                        : lead.type === "Probate"
-                        ? styles.badge_primary
-                        : lead.type === "Tax Default"
-                        ? styles.badge_warning
-                        : styles.badge_neutral
-                    }`}
-                  >
+                  <span className={`${styles.badge} ${styles.badge_primary}`}>
                     {lead.type}
                   </span>
+                </td>
+
+                {/* Owner Info */}
+                <td>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                    <span style={{ fontWeight: 500, color: "#111827", fontSize: 13 }}>
+                      {maskOwnerName(lead.ownerName || "John Smith", isPro)}
+                      {!isPro && (
+                        <i
+                          className="fa-solid fa-lock"
+                          style={{
+                            marginLeft: 6,
+                            fontSize: 9,
+                            color: "#9CA3AF"
+                          }}
+                        ></i>
+                      )}
+                    </span>
+                    <span style={{ fontSize: 12, color: "#6B7280" }}>
+                      {maskPhone(lead.ownerPhone || "(555) 123-4567", isPro)}
+                    </span>
+                  </div>
                 </td>
 
                 {/* Details */}
                 <td>
                   <span style={{ color: "#4B5563", fontSize: 13 }}>
                     {lead.beds} bd • {lead.baths} ba • {lead.sqft.toLocaleString()} sqft
-                  </span>
-                </td>
-
-                {/* Value */}
-                <td>
-                  <span style={{ fontWeight: 600 }}>
-                    {formatCurrency(lead.appraised)}
                   </span>
                 </td>
 
@@ -172,6 +217,41 @@ const LeadTableView: React.FC<LeadTableProps> = ({
           })}
         </tbody>
       </table>
+
+      {/* Upgrade prompt for free users */}
+      {!isPro && (
+        <div style={{
+          background: "linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%)",
+          borderRadius: 8,
+          padding: "12px 16px",
+          marginTop: 16,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          border: "1px solid #BFDBFE"
+        }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <i className="fa-solid fa-lock" style={{ color: "#2563EB" }}></i>
+            <span style={{ fontSize: 13, color: "#1E40AF", fontWeight: 500 }}>
+              Some data is hidden. Upgrade to Pro to see full addresses, owner contacts, and more.
+            </span>
+          </div>
+          <Link
+            href="/dashboard/subscription"
+            style={{
+              background: "linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%)",
+              color: "#fff",
+              padding: "8px 16px",
+              borderRadius: 6,
+              fontSize: 12,
+              fontWeight: 600,
+              textDecoration: "none"
+            }}
+          >
+            Upgrade Now
+          </Link>
+        </div>
+      )}
     </div>
   );
 };

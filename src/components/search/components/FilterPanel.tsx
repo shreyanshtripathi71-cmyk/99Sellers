@@ -5,6 +5,7 @@ import styles from "../styles/dashboard.module.scss";
 export interface Filters {
   state: string;
   county: string;
+  zipCode: string;
   motive: string;
   minEquity: string;
   maxDebt: string;
@@ -61,6 +62,19 @@ const FilterPanel: React.FC<FiltersProps> = ({
               </option>
             ))}
           </select>
+        </div>
+
+        {/* Zip Code */}
+        <div className={styles.filter_group}>
+          <label className={styles.filter_label}>Zip Code</label>
+          <input
+            type="text"
+            className={styles.filter_input}
+            placeholder="e.g. 78701"
+            value={filters.zipCode}
+            onChange={(e) => onChange("zipCode", e.target.value)}
+            maxLength={5}
+          />
         </div>
 
         {/* Motive */}

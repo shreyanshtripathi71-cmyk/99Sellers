@@ -6,6 +6,7 @@ import styles from "./dashboard.module.scss";
 export interface Filters {
    state: string;
    county: string;
+   zipCode: string;
    motive: string;
    minEquity: string;
    maxDebt: string;
@@ -29,7 +30,7 @@ const SearchFilters = ({ filters, onFilterChange, onReset, onClose, isOpen }: Se
 
    return (
       <AnimatePresence>
-         <motion.div 
+         <motion.div
             className={styles.filter_container}
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
@@ -41,8 +42,8 @@ const SearchFilters = ({ filters, onFilterChange, onReset, onClose, isOpen }: Se
                   <i className="fa-solid fa-sliders" style={{ color: '#2563EB' }}></i>
                   <span style={{ fontWeight: '700' }}>Advanced Filters</span>
                </div>
-               <motion.button 
-                  className={styles.btn_clear} 
+               <motion.button
+                  className={styles.btn_clear}
                   onClick={onReset}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
@@ -54,7 +55,7 @@ const SearchFilters = ({ filters, onFilterChange, onReset, onClose, isOpen }: Se
 
             <div className={styles.filter_body}>
                {/* Location & Motive */}
-               <motion.div 
+               <motion.div
                   className={styles.filter_row}
                   initial={{ x: -20, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
@@ -74,6 +75,16 @@ const SearchFilters = ({ filters, onFilterChange, onReset, onClose, isOpen }: Se
                            <option value="CA">California</option>
                            <option value="AZ">Arizona</option>
                         </select>
+                     </div>
+                     <div className={styles.input_group}>
+                        <label>Zip Code</label>
+                        <input
+                           type="text"
+                           placeholder="e.g. 78701"
+                           value={filters.zipCode}
+                           onChange={(e) => onFilterChange('zipCode', e.target.value)}
+                           maxLength={5}
+                        />
                      </div>
                      <div className={styles.input_group}>
                         <label>Distress Type</label>
@@ -99,7 +110,7 @@ const SearchFilters = ({ filters, onFilterChange, onReset, onClose, isOpen }: Se
                </motion.div>
 
                {/* Property Details */}
-               <motion.div 
+               <motion.div
                   className={styles.filter_row}
                   initial={{ x: -20, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
@@ -133,27 +144,27 @@ const SearchFilters = ({ filters, onFilterChange, onReset, onClose, isOpen }: Se
                      </div>
                      <div className={styles.input_group}>
                         <label>Min Square Feet</label>
-                        <input 
-                           type="number" 
-                           placeholder="e.g. 1500" 
-                           value={filters.minSqft} 
-                           onChange={(e) => onFilterChange('minSqft', e.target.value)} 
+                        <input
+                           type="number"
+                           placeholder="e.g. 1500"
+                           value={filters.minSqft}
+                           onChange={(e) => onFilterChange('minSqft', e.target.value)}
                         />
                      </div>
                      <div className={styles.input_group}>
                         <label>Min Year Built</label>
-                        <input 
-                           type="number" 
-                           placeholder="e.g. 2000" 
-                           value={filters.minYear} 
-                           onChange={(e) => onFilterChange('minYear', e.target.value)} 
+                        <input
+                           type="number"
+                           placeholder="e.g. 2000"
+                           value={filters.minYear}
+                           onChange={(e) => onFilterChange('minYear', e.target.value)}
                         />
                      </div>
                   </div>
                </motion.div>
 
                {/* Financial Constraints */}
-               <motion.div 
+               <motion.div
                   className={styles.filter_row}
                   initial={{ x: -20, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
@@ -166,19 +177,19 @@ const SearchFilters = ({ filters, onFilterChange, onReset, onClose, isOpen }: Se
                   <div className={styles.filter_grid_advanced}>
                      <div className={styles.input_group}>
                         <label>Maximum Debt</label>
-                        <input 
-                           type="number" 
-                           placeholder="e.g. 200000" 
-                           value={filters.maxDebt} 
-                           onChange={(e) => onFilterChange('maxDebt', e.target.value)} 
+                        <input
+                           type="number"
+                           placeholder="e.g. 200000"
+                           value={filters.maxDebt}
+                           onChange={(e) => onFilterChange('maxDebt', e.target.value)}
                         />
                      </div>
                      <div className={styles.input_group}>
                         <label>Auction Date (After)</label>
-                        <input 
-                           type="date" 
-                           value={filters.auctionDateStart} 
-                           onChange={(e) => onFilterChange('auctionDateStart', e.target.value)} 
+                        <input
+                           type="date"
+                           value={filters.auctionDateStart}
+                           onChange={(e) => onFilterChange('auctionDateStart', e.target.value)}
                         />
                      </div>
                   </div>
@@ -186,8 +197,8 @@ const SearchFilters = ({ filters, onFilterChange, onReset, onClose, isOpen }: Se
             </div>
 
             <div className={styles.filter_footer}>
-               <motion.button 
-                  className={styles.btn_primary_small} 
+               <motion.button
+                  className={styles.btn_primary_small}
                   onClick={onClose}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
